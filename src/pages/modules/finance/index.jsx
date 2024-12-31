@@ -1,27 +1,34 @@
-import {Box, Card, CardHeader, Flex, Group, Heading, Stack} from "@chakra-ui/react";
+import {Box, Card, CardHeader, Flex, For, Group, Heading, Stack} from "@chakra-ui/react";
 import {Checkbox} from "@/components/ui/checkbox.jsx";
 import {Button} from "@/components/ui/button.jsx";
 import {useEffect, useState} from "react";
 
 const FinancePage = () => {
-    const [invoices, setInvoices] = useState([]);
-    const [outcomes, setOutcomes] = useState([]);
+    // const [incomes, setIncomes] = useState([]);
+    // const [outcomes, setOutcomes] = useState([]);
+    const [transactions, setTransactions] = useState([]);
 
-    const getInvoices = async () => {
-        const response  = await fetch("/api/incomes", {method: "GET", headers: {
+    const getTransaction = async (endpoint) => {
+        return await fetch(`/api/${endpoint}`, {
+            method: "GET", headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }
-            }).then((res) => res.json()).then((data) => {
-                console.log(data)
-        })
+        }).then((res) => res.json()).then((data) => data)
     };
 
-    useEffect(() => {
-        getInvoices()
-    })
+    const handleTransactions = async () => {
+        const incomes = await getTransaction('incomes').then(data => data);
+        const outcomes = await getTransaction('outcomes').then(data => data);
+        const transactions = [...incomes, ...outcomes];
+        setTransactions(transactions);
+    }
 
-    // console.log(invoices)
+    useEffect(() => {
+        handleTransactions();
+    }, [])
+
+    console.log(transactions)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
@@ -61,31 +68,25 @@ const FinancePage = () => {
                 </Card.Root>
             </Group>
 
-
             <Stack spacing={2} my={"32px"} bgColor={"#fff"} borderRadius={4} border={'1px solid #eee'} padding={'32px'}>
                 <Heading as={"h2"}>Last Transactions</Heading>
-                <Group gap={3} grow mt={"16px"} borderBottom={'1px solid #eee'} paddingBottom={'16px'}>
-                    <input type="checkbox"/>
-                    <Heading>Transaction one</Heading>
-                    <p>Description</p>
-                    <p>amount</p>
+                {transactions?.map(({name, description, amount, id}) => {
+                    return (
+                        <Group key={id} gap={3} grow mt={"16px"} borderBottom={'1px solid #eee'}
+                               paddingBottom={'16px'}>
+                            <input type="checkbox"/>
+                            <Heading>{name}</Heading>
+                            <p>{description}</p>
+                            <p>{amount}</p>
 
-                    <Flex gap={3} justifyContent="end">
-                        <Button>Detail</Button>
-                        <Button>Delete</Button>
-                    </Flex>
-                </Group>
-                <Group gap={3} grow mt={"16px"} borderBottom={'1px solid #eee'} paddingBottom={'16px'}>
-                    <input type="checkbox"/>
-                    <Heading>Transaction one</Heading>
-                    <p>Description</p>
-                    <p>amount</p>
+                            <Flex gap={3} justifyContent="end">
+                                <Button>Detail</Button>
+                                <Button>Delete</Button>
+                            </Flex>
+                        </Group>
+                    )
+                })}
 
-                    <Flex gap={3} justifyContent="end">
-                        <Button>Detail</Button>
-                        <Button>Delete</Button>
-                    </Flex>
-                </Group>
             </Stack>
 
         </Box>
