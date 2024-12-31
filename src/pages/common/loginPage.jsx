@@ -12,7 +12,6 @@ export const LoginPage = () => {
        console.log(inputEmail.current.value, inputPassword.current.value);
    }
     return (
-        <Center bgColor={'gray.100'} h={'100vh'}>
             <Flex gap={4} maxW={'40%'} bgColor={'white'} borderRadius={'lg'} p={'64px'} flexDir={'column'} justify>
                 <Heading as={'h1'} size={'2xl'}>Login</Heading>
                 <Field label="Email" errorText="This field is required">
@@ -23,6 +22,5 @@ export const LoginPage = () => {
                 </Field>
                 <Button onClick={handleSubmitLogin}>Submit</Button>
             </Flex>
-        </Center>
     )
 }
