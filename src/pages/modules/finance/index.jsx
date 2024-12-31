@@ -1,11 +1,8 @@
-import {Box, Card, CardHeader, Flex, For, Group, Heading, Stack} from "@chakra-ui/react";
-import {Checkbox} from "@/components/ui/checkbox.jsx";
+import {Box, Card, Flex,Group, Heading, Stack} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.jsx";
 import {useEffect, useState} from "react";
 
 const FinancePage = () => {
-    // const [incomes, setIncomes] = useState([]);
-    // const [outcomes, setOutcomes] = useState([]);
     const [transactions, setTransactions] = useState([]);
 
     const getTransaction = async (endpoint) => {
@@ -28,7 +25,6 @@ const FinancePage = () => {
         handleTransactions();
     }, [])
 
-    console.log(transactions)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
