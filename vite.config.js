@@ -5,6 +5,12 @@ import path from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server:{
+    proxy:{
+      target: 'http://localhost:5278/',
+      changeOrigin: true,
+    }
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'), // Replace './src' with your source directory
