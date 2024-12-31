@@ -1,8 +1,27 @@
 import {Box, Card, CardHeader, Flex, Group, Heading, Stack} from "@chakra-ui/react";
 import {Checkbox} from "@/components/ui/checkbox.jsx";
 import {Button} from "@/components/ui/button.jsx";
+import {useEffect, useState} from "react";
 
 const FinancePage = () => {
+    const [invoices, setInvoices] = useState([]);
+    const [outcomes, setOutcomes] = useState([]);
+
+    const getInvoices = async () => {
+        const response  = await fetch("/api/incomes", {method: "GET", headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+            }).then((res) => res.json()).then((data) => {
+                console.log(data)
+        })
+    };
+
+    useEffect(() => {
+        getInvoices()
+    })
+
+    // console.log(invoices)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
@@ -56,7 +75,7 @@ const FinancePage = () => {
                         <Button>Delete</Button>
                     </Flex>
                 </Group>
-                <Group gap={3} grow mt={"16px"} borderBottom={'1px solid #eee'} paddingBottom={'16px'}>>
+                <Group gap={3} grow mt={"16px"} borderBottom={'1px solid #eee'} paddingBottom={'16px'}>
                     <input type="checkbox"/>
                     <Heading>Transaction one</Heading>
                     <p>Description</p>
