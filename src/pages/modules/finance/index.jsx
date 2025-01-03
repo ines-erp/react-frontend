@@ -13,7 +13,7 @@ const FinancePage = () => {
     const totalOutcomes = outcomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
 
     const handleTransactions = () => {
-        fetch("api/transactions", {
+        fetch("api/transactions?" + (new URLSearchParams({filterOn:"currencySymbol",filterQuery:"R$"})).toString() , {
             method: "GET",
             headers: {"Content-Type": "application/json"}
         })
