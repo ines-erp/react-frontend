@@ -31,6 +31,7 @@ const AVALIABLE_CURRENCIES = [
 const FinancePage = () => {
     const [transactions, setTransactions] = useState([]);
     const [currency, setCurrency] = useState(AVALIABLE_CURRENCIES[0])
+    const [balance, setBalance] = useState(0.00)
 
     let incomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "income");
     let outcomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "outcome");
@@ -40,33 +41,43 @@ const FinancePage = () => {
     const totalIncomes = incomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
     const totalOutcomes = outcomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
 
-    const getTransactions = (filterOn = "currencyName") => {
+    const getTransactions = (currencyName) => {
 
-        if (filterOn) {
-            fetch("api/transactions?" + (new URLSearchParams({
-                currency: currency.label
-            })).toString(), {
-                method: "GET",
-                headers: {"Content-Type": "application/json"}
-            })
-                .then((res) => res.json())
-                .then((data) => setTransactions(data))
-        }
+        fetch("api/transactions?" + (new URLSearchParams({
+            currency: currencyName
+        })).toString(), {
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        })
+            .then((res) => res.json())
+            .then((data) => setTransactions(data))
     }
 
-    useEffect(() => {
-        getTransactions();
-    }, [currency])
+    const getBalance = (currencyName) => {
+        fetch("api/balance?" + (new URLSearchParams({
+            currency: currencyName
+        })).toString(), {
+            method: "GET",
+            headers: {"Content-Type": "application/json"}
+        })
+            .then((res) => res.json())
+            .then((data) => setBalance(data))
+    }
 
-    
+        useEffect(() => {
+            getTransactions("Brazilian Real");
+            getBalance("Brazilian Real")
+        }, [currency])
+
+
     const handleChangeCurrency = (value) => {
         const currencyIndex = AVALIABLE_CURRENCIES.findIndex(currency => currency.value === value[0]);
         if (currencyIndex >= 0) {
             setCurrency(AVALIABLE_CURRENCIES[currencyIndex]);
         }
     }
-    
 
+console.log(balance)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
@@ -126,10 +137,10 @@ const FinancePage = () => {
                 <Card.Root>
                     <Card.Body>
                         <Card.Title>Balance</Card.Title>
-                        <Card.Description>R$ 200,00</Card.Description>
+                        <Card.Description>{balance[0].symbol} {balance[0].amount}</Card.Description>
                     </Card.Body>
                     <Card.Footer>
-                        blablabla
+                        {balance[0].currency}
                     </Card.Footer>
                 </Card.Root>
             </Group>
