@@ -44,8 +44,7 @@ const FinancePage = () => {
 
         if (filterOn) {
             fetch("api/transactions?" + (new URLSearchParams({
-                filterOn: filterOn,
-                filterQuery: currency.label
+                currency: currency.label
             })).toString(), {
                 method: "GET",
                 headers: {"Content-Type": "application/json"}
