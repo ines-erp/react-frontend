@@ -1,28 +1,41 @@
-import {Box, Card, CardHeader, Flex, For, Group, Heading, Stack} from "@chakra-ui/react";
-import {Checkbox} from "@/components/ui/checkbox.jsx";
+import {
+    Box,
+    Card,
+    Flex,
+    Group,
+    Heading,
+    Stack,
+    SelectContent,
+    SelectItem,
+    SelectLabel,
+    SelectRoot,
+    SelectTrigger,
+    SelectValueText, createListCollection,
+} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.jsx";
 import {useEffect, useState} from "react";
 
 const AVALIABLE_CURRENCIES = [
     {
         id: 1,
-        name: "Brazilian Real",
-        symbol: "R$"
+        label: "Brazilian Real",
+        value: "R$"
     },
     {
         id: 2,
-        name: "Euro",
-        symbol: "€"
+        label: "Euro",
+        value: "€"
     },
 ]
 
 const FinancePage = () => {
     const [transactions, setTransactions] = useState([]);
+    const [currency, setCurrency] = useState(AVALIABLE_CURRENCIES[0])
 
     let incomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "income");
     let outcomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "outcome");
-    const [currency, setCurrency] = useState(AVALIABLE_CURRENCIES[0])
-    ;
+
+    const avaliableCurrenciesCollectio = createListCollection({items: [...AVALIABLE_CURRENCIES]})
 
     const totalIncomes = incomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
     const totalOutcomes = outcomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
@@ -32,7 +45,7 @@ const FinancePage = () => {
         if (filterOn) {
             fetch("api/transactions?" + (new URLSearchParams({
                 filterOn: filterOn,
-                filterQuery: currency.name
+                filterQuery: currency.label
             })).toString(), {
                 method: "GET",
                 headers: {"Content-Type": "application/json"}
@@ -40,24 +53,21 @@ const FinancePage = () => {
                 .then((res) => res.json())
                 .then((data) => setTransactions(data))
         }
-
-        // fetch("api/transactions?" + (new URLSearchParams({
-        //     filterOn: currency[1].filterOn,
-        //     filterQuery: currency[1].filterQyery
-        // })).toString(), {
-        //     method: "GET",
-        //     headers: {"Content-Type": "application/json"}
-        // })
-        //     .then((res) => res.json())
-        //     .then((data) => setTransactions(data))
     }
 
     useEffect(() => {
         getTransactions();
-    }, [])
+    }, [currency])
 
+    
+    const handleChangeCurrency = (value) => {
+        const currencyIndex = AVALIABLE_CURRENCIES.findIndex(currency => currency.value === value[0]);
+        if (currencyIndex >= 0) {
+            setCurrency(AVALIABLE_CURRENCIES[currencyIndex]);
+        }
+    }
+    
 
-// console.log(transactions)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
@@ -65,16 +75,32 @@ const FinancePage = () => {
              padding={"32px"}
         >
 
-            <Flex>
+            <Flex justifyContent="space-between">
                 <Heading as={"h1"}>
                     Finance
                 </Heading>
 
-                Currency:
-                <select>
-                    <option value="Euro" defaultChecked>Euro</option>
-                    <option value="Real">Real</option>
-                </select>
+                <SelectRoot
+                    collection={avaliableCurrenciesCollectio}
+                    size="sm"
+                    width="320px"
+                    value={currency.label}
+                    onValueChange={(e) => handleChangeCurrency(e.value)}
+                    style={{position: "relative"}}
+
+                >
+
+                    <SelectTrigger>
+                        <SelectValueText placeholder={currency.label}/>
+                    </SelectTrigger>
+                    <SelectContent style={{zIndex: 100, position: "absolute", width: "100%", marginTop: "40px"}}>
+                        {AVALIABLE_CURRENCIES.map((c) => (
+                            <SelectItem item={c} key={c.id}>
+                                {c.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </SelectRoot>
             </Flex>
 
             <Group gap={3} grow my={"32px"}>
