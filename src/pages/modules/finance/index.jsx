@@ -3,30 +3,61 @@ import {Checkbox} from "@/components/ui/checkbox.jsx";
 import {Button} from "@/components/ui/button.jsx";
 import {useEffect, useState} from "react";
 
+const AVALIABLE_CURRENCIES = [
+    {
+        id: 1,
+        name: "Brazilian Real",
+        symbol: "R$"
+    },
+    {
+        id: 2,
+        name: "Euro",
+        symbol: "€"
+    },
+]
+
 const FinancePage = () => {
     const [transactions, setTransactions] = useState([]);
 
     let incomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "income");
     let outcomes = transactions.filter((transaction) => (transaction.transactionType.name).toLowerCase() === "outcome");
+    const [currency, setCurrency] = useState(AVALIABLE_CURRENCIES[0])
+    ;
 
     const totalIncomes = incomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
     const totalOutcomes = outcomes.reduce((totalAmount, currentAmount) => totalAmount + currentAmount.amount, 0)
 
-    const handleTransactions = () => {
-        fetch("api/transactions?" + (new URLSearchParams({filterOn:"currencySymbol",filterQuery:"R$"})).toString() , {
-            method: "GET",
-            headers: {"Content-Type": "application/json"}
-        })
-            .then((res) => res.json())
-            .then((data) => setTransactions(data))
+    const getTransactions = (filterOn = "currencyName") => {
+
+        if (filterOn) {
+            fetch("api/transactions?" + (new URLSearchParams({
+                filterOn: filterOn,
+                filterQuery: currency.name
+            })).toString(), {
+                method: "GET",
+                headers: {"Content-Type": "application/json"}
+            })
+                .then((res) => res.json())
+                .then((data) => setTransactions(data))
+        }
+
+        // fetch("api/transactions?" + (new URLSearchParams({
+        //     filterOn: currency[1].filterOn,
+        //     filterQuery: currency[1].filterQyery
+        // })).toString(), {
+        //     method: "GET",
+        //     headers: {"Content-Type": "application/json"}
+        // })
+        //     .then((res) => res.json())
+        //     .then((data) => setTransactions(data))
     }
 
     useEffect(() => {
-        handleTransactions();
+        getTransactions();
     }, [])
 
 
-    // console.log(transactions)
+// console.log(transactions)
     return (
         <Box flexGrow="1"
              bgColor={"#eee"}
@@ -38,11 +69,11 @@ const FinancePage = () => {
                 <Heading as={"h1"}>
                     Finance
                 </Heading>
-                
+
                 Currency:
                 <select>
-                    <option value="Euro" defaultChecked>Euro</option> 
-                    <option value="Real">Real</option> 
+                    <option value="Euro" defaultChecked>Euro</option>
+                    <option value="Real">Real</option>
                 </select>
             </Flex>
 
