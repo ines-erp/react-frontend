@@ -7,7 +7,6 @@ import {
     Stack,
     SelectContent,
     SelectItem,
-    SelectLabel,
     SelectRoot,
     SelectTrigger,
     SelectValueText, createListCollection,
@@ -65,8 +64,8 @@ const FinancePage = () => {
     }
 
         useEffect(() => {
-            getTransactions("Brazilian Real");
-            getBalance("Brazilian Real")
+            getTransactions(currency.label);
+            getBalance(currency.label)
         }, [currency])
 
 
