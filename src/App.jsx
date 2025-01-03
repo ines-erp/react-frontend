@@ -1,12 +1,16 @@
-import {Container} from "@mui/material";
+import {createTheme, ThemeProvider} from "@mui/material";
 
 function App() {
 
     return (
-        <Container maxWidth={false} sx={{background: "red"}}>
-            app
-        </Container>
+        <ThemeProvider theme={theme}>
+           App
+        </ThemeProvider>
     )
 }
+
+const theme = createTheme({
+   
+})
 
 export default App
