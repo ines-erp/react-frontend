@@ -22,8 +22,6 @@ const creatingDinamicMenu = (routingObjLikeArray) => {
     })
 }
 
-const homeMenu = creatingDinamicMenu(HomeRoutes);
-const financeMenu = creatingDinamicMenu(HomeRoutes);
 
 const router = createBrowserRouter([
     {
@@ -31,8 +29,7 @@ const router = createBrowserRouter([
         element: <>
             Login
             <ul>
-                {homeMenu}
-                {financeMenu}
+                {creatingDinamicMenu(HomeRoutes)}
             </ul>
             <Outlet>
             </Outlet>
