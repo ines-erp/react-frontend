@@ -1,6 +1,7 @@
 import {createBrowserRouter, Link, NavLink, Outlet} from "react-router-dom";
 import {HomeRoutes} from "@/pages/Home/Routes.jsx";
 
+//TODO: finish that implementation when have menu
 //helper function to menu dynamically
 const creatingDinamicMenu = (routingObjLikeArray) => {
 
