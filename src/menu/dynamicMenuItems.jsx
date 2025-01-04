@@ -1,4 +1,7 @@
 import {Link} from "react-router-dom";
+import {ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
+import MailIcon from "@mui/icons-material/Mail";
+import React from "react";
 
 /**
  * Function to generate menu items from routes
@@ -9,23 +12,28 @@ export const dynamicMenuItems = (routes) => {
 
     // path: "", element: <HomePage/>, label:"Home", isInMenu: false, isEnabled: false
     return routes.map((route) => {
-
-        if (route.children.length > 0) {
-            return route.children.map((childRoute) => {
-                if(childRoute.isInMenu && childRoute.isEnabled){
-                    return (
-                        <li>
-                            <Link to={`${route.path}/${childRoute.path}`}>{childRoute.label}</Link>
-                        </li>
-                    )
-                }
-                return null
-            })
-        }
-
-        return <li>
-            <Link to={`${route.path}`}>{route.label}</Link>
-        </li>
-
+        return route.children.map((childRoute) => {
+            if (childRoute.isInMenu && childRoute.isEnabled) {
+                const currentPath = `${route.path}/${childRoute.path}`
+                return (
+                    <LinkItemMenu path={currentPath} key={childRoute.path} label={childRoute.label}
+                                  icon={childRoute.icon}/>
+                )
+            }
+            return null
+        })
     })
+}
+
+const LinkItemMenu = ({label, path, icon}) => {
+    return (
+        <ListItem disablePadding sx={{textDecoration: 'none'}} as={Link} to={path}>
+            <ListItemButton>
+                {icon && <ListItemIcon>
+                    {icon}
+                </ListItemIcon>}
+                <ListItemText primary={label}/>
+            </ListItemButton>
+        </ListItem>
+    )
 }

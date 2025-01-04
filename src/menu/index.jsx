@@ -2,13 +2,14 @@
 
 import {menuRoutes} from "@/menu/menuRoutes.jsx";
 import {dynamicMenuItems} from "@/menu/dynamicMenuItems.jsx";
+import {List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import MailIcon from '@mui/icons-material/Mail';
 
 
 export const RouterMainMenu = () => {
-
     return (
-        <nav>
+        <List as={'nav'} >
             {dynamicMenuItems(menuRoutes)}
-        </nav>
+        </List>
     )
 }
