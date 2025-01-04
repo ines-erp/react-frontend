@@ -11,13 +11,13 @@ import React, {useState} from "react";
 export const dynamicMenuItems = (routes) => {
 
     return routes.map((route) => {
-        return <MenuGroup route={route.children}/>
+        return <MenuGroup route={route}/>
     })
 }
 
 const MenuGroup = ({route}) => {
     const [isVisible, setIsVisible] = useState(false);
-    return route.map((childRoute) => {
+    return route.children.map((childRoute) => {
         if (childRoute.isInMenu && childRoute.isEnabled) {
             const currentPath = `${route.path}/${childRoute.path}`
 
@@ -34,6 +34,7 @@ const MenuGroup = ({route}) => {
                                 <ListItemText primary={childRoute.parentLabel}/>
                             </ListItemButton>
                         </ListItem>
+
                         <ListItem disablePadding as={Link} to={currentPath}
                                   sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
                             <ListItemButton>
@@ -41,15 +42,17 @@ const MenuGroup = ({route}) => {
                             </ListItemButton>
                         </ListItem>
                     </>)
+
                 default:
-                    return (<ListItem disablePadding as={Link} to={currentPath}
+                    return (
+                        <ListItem disablePadding as={Link} to={currentPath}
                                       sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                        <ListItemButton>
-                            {childRoute.icon && <ListItemIcon>
-                                {childRoute.icon}
-                            </ListItemIcon>}
-                            <ListItemText primary={childRoute.label}/>
-                        </ListItemButton>
+                            <ListItemButton>
+                                {childRoute.icon && <ListItemIcon>
+                                    {childRoute.icon}
+                                </ListItemIcon>}
+                                <ListItemText primary={childRoute.label}/>
+                            </ListItemButton>
                     </ListItem>)
             }
         }
