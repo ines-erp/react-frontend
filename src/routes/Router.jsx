@@ -1,7 +1,29 @@
 import {createBrowserRouter, Link, NavLink, Outlet} from "react-router-dom";
 import {HomeRoutes} from "@/pages/Home/Routes.jsx";
 
+//helper function to menu dynamically
+const creatingDinamicMenu = (routingObjLikeArray) => {
 
+    let path;
+    const linksToNav = []
+
+    for (let route of routingObjLikeArray) {
+        path = route.path
+        linksToNav.push(path)
+        for (let child of route.children) {
+            if (child.path) {
+                linksToNav.push(`${path}/${child.path}`)
+            }
+        }
+    }
+
+    return linksToNav.map((menuItem) => {
+        return <li key={menuItem}><Link to={menuItem}>{menuItem.split("/")}</Link></li>
+    })
+}
+
+const homeMenu = creatingDinamicMenu(HomeRoutes);
+const financeMenu = creatingDinamicMenu(HomeRoutes);
 
 const router = createBrowserRouter([
     {
@@ -9,20 +31,15 @@ const router = createBrowserRouter([
         element: <>
             Login
             <ul>
-                <li><Link to={"/"}>Home</Link></li>
-                <li><Link to={"/home"}>Page home</Link></li>
-                <ul>
-                    <li><Link to={"/home"}>Module one home</Link></li>
-                    <li><Link to={"/home/finances"}>Module one amora</Link></li>
-                </ul>
-                <li><Link to={"/moduleOne"}>Module one</Link></li>
+                {homeMenu}
+                {financeMenu}
             </ul>
             <Outlet>
             </Outlet>
         </>,
         errorElement: <h1>Error</h1>,
         children: [...HomeRoutes]
-        
+
     }]);
 
 
