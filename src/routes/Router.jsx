@@ -1,23 +1,29 @@
 import {createBrowserRouter, Link, NavLink, Outlet} from "react-router-dom";
+import {HomeRoutes} from "@/pages/Home/Routes.jsx";
 
-const routesArray = [
-    {index: true, element: <h1>Home</h1>},
-    {path: "/finances", element: <h1>Finances</h1>}
-]
+
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <>
-            <nav>
-                <NavLink className={({isActive}) => isActive ? "active" : undefined} to={"/"} end>Home</NavLink>
-                <Link to={"/finances"}>Finances</Link>
-            </nav>
-            <Outlet></Outlet>
+            Login
+            <ul>
+                <li><Link to={"/"}>Home</Link></li>
+                <li><Link to={"/home"}>Page home</Link></li>
+                <ul>
+                    <li><Link to={"/home"}>Module one home</Link></li>
+                    <li><Link to={"/home/finances"}>Module one amora</Link></li>
+                </ul>
+                <li><Link to={"/moduleOne"}>Module one</Link></li>
+            </ul>
+            <Outlet>
+            </Outlet>
         </>,
         errorElement: <h1>Error</h1>,
-        children: routesArray
-
+        children: [...HomeRoutes]
+        
     }]);
+
 
 export default router
