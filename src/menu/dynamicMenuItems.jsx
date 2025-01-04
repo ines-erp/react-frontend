@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
 import MailIcon from "@mui/icons-material/Mail";
 import React, {useState} from "react";
@@ -11,7 +11,13 @@ import React, {useState} from "react";
 export const dynamicMenuItems = (routes) => {
 
     return routes.map((route) => {
-        return <MenuGroup route={route}/>
+        return (
+            <>
+                <MenuGroup route={route}/>
+                <hr/>
+
+            </>
+        )
     })
 }
 
@@ -35,25 +41,34 @@ const MenuGroup = ({route}) => {
                             </ListItemButton>
                         </ListItem>
 
-                        <ListItem disablePadding as={Link} to={currentPath}
-                                  sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                            <ListItemButton>
-                                <ListItemText primary={childRoute.label}/>
-                            </ListItemButton>
-                        </ListItem>
+
+                        <NavLink to={currentPath} end>
+                            {({isActive}) => (
+                                <ListItem disablePadding
+                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                    <ListItemButton selected={isActive}>
+                                        <ListItemText primary={childRoute.label}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            )}
+                        </NavLink>
+
                     </>)
 
                 default:
-                    return (
-                        <ListItem disablePadding as={Link} to={currentPath}
-                                      sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                            <ListItemButton>
-                                {childRoute.icon && <ListItemIcon>
-                                    {childRoute.icon}
-                                </ListItemIcon>}
-                                <ListItemText primary={childRoute.label}/>
-                            </ListItemButton>
-                    </ListItem>)
+                    return (<>
+                        <NavLink to={currentPath} end>
+                            {({isActive}) => (
+                                <ListItem disablePadding
+                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                    <ListItemButton selected={isActive}>
+                                        <ListItemText primary={childRoute.label}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            )}
+                        </NavLink>
+
+                    </>)
             }
         }
         return null
