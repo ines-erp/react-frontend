@@ -1,11 +1,11 @@
 import {createBrowserRouter} from "react-router-dom";
-import {TempLayout} from "@/menu/tempLayout.jsx";
 import {menuRoutes} from "@/menu/menuRoutes.jsx";
+import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <TempLayout/>,
+        element: <LayoutMenuAppbar/>,
         errorElement: <h1>Error</h1>,
         children: [...menuRoutes]
 

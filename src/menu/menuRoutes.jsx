@@ -1,4 +1,5 @@
 import {homeRoutes} from "@/pages/home/homeRoutes.jsx";
+import {otherRoutes} from "@/pages/otherModule/otherModuleRoutes.jsx";
 
 
 /**
@@ -6,4 +7,5 @@ import {homeRoutes} from "@/pages/home/homeRoutes.jsx";
  */
 export const menuRoutes = [
         ...homeRoutes,
+    ...otherRoutes
     ]
