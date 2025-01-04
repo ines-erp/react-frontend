@@ -8,20 +8,28 @@ import {Link} from "react-router-dom";
 export const dynamicMenuItems = (routes) => {
 
     let path;
-    const linksToNav = []
+    let linksToNav
 
     for (let route of routes) {
-        path = route.path
-        linksToNav.push(path)
-        
-        for (let child of route.children) {
-            if (child.path) {
-                linksToNav.push(`${path}/${child.path}`)
-            }
-        }
+        path = route.path;
+        linksToNav = route.children;
     }
 
+
+    // path: "", element: <HomePage/>, label:"Home", isInMenu: false, isEnabled: false
     return linksToNav.map((menuItem) => {
-        return <li key={menuItem}><Link to={menuItem}>{menuItem.split("/")}</Link></li>
+
+        console.log(menuItem.isInMenu, menuItem.isEnabled)
+        
+        if(menuItem.isInMenu && menuItem.isEnabled){
+            return (
+                <li key={`${path}/${menuItem.path}`}>
+                    <Link to={`${path}/${menuItem.path}`}>{menuItem.label}</Link>
+                </li>
+            )
+        }
+        
+        return null
+
     })
 }
