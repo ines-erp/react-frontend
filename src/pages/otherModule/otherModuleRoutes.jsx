@@ -1,8 +1,8 @@
 import { Outlet} from "react-router-dom";
-import {OtherModule} from "@/pages/Other module/index.jsx";
+import {OtherModule} from "@/pages/otherModule/index.jsx";
 
 //example
-export const OtherModuleRoutes = [
+export const otherModuleRoutes = [
     {
         path: "/othermodule",
         element: <Outlet />,

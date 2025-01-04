@@ -1,7 +1,7 @@
 import {Outlet} from "react-router-dom";
-import {HomePage} from "@/pages/Home/index.jsx";
+import {HomePage} from "@/pages/home/index.jsx";
 //example
-export const HomeRoutes = [
+export const homeRoutes = [
     {
         path: "/home",
         element: <Outlet />,
