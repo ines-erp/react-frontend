@@ -1,10 +1,11 @@
 import {createTheme, ThemeProvider} from "@mui/material";
+import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
 
 function App() {
 
     return (
         <ThemeProvider theme={theme}>
-           App
+            <LayoutMenuAppbar />
         </ThemeProvider>
     )
 }
