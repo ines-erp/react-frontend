@@ -1,123 +1,107 @@
 import {
     AppBar,
-    Box, Container,
-    CssBaseline, Divider,
-    Drawer,
+    Box, Container, Drawer,
     IconButton,
-    List,
-    ListItem, ListItemButton, ListItemIcon, ListItemText,
     Toolbar,
     Typography,
     useMediaQuery
 } from "@mui/material";
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+
+const Offset = () => <Box sx={{height: '86px'}}/>
+
 
 export const LayoutMenuAppbar = () => {
-    const drawerWidth = 240;
-    const matches = useMediaQuery('(min-width:600px)');
-    const [openDrawer, setOpenDrawer] = React.useState(false);
+    const isScreenBigger = useMediaQuery('(min-width:600px)');
+    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
     const handleDrawerToggle = () => {
-        setOpenDrawer(!openDrawer);
+        setIsDrawerOpen(!isDrawerOpen);
     }
 
+    const drawerWidth = 240;
     return (
-        <Box display={'flex'}>
-            <AppBar position='fixed' sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
+        <Box sx={{display: 'flex'}}>
+            <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}} >
                 <Toolbar>
-                    <IconButton onClick={handleDrawerToggle} sx={{display: matches ? 'none' : 'flex'}}>
+                    <IconButton color='inherit' onClick={handleDrawerToggle} sx={{display: isScreenBigger ? 'none' : 'flex', marginRight:2}}>
                         <MenuIcon/>
                     </IconButton>
                     <Typography
-                        variant="h6"
+                        variant="h4"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
-                            mr: 2,
+                            mr: 4,
                             fontFamily: 'monospace',
-                            fontWeight: 700,
-                            letterSpacing: '.3rem',
+                            fontWeight: 900,
+                            letterSpacing: '.6rem',
                             color: 'inherit',
                             textDecoration: 'none',
                         }}
                     >
-                        I N E S
+                        INES
                     </Typography>
                 </Toolbar>
-
             </AppBar>
-            <Drawer
-                variant={matches ? "permanent" : "temporary"}
-                sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
-                }}
-                open={openDrawer}
-            >
-                <Toolbar/>
-                <Box sx={{overflow: 'auto'}}>
-                    <List>
-                        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text}/>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider/>
-                    <List>
-                        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        {index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}
-                                    </ListItemIcon>
-                                    <ListItemText primary={text}/>
-                                </ListItemButton>
-                            </ListItem>
-                        ))}
-                    </List>
-                </Box>
+            <Drawer variant={isScreenBigger ? "permanent" : "temporary"}
+                    open={isDrawerOpen}
+                    sx={{
+                        width: drawerWidth,
+                        flexShrink: 0,
+                        [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+                    }}
+                    anchor="left" border={'1px solid red'}>
+                <Offset/>
+                <ul>
+                    <li>menu</li>
+                    <li>menu</li>
+                    <li>menu</li>
+                </ul>
             </Drawer>
-            <Box component="main" sx={{flexGrow: 1, p: 3}}>
-                <Toolbar/>
-                <Typography sx={{marginBottom: 2}}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-                    enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-                    imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-                    Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-                    Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                    adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-                    nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-                    leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-                    feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-                    consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-                    sapien faucibus et molestie ac.
+
+            <Container maxWidth={false} id={"main"}>
+                <Offset/>
+                <Typography>
+
+                    Mauris imperdiet erat id nunc dignissim rutrum. Vestibulum ligula elit, rhoncus in tempus quis,
+                    congue a mi. Integer sit amet finibus dolor. Duis pellentesque tortor venenatis magna congue, id
+                    lacinia lacus semper. Morbi a lorem placerat, viverra nisl ac, blandit ipsum. Nunc id scelerisque
+                    felis. Nullam nec nulla rhoncus, aliquet erat et, dictum eros. Curabitur facilisis aliquam tellus at
+                    vulputate. Fusce tempus nisl quis justo elementum, et lacinia nisi dictum. Fusce gravida dignissim
+                    velit, eu ornare metus pharetra eget. Quisque eget lorem nec dui sagittis egestas et quis erat.
+                    Nullam rhoncus sagittis felis, id convallis felis dignissim nec.
+
+                    Vestibulum maximus tellus vel quam pharetra vulputate. Phasellus maximus, metus a tempus
+                    ullamcorper, mauris lorem fringilla est, nec finibus lacus dui quis elit. Pellentesque tincidunt
+                    nisl nec magna pharetra consectetur. Vestibulum eleifend dui a pharetra lobortis. Pellentesque sed
+                    suscipit felis. Cras sollicitudin augue nec egestas blandit. Praesent pellentesque mi quis diam
+                    sollicitudin, eget auctor mauris lobortis. Nullam bibendum metus quis varius egestas. Ut ullamcorper
+                    commodo est, ut aliquet tellus volutpat at. Suspendisse sit amet magna et tortor accumsan posuere.
+                    Suspendisse congue tristique augue a imperdiet.
+
+                    Etiam cursus non magna venenatis aliquam. Mauris est risus, aliquet nec metus sit amet, rutrum
+                    commodo purus. Quisque aliquet, ex vel tincidunt gravida, nibh lectus pharetra enim, id mollis urna
+                    diam eu magna. Nulla convallis finibus molestie. Fusce pharetra ligula a ex hendrerit, id sagittis
+                    leo semper. Nullam lobortis, urna ac efficitur rutrum, nisi tellus gravida elit, a volutpat velit
+                    ligula a metus. Nulla semper felis augue, ut malesuada odio iaculis et. Aliquam erat volutpat. Nam
+                    iaculis mauris eu placerat laoreet. Nullam mollis vel metus in varius. Vestibulum purus tortor,
+                    posuere et metus at, tincidunt efficitur nibh. Nulla feugiat quam lectus, at egestas lorem rhoncus
+                    ac. Suspendisse magna massa, elementum efficitur nisi ut, scelerisque iaculis elit.
+
+                    Fusce semper tempor augue, eu interdum diam gravida in. Curabitur sed est nec leo sollicitudin
+                    ultrices. Cras a erat lacus. Maecenas lacus enim, molestie nec suscipit sit amet, faucibus at dolor.
+                    Duis dictum velit ac tortor sodales, in ultricies orci finibus. Integer sollicitudin, nulla eu
+                    tincidunt elementum, leo leo convallis tellus, sed vehicula tellus mi quis odio. Phasellus non mi
+                    nulla. Vivamus porttitor in ipsum ac aliquet. Nullam neque purus, lobortis at sollicitudin id,
+                    cursus quis erat. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae magna a enim
+                    euismod porttitor a a odio. Aenean interdum erat non nisl congue tempus. Aliquam auctor purus sit
+                    amet tellus dapibus venenatis.
+
                 </Typography>
-                <Typography sx={{marginBottom: 2}}>
-                    Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-                    eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-                    neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-                    tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-                    sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-                    tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-                    gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-                    et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-                    tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-                    eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-                    posuere sollicitudin aliquam ultrices sagittis orci a.
-                </Typography>
-            </Box>
+            </Container>
         </Box>
     )
 }
