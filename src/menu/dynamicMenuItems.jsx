@@ -1,4 +1,7 @@
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
+import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
+import MailIcon from "@mui/icons-material/Mail";
+import React, {useState} from "react";
 
 /**
  * Function to generate menu items from routes
@@ -7,29 +10,67 @@ import {Link} from "react-router-dom";
  */
 export const dynamicMenuItems = (routes) => {
 
-    let path;
-    let linksToNav
+    return routes.map((route) => {
+        return (
+            <>
+                <MenuGroup route={route}/>
+                <hr/>
 
-    for (let route of routes) {
-        path = route.path;
-        linksToNav = route.children;
-    }
+            </>
+        )
+    })
+}
+
+const MenuGroup = ({route}) => {
+    const [isVisible, setIsVisible] = useState(false);
+    return route.children.map((childRoute) => {
+        if (childRoute.isInMenu && childRoute.isEnabled) {
+            const currentPath = `${route.path}/${childRoute.path}`
+
+            switch (!!childRoute.parentLabel) {
+                case true:
+                    return (<>
+                        <ListItem disablePadding sx={{textDecoration: 'none'}} as={Button} onClick={() => {
+                            setIsVisible((prev) => !prev)
+                        }}>
+                            <ListItemButton>
+                                {childRoute.icon && <ListItemIcon>
+                                    {childRoute.icon}
+                                </ListItemIcon>}
+                                <ListItemText primary={childRoute.parentLabel}/>
+                            </ListItemButton>
+                        </ListItem>
 
 
-    // path: "", element: <HomePage/>, label:"Home", isInMenu: false, isEnabled: false
-    return linksToNav.map((menuItem) => {
+                        <NavLink to={currentPath} end>
+                            {({isActive}) => (
+                                <ListItem disablePadding
+                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                    <ListItemButton selected={isActive}>
+                                        <ListItemText primary={childRoute.label}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            )}
+                        </NavLink>
 
-        console.log(menuItem.isInMenu, menuItem.isEnabled)
-        
-        if(menuItem.isInMenu && menuItem.isEnabled){
-            return (
-                <li key={`${path}/${menuItem.path}`}>
-                    <Link to={`${path}/${menuItem.path}`}>{menuItem.label}</Link>
-                </li>
-            )
+                    </>)
+
+                default:
+                    return (<>
+                        <NavLink to={currentPath} end>
+                            {({isActive}) => (
+                                <ListItem disablePadding
+                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                    <ListItemButton selected={isActive}>
+                                        <ListItemText primary={childRoute.label}/>
+                                    </ListItemButton>
+                                </ListItem>
+                            )}
+                        </NavLink>
+
+                    </>)
+            }
         }
-        
         return null
-
     })
 }
