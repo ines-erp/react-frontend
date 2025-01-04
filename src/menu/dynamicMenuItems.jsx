@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
-import {ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
+import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
 import MailIcon from "@mui/icons-material/Mail";
-import React from "react";
+import React, {useState} from "react";
 
 /**
  * Function to generate menu items from routes
@@ -9,31 +9,47 @@ import React from "react";
  * @returns React.ReactNode
  */
 export const dynamicMenuItems = (routes) => {
+    const [isVisible, setIsVisible] = useState(false);
 
-    // path: "", element: <HomePage/>, label:"Home", isInMenu: false, isEnabled: false
     return routes.map((route) => {
         return route.children.map((childRoute) => {
             if (childRoute.isInMenu && childRoute.isEnabled) {
                 const currentPath = `${route.path}/${childRoute.path}`
-                return (
-                    <LinkItemMenu path={currentPath} key={childRoute.path} label={childRoute.label}
-                                  icon={childRoute.icon}/>
-                )
+
+                switch(!!childRoute.parentLabel){
+                    case true:
+                        return (
+                            <>
+                            <ListItem disablePadding sx={{textDecoration: 'none'}} as={Button} onClick={() => {setIsVisible((prev) => !prev)}}>
+                                <ListItemButton>
+                                    {childRoute.icon && <ListItemIcon>
+                                        {childRoute.icon}
+                                    </ListItemIcon>}
+                                    <ListItemText primary={childRoute.parentLabel}/>
+                                </ListItemButton>
+                            </ListItem>
+                                <ListItem disablePadding as={Link} to={currentPath} sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                    <ListItemButton>
+                                        <ListItemText primary={childRoute.label}/>
+                                    </ListItemButton>
+                                </ListItem>
+                                </>
+                        )
+                    default:
+                        return (
+                            <ListItem disablePadding as={Link} to={currentPath} sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                                <ListItemButton>
+                                    {childRoute.icon && <ListItemIcon>
+                                        {childRoute.icon}
+                                    </ListItemIcon>}
+                                    <ListItemText primary={childRoute.label}/>
+                                </ListItemButton>
+                            </ListItem>
+                        )
+                }
             }
             return null
         })
     })
 }
 
-const LinkItemMenu = ({label, path, icon}) => {
-    return (
-        <ListItem disablePadding sx={{textDecoration: 'none'}} as={Link} to={path}>
-            <ListItemButton>
-                {icon && <ListItemIcon>
-                    {icon}
-                </ListItemIcon>}
-                <ListItemText primary={label}/>
-            </ListItemButton>
-        </ListItem>
-    )
-}
