@@ -1,4 +1,4 @@
-import {Link, Outlet} from "react-router-dom";
+import {Outlet} from "react-router-dom";
 import {HomePage} from "@/pages/Home/index.jsx";
 //example
 export const HomeRoutes = [
