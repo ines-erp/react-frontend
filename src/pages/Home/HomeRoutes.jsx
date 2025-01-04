@@ -1,12 +1,14 @@
 import {Link, Outlet} from "react-router-dom";
+import {HomePage} from "@/pages/Home/index.jsx";
 //example
 export const HomeRoutes = [
     {
         path: "/home",
-        element: <Outlet></Outlet>,
+        element: <Outlet />,
         children: [
-            {path: "", element: <h1>Dashboard</h1>},
+            {index: true, element: <HomePage/>},
             {path: "finances", element: <h1>Finances</h1>},
+            {path: "other", element: <h1>Any other</h1>},
         ]
     }
 ]
