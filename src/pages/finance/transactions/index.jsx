@@ -9,15 +9,16 @@ export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
+    const [currency, setCurrenty] = useState("Brazilian Real")
 
 
     const handleGetTransactions = async () => {
-        const data = await getFromApiData('transactions?' + new URLSearchParams({currency: "Euro"}).toString())
+        const data = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
         setTransactions(data)
     }
 
     const handleGetBalance = async () => {
-        const data = await getFromApiData('balance?currency=Euro')
+        const data = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
         setBalance(data[0])
     }
 
@@ -30,9 +31,9 @@ export const TransactionsDashboard = () => {
     const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
     const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
 
-        const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0)
+    const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0)
 
-        const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
+    const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
 
 
     return (
@@ -55,7 +56,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success" size="small"></Chip>
+                            {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success"
+                                                                             size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -80,7 +82,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            -{balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning" size="small"></Chip>
+                            -{balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
+                                                                               size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -156,9 +159,9 @@ export const TransactionsDashboard = () => {
                                     <Typography>{transaction.description}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                        <Button as={Link} variant={"outlined"}
+                                        <Button as={Link} variant={"outlined"} sx={{background:"#fff"}}
                                                 to={`details/${transaction.id}`}>Details</Button>
-                                        <Button componet={Link} variant={"outlined"} color={"error"}>Delete</Button>
+                                        <Button componet={Link} variant={"outlined"} color={"error"} sx={{background:"#fff"}}>Delete</Button>
                                     </Box>
                                 </CardContent>
                                 <Box></Box>
