@@ -10,7 +10,6 @@ export const TransactionsDashboard = () => {
     const [transactions, setTransactions] = useState([])
 
 
-    
     const handleGetTransactions = async () => {
         const data = await getFromApiData('transactions')
         setTransactions(data)
@@ -104,7 +103,7 @@ export const TransactionsDashboard = () => {
                 </Card>
             </Box>
 
-            <Box sx={{display: "flex", gap: "24px"}}>
+            <Box sx={{display: "flex", gap: "24px", display:"none"}}>
                 <Card sx={{maxWidth: "60%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
                     one</Card>
                 <Card sx={{maxWidth: "40%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
@@ -132,11 +131,13 @@ export const TransactionsDashboard = () => {
                 <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
                     {transactions.map(transaction => {
                         return (
-                            <Card variant={"outlined"} key={transaction.id}>
+                            <Card variant={"outlined"} key={transaction.id}
+                                  sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? "#00ff0009" : "#ff000009"}}>
                                 <CardContent
                                     sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                                     <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
                                     <Typography>{transaction.transactionType.name}</Typography>
+                                    <Typography>{transaction.currency.symbol}: {transaction.amount.toFixed(2)}</Typography>
                                     <Typography>{transaction.description}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>

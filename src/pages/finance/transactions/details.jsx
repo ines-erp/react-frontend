@@ -26,12 +26,12 @@ export const TransactionsDetails = () => {
 
                 <Typography variant={"h1"}>Trnasctions details</Typography>
 
-                <Box sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: "16px", mt:"32px"}}>
-                    <Button variant={"outlined"}>...</Button>
-                    <Button variant={"outlined"}>Edit</Button>
-                    <Button variant={"outlined"} color={"error"}>Delete</Button>
+                <Box sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: "16px", mt: "32px"}}>
+                    <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>
+                    <Button variant={"outlined"} sx={{background: "#fff"}}>Edit</Button>
+                    <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}}>Delete</Button>
                 </Box>
-                
+
                 <Paper variant={"outlined"} sx={{padding: "32px", mt: "32px", borderRadius: "8px", border: "none"}}>
 
                     <Typography
@@ -58,22 +58,25 @@ export const TransactionsDetails = () => {
                         <Typography variant={"p"} sx={{mb: "32px"}}>{transaction.description}</Typography>
                     </Box>
 
-                    <Box sx={{mb: "32px"}}>
-                        <Typography variant={"h3"} sx={{mb: "32px"}}>Transactions infos</Typography>
-                        <Typography>Paid by: {transaction.paidBy}</Typography>
-                        <Typography>Recieved by: {transaction.recievedBy}</Typography>
-                        <Typography>Transaction type: {transaction.transactionType.name}</Typography>
-                        <Typography>Payment method: {transaction.paymentMethod.name}</Typography>
-                    </Box>
+                    <Box sx={{display:"flex", }}>
 
-                    <Box sx={{mb: "32px"}}>
-                        <Typography variant={"h3"} sx={{mb: "32px"}}>Currency information</Typography>
-                        <Typography>Currency name: <strong>{transaction.currency.name}</strong></Typography>
-                        <Typography>Currency symbol: <strong>{transaction.currency.symbol}</strong></Typography>
-                        <Typography>Currency code: <strong>{transaction.currency.symbol}</strong></Typography>
-                        <Typography>amount: <strong>{transaction.amount}</strong></Typography>
-                    </Box>
+                        <Box sx={{mb: "32px"}}>
+                            <Typography variant={"h3"} sx={{mb: "32px"}}>Transactions infos</Typography>
+                            <Typography>Paid by: {transaction.paidBy}</Typography>
+                            <Typography>Recieved by: {transaction.recievedBy}</Typography>
+                            <Typography>Transaction type: {transaction.transactionType.name}</Typography>
+                            <Typography>Payment method: {transaction.paymentMethod.name}</Typography>
+                        </Box>
 
+                        <Box sx={{mb: "32px"}}>
+                            <Typography variant={"h3"} sx={{mb: "32px"}}>Currency information</Typography>
+                            <Typography>Currency name: <strong>{transaction.currency.name}</strong></Typography>
+                            <Typography>Currency symbol: <strong>{transaction.currency.symbol}</strong></Typography>
+                            <Typography>Currency code: <strong>{transaction.currency.symbol}</strong></Typography>
+                            <Typography>amount: <strong>{transaction.amount}</strong></Typography>
+                        </Box>
+
+                    </Box>
 
                 </Paper>
 
