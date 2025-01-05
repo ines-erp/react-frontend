@@ -1,6 +1,7 @@
 import {NavLink} from "react-router-dom";
-import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import {Button, Collapse, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import React, {useState} from "react";
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
 
 /**
  * Function to generate menu items from routes
@@ -13,7 +14,7 @@ export const dynamicMenuItems = (routes) => {
         return (
             <React.Fragment key={route.path}>
                 <MenuGroup route={route}/>
-                <hr/>
+                <Divider/>
             </React.Fragment>
         )
     })
@@ -28,41 +29,40 @@ const MenuGroup = ({route}) => {
             switch (!!childRoute.parentLabel) {
                 case true:
                     return (<
-                    React.Fragment key={currentPath}>
-                        <ListItem disablePadding sx={{textDecoration: 'none'}} as={Button} onClick={() => {
+                        React.Fragment key={currentPath}>
+                        <ListItemButton onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
-                            <ListItemButton>
-                                {childRoute.icon && <ListItemIcon>
-                                    {childRoute.icon}
-                                </ListItemIcon>}
-                                <ListItemText primary={childRoute.parentLabel}/>
-                            </ListItemButton>
-                        </ListItem>
+                            {childRoute.icon && <ListItemIcon>
+                                {childRoute.icon}
+                            </ListItemIcon>}
+                            <ListItemText primary={childRoute.parentLabel}/>
+                            {isVisible ? <ExpandLess/> : <ExpandMore/>}
+                        </ListItemButton>
 
-
-                        <NavLink to={currentPath} end>
-                            {({isActive}) => (
-                                <ListItem disablePadding
-                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
+                        <Collapse in={isVisible} timeout="auto" unmountOnExit>
+                            <NavLink to={currentPath} end role={undefined}>
+                                {({isActive}) => (
                                     <ListItemButton selected={isActive}>
-                                        <ListItemText primary={childRoute.label}/>
+                                        <ListItemText primary={childRoute.label} inset/>
                                     </ListItemButton>
-                                </ListItem>
-                            )}
-                        </NavLink>
+                                )}
+                            </NavLink>
+                        </Collapse>
                     </React.Fragment>)
 
                 default:
                     return (
                         <NavLink to={currentPath} end key={currentPath}>
                             {({isActive}) => (
-                                <ListItem disablePadding
-                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                                    <ListItemButton selected={isActive}>
-                                        <ListItemText primary={childRoute.label}/>
-                                    </ListItemButton>
-                                </ListItem>
+                                <ListItemButton selected={isActive}>
+                                    {childRoute.icon &&
+                                        <ListItemIcon>
+                                            {childRoute.icon}
+                                        </ListItemIcon>
+                                    }
+                                    <ListItemText primary={childRoute.label}/>
+                                </ListItemButton>
                             )}
                         </NavLink>
                     )
