@@ -58,18 +58,18 @@ export const TransactionsDetails = () => {
                         <Typography variant={"p"} sx={{mb: "32px"}}>{transaction.description}</Typography>
                     </Box>
 
-                    <Box sx={{display:"flex", }}>
+                    <Box sx={{display:"flex", gap:"32px" }}>
 
-                        <Box sx={{mb: "32px"}}>
-                            <Typography variant={"h3"} sx={{mb: "32px"}}>Transactions infos</Typography>
+                        <Box sx={{mb: "32px", maxWidth:"50%", flex:1}}>
+                            <Typography variant={"h3"} sx={{mb: "32px"}}>Transaction info</Typography>
                             <Typography>Paid by: {transaction.paidBy}</Typography>
                             <Typography>Recieved by: {transaction.recievedBy}</Typography>
                             <Typography>Transaction type: {transaction.transactionType.name}</Typography>
                             <Typography>Payment method: {transaction.paymentMethod.name}</Typography>
                         </Box>
 
-                        <Box sx={{mb: "32px"}}>
-                            <Typography variant={"h3"} sx={{mb: "32px"}}>Currency information</Typography>
+                        <Box sx={{mb: "32px", maxWidth:"50%", flex:1}}>
+                            <Typography variant={"h3"} sx={{mb: "32px"}}>Currency info</Typography>
                             <Typography>Currency name: <strong>{transaction.currency.name}</strong></Typography>
                             <Typography>Currency symbol: <strong>{transaction.currency.symbol}</strong></Typography>
                             <Typography>Currency code: <strong>{transaction.currency.symbol}</strong></Typography>
