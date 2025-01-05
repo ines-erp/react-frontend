@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const inesDataApiV1 = axios.create({
-    baseURL: "http://localhost:5047/api/v1/",
+    baseURL: "/api",
     headers: {"Content-Type": "application/json"}
 })
 
-// inesApi.get("PaymentMethod?"+ new URLSearchParams({name:"Cash"}).toString()).then(res => console.log(res.data))
+// inesDataApiV1.get("PaymentMethod?"+ new URLSearchParams({name:"Cash"}).toString()).then(res => console.log(res.data))
