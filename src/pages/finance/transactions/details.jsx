@@ -17,7 +17,7 @@ export const TransactionsDetails = () => {
         handleGetTransaction();
     }, [])
 
-    if (!!transaction) {
+    if (transaction) {
 
         const transactionDate = new Date(Date.parse(transaction.date))
 
