@@ -103,7 +103,7 @@ export const TransactionsDashboard = () => {
                 </Card>
             </Box>
 
-            <Box sx={{display: "flex", gap: "24px", display:"none"}}>
+            <Box sx={{gap: "24px", display:"none"}}>
                 <Card sx={{maxWidth: "60%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
                     one</Card>
                 <Card sx={{maxWidth: "40%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
