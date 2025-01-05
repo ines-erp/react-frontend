@@ -1,6 +1,5 @@
-import {Link, NavLink} from "react-router-dom";
-import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
-import MailIcon from "@mui/icons-material/Mail";
+import {NavLink} from "react-router-dom";
+import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
 import React, {useState} from "react";
 
 /**
@@ -12,11 +11,10 @@ export const dynamicMenuItems = (routes) => {
 
     return routes.map((route) => {
         return (
-            <>
+            <React.Fragment key={route.path}>
                 <MenuGroup route={route}/>
                 <hr/>
-
-            </>
+            </React.Fragment>
         )
     })
 }
@@ -29,7 +27,8 @@ const MenuGroup = ({route}) => {
 
             switch (!!childRoute.parentLabel) {
                 case true:
-                    return (<>
+                    return (<
+                    React.Fragment key={currentPath}>
                         <ListItem disablePadding sx={{textDecoration: 'none'}} as={Button} onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
@@ -52,12 +51,11 @@ const MenuGroup = ({route}) => {
                                 </ListItem>
                             )}
                         </NavLink>
-
-                    </>)
+                    </React.Fragment>)
 
                 default:
-                    return (<>
-                        <NavLink to={currentPath} end>
+                    return (
+                        <NavLink to={currentPath} end key={currentPath}>
                             {({isActive}) => (
                                 <ListItem disablePadding
                                           sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
@@ -67,8 +65,7 @@ const MenuGroup = ({route}) => {
                                 </ListItem>
                             )}
                         </NavLink>
-
-                    </>)
+                    )
             }
         }
         return null
