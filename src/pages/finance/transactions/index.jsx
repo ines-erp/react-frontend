@@ -1,9 +1,20 @@
 import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
 import {MonetizationOnOutlined} from "@mui/icons-material";
-import {green, grey} from "@mui/material/colors"
+import {green} from "@mui/material/colors"
 import {Link} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {inesDataApiV1} from "@/api/inesDataApiV1.js";
 
 export const TransactionsDashboard = () => {
+
+    const [transactions, setStransactions] = useState([])
+
+
+    useEffect(() => {
+        inesDataApiV1.get("Transactions")
+            .then(res => setStransactions(res.data));
+    }, [])
+
     return (
         <Container maxWidth={false}>
             <Typography variant={"h1"} gutterBottom fontSize={"3rem"}>Transactions</Typography>
@@ -112,35 +123,25 @@ export const TransactionsDashboard = () => {
                     </ButtonGroup>
                 </Box>
 
-                <Box sx={{display:"flex", gap:"16px", flexDirection:"column"}}>
-                    <Card variant={"outlined"}>
-                        <CardContent sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                            <Typography variant={"h3"} fontSize={"1rem"}>Transaction one</Typography>
-                            <Typography>Income</Typography>
-                            <Typography>Description of this transaction</Typography>
+                <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
+                    {transactions.map(transaction => {
+                        return (
+                            <Card variant={"outlined"}>
+                                <CardContent
+                                    sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                                    <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
+                                    <Typography>{transaction.transactionType.name}</Typography>
+                                    <Typography>{transaction.description}</Typography>
 
-                            <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                <Button componet={Link} variant={"outlined"}>Details</Button>
-                                <Button componet={Link} variant={"outlined"} color={"error"}>Delete</Button>
-                            </Box>
-                        </CardContent>
-                        <Box></Box>
-                    </Card>
-
-                    <Card variant={"outlined"}>
-                        <CardContent sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                            <Typography variant={"h3"} fontSize={"1rem"}>Transaction one</Typography>
-                            <Typography>Outcome</Typography>
-                            <Typography>Description of this transaction</Typography>
-
-                            <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                <Button componet={Link} variant={"outlined"}>Details</Button>
-                                <Button componet={Link} variant={"outlined"} color={"error"}>Delete</Button>
-                            </Box>
-                        </CardContent>
-                        <Box></Box>
-                    </Card>
-
+                                    <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
+                                        <Button as={Link} variant={"outlined"} to={`details/${transaction.id}`}>Details</Button>
+                                        <Button componet={Link} variant={"outlined"} color={"error"}>Delete</Button>
+                                    </Box>
+                                </CardContent>
+                                <Box></Box>
+                            </Card>
+                        )
+                    })}
                 </Box>
             </Box>
 
