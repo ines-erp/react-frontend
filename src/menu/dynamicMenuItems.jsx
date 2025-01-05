@@ -1,8 +1,8 @@
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import {blue, grey} from "@mui/material/colors";
+import {blue} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -10,6 +10,7 @@ import {blue, grey} from "@mui/material/colors";
  * @returns React.ReactNode
  */
 export const dynamicMenuItems = (routes) => {
+
 
     return routes.map((route) => {
         return (
@@ -20,39 +21,13 @@ export const dynamicMenuItems = (routes) => {
         )
     })
 }
-const MenuGroupParent = styled(ListItemButton)(({ theme }) => ({
-    margin:8,
-    borderRadius: 8,
-
-    '&.Mui-selected': {
-        'color':'#fff',
-        'background-color':blue[600],
-        '&:hover':{
-            'color':'#fff',
-            'background-color':blue[600],
-        },
-    },
-}));
-
-const MenuItem = styled(ListItemButton)(({ theme }) => ({
-    margin:8,
-    borderRadius: 8,
-
-    '&.Mui-selected': {
-        'color':grey[900],
-        'background-color':blue[50],
-        '&:hover':{
-            'color':grey[900],
-            'background-color':blue[100],
-        },
-        '&:active':{
-            color:grey[900]
-        }
-    },
-}));
 
 const MenuGroup = ({route}) => {
+    const location = useLocation();
+    const isParentPathSelected = location.pathname.split('/')[1] === route.path.split('/')[1];
+
     const [isVisible, setIsVisible] = useState(false);
+
     return route.children.map((childRoute) => {
         if (childRoute.isInMenu && childRoute.isEnabled) {
             const currentPath = `${route.path}/${childRoute.path}`
@@ -61,10 +36,10 @@ const MenuGroup = ({route}) => {
                 case true:
                     return (<
                         React.Fragment key={currentPath}>
-                        <MenuGroupParent onClick={() => {
+                        <MenuGroupParent selected={isParentPathSelected} onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
-                            {childRoute.icon && <ListItemIcon>
+                            {childRoute.icon && <ListItemIcon sx={{color: 'inherit'}}>
                                 {childRoute.icon}
                             </ListItemIcon>}
                             <ListItemText primary={childRoute.parentLabel}/>
@@ -103,3 +78,35 @@ const MenuGroup = ({route}) => {
         return null
     })
 }
+
+
+const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
+    margin: 8,
+    borderRadius: 8,
+
+    '&.Mui-selected': {
+        'color': '#fff',
+        'background-color': blue[600],
+        '&:hover': {
+            'color': '#fff',
+            'background-color': blue[600],
+        },
+    },
+}));
+
+const MenuItem = styled(ListItemButton)(({theme}) => ({
+    margin: 8,
+    borderRadius: 8,
+
+    '&.Mui-selected': {
+        'color': blue[900],
+        'background-color': blue[100],
+        '&:hover': {
+            'color': blue[900],
+            'background-color': blue[100],
+        },
+        '&:active': {
+            color: blue[900]
+        }
+    },
+}));
