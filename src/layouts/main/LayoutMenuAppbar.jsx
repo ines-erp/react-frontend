@@ -10,6 +10,7 @@ import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {RouterMainMenu} from "@/menu/index.jsx";
 import {Outlet} from "react-router-dom";
+import {grey} from "@mui/material/colors";
 
 const Offset = () => <Box sx={{height: '86px'}}/>
 
@@ -60,9 +61,10 @@ export const LayoutMenuAppbar = () => {
                 <RouterMainMenu/>
             </Drawer>
 
-            <Container maxWidth={false} id={"main"}>
+    <Container as={"main"} maxWidth={false} sx={{background:grey[100], marginBottom:0, minHeight:"100vh"}}>
                 <Offset/>
                 <Outlet />
+                <Offset/>
             </Container>
         </Box>
     )
