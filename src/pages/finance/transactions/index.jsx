@@ -3,16 +3,22 @@ import {MonetizationOnOutlined} from "@mui/icons-material";
 import {green} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {inesDataApiV1} from "@/api/inesDataApiV1.js";
+import {getFromApiData} from "@/api/helpers/getFromApiData.js";
 
 export const TransactionsDashboard = () => {
 
-    const [transactions, setStransactions] = useState([])
+    const [transactions, setTransactions] = useState([])
+
+
+    
+    const handleGetTransactions = async () => {
+        const data = await getFromApiData('transactions')
+        setTransactions(data)
+    }
 
 
     useEffect(() => {
-        inesDataApiV1.get("Transactions")
-            .then(res => setStransactions(res.data));
+        handleGetTransactions();
     }, [])
 
     return (
@@ -126,7 +132,7 @@ export const TransactionsDashboard = () => {
                 <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
                     {transactions.map(transaction => {
                         return (
-                            <Card variant={"outlined"}>
+                            <Card variant={"outlined"} key={transaction.id}>
                                 <CardContent
                                     sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                                     <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
@@ -134,7 +140,8 @@ export const TransactionsDashboard = () => {
                                     <Typography>{transaction.description}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                        <Button as={Link} variant={"outlined"} to={`details/${transaction.id}`}>Details</Button>
+                                        <Button as={Link} variant={"outlined"}
+                                                to={`details/${transaction.id}`}>Details</Button>
                                         <Button componet={Link} variant={"outlined"} color={"error"}>Delete</Button>
                                     </Box>
                                 </CardContent>
