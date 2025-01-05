@@ -1,7 +1,8 @@
-import {Link, NavLink} from "react-router-dom";
-import {Button, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem} from "@mui/material";
-import MailIcon from "@mui/icons-material/Mail";
+import {NavLink, useLocation} from "react-router-dom";
+import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import {blue, blueGrey} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -10,67 +11,102 @@ import React, {useState} from "react";
  */
 export const dynamicMenuItems = (routes) => {
 
+
     return routes.map((route) => {
         return (
-            <>
+            <React.Fragment key={route.path}>
                 <MenuGroup route={route}/>
-                <hr/>
-
-            </>
+                <Divider/>
+            </React.Fragment>
         )
     })
 }
 
 const MenuGroup = ({route}) => {
+    const location = useLocation();
+    const isParentPathSelected = location.pathname.split('/')[1] === route.path.split('/')[1];
+
     const [isVisible, setIsVisible] = useState(false);
+
     return route.children.map((childRoute) => {
         if (childRoute.isInMenu && childRoute.isEnabled) {
             const currentPath = `${route.path}/${childRoute.path}`
 
             switch (!!childRoute.parentLabel) {
                 case true:
-                    return (<>
-                        <ListItem disablePadding sx={{textDecoration: 'none'}} as={Button} onClick={() => {
+                    return (<
+                        React.Fragment key={currentPath}>
+                        <MenuGroupParent selected={isParentPathSelected} onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
-                            <ListItemButton>
-                                {childRoute.icon && <ListItemIcon>
-                                    {childRoute.icon}
-                                </ListItemIcon>}
-                                <ListItemText primary={childRoute.parentLabel}/>
-                            </ListItemButton>
-                        </ListItem>
+                            {childRoute.icon && <ListItemIcon sx={{color: 'inherit'}}>
+                                {childRoute.icon}
+                            </ListItemIcon>}
+                            <ListItemText primary={childRoute.parentLabel}/>
+                            {isVisible ? <ExpandLess/> : <ExpandMore/>}
+                        </MenuGroupParent>
 
-
-                        <NavLink to={currentPath} end>
+                        <NavLink to={currentPath} end role={undefined}
+                                 style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <ListItem disablePadding
-                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                                    <ListItemButton selected={isActive}>
-                                        <ListItemText primary={childRoute.label}/>
-                                    </ListItemButton>
-                                </ListItem>
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
+                                    <ListItemText primary={childRoute.label} inset/>
+                                </MenuItem>
                             )}
                         </NavLink>
 
-                    </>)
+                    </React.Fragment>)
 
                 default:
-                    return (<>
-                        <NavLink to={currentPath} end>
+                    return (
+                        <NavLink to={currentPath} end key={currentPath}
+                                 style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <ListItem disablePadding
-                                          sx={{textDecoration: 'none', display: isVisible ? "block" : "none"}}>
-                                    <ListItemButton selected={isActive}>
-                                        <ListItemText primary={childRoute.label}/>
-                                    </ListItemButton>
-                                </ListItem>
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
+                                    {childRoute.icon &&
+                                        <ListItemIcon>
+                                            {childRoute.icon}
+                                        </ListItemIcon>
+                                    }
+                                    <ListItemText primary={childRoute.label} inset={!childRoute.icon}/>
+                                </MenuItem>
                             )}
                         </NavLink>
-
-                    </>)
+                    )
             }
         }
         return null
     })
 }
+
+
+const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
+    margin: 8,
+    borderRadius: 8,
+    color:blueGrey[900],
+    '&.Mui-selected': {
+        'color': '#fff',
+        'background-color': blue[600],
+        '&:hover': {
+            'color': '#fff',
+            'background-color': blue[600],
+        },
+    },
+}));
+
+const MenuItem = styled(ListItemButton)(({theme}) => ({
+    margin: 8,
+    borderRadius: 8,
+    color:blueGrey[900],
+    '&.Mui-selected': {
+        'color': blueGrey[800],
+        'background-color': blue[100],
+        '&:hover': {
+            'color': blueGrey[800],
+            'background-color': blue[100],
+        },
+        '&:active': {
+            'color': blueGrey[800],
+        }
+    },
+}));
