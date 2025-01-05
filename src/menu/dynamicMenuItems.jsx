@@ -1,7 +1,8 @@
 import {NavLink} from "react-router-dom";
-import {Button, Collapse, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
+import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import {blue, grey} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -19,6 +20,36 @@ export const dynamicMenuItems = (routes) => {
         )
     })
 }
+const MenuGroupParent = styled(ListItemButton)(({ theme }) => ({
+    margin:8,
+    borderRadius: 8,
+
+    '&.Mui-selected': {
+        'color':'#fff',
+        'background-color':blue[600],
+        '&:hover':{
+            'color':'#fff',
+            'background-color':blue[600],
+        },
+    },
+}));
+
+const MenuItem = styled(ListItemButton)(({ theme }) => ({
+    margin:8,
+    borderRadius: 8,
+
+    '&.Mui-selected': {
+        'color':grey[900],
+        'background-color':blue[50],
+        '&:hover':{
+            'color':grey[900],
+            'background-color':blue[100],
+        },
+        '&:active':{
+            color:grey[900]
+        }
+    },
+}));
 
 const MenuGroup = ({route}) => {
     const [isVisible, setIsVisible] = useState(false);
@@ -30,7 +61,7 @@ const MenuGroup = ({route}) => {
                 case true:
                     return (<
                         React.Fragment key={currentPath}>
-                        <ListItemButton onClick={() => {
+                        <MenuGroupParent onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
                             {childRoute.icon && <ListItemIcon>
@@ -38,31 +69,32 @@ const MenuGroup = ({route}) => {
                             </ListItemIcon>}
                             <ListItemText primary={childRoute.parentLabel}/>
                             {isVisible ? <ExpandLess/> : <ExpandMore/>}
-                        </ListItemButton>
+                        </MenuGroupParent>
 
-                        <Collapse in={isVisible} timeout="auto" unmountOnExit>
-                            <NavLink to={currentPath} end role={undefined}>
-                                {({isActive}) => (
-                                    <ListItemButton selected={isActive}>
-                                        <ListItemText primary={childRoute.label} inset/>
-                                    </ListItemButton>
-                                )}
-                            </NavLink>
-                        </Collapse>
+                        <NavLink to={currentPath} end role={undefined}
+                                 style={{textDecoration: 'none', color: 'inherit'}}>
+                            {({isActive}) => (
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
+                                    <ListItemText primary={childRoute.label} inset/>
+                                </MenuItem>
+                            )}
+                        </NavLink>
+
                     </React.Fragment>)
 
                 default:
                     return (
-                        <NavLink to={currentPath} end key={currentPath}>
+                        <NavLink to={currentPath} end key={currentPath}
+                                 style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <ListItemButton selected={isActive}>
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
                                     {childRoute.icon &&
                                         <ListItemIcon>
                                             {childRoute.icon}
                                         </ListItemIcon>
                                     }
-                                    <ListItemText primary={childRoute.label}/>
-                                </ListItemButton>
+                                    <ListItemText primary={childRoute.label} inset={!childRoute.icon}/>
+                                </MenuItem>
                             )}
                         </NavLink>
                     )
