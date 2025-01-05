@@ -2,7 +2,7 @@ import {NavLink, useLocation} from "react-router-dom";
 import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import {blue} from "@mui/material/colors";
+import {blue, blueGrey} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -83,7 +83,7 @@ const MenuGroup = ({route}) => {
 const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
     margin: 8,
     borderRadius: 8,
-
+    color:blueGrey[900],
     '&.Mui-selected': {
         'color': '#fff',
         'background-color': blue[600],
@@ -97,16 +97,16 @@ const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
 const MenuItem = styled(ListItemButton)(({theme}) => ({
     margin: 8,
     borderRadius: 8,
-
+    color:blueGrey[900],
     '&.Mui-selected': {
-        'color': blue[900],
+        'color': blueGrey[800],
         'background-color': blue[100],
         '&:hover': {
-            'color': blue[900],
+            'color': blueGrey[800],
             'background-color': blue[100],
         },
         '&:active': {
-            color: blue[900]
+            'color': blueGrey[800],
         }
     },
 }));
