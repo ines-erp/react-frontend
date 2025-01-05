@@ -1,6 +1,5 @@
 import { Outlet} from "react-router-dom";
 import {OtherModule} from "@/pages/otherModule/index.jsx";
-import {HomePage} from "@/pages/home/index.jsx";
 import {BiUser} from "react-icons/bi";
 
 export const otherRoutesList = [
