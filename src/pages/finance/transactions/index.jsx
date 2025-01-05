@@ -8,17 +8,32 @@ import {getFromApiData} from "@/api/helpers/getFromApiData.js";
 export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
+    const [balance, setBalance] = useState({})
 
 
     const handleGetTransactions = async () => {
-        const data = await getFromApiData('transactions')
+        const data = await getFromApiData('transactions?' + new URLSearchParams({currency: "Euro"}).toString())
         setTransactions(data)
+    }
+
+    const handleGetBalance = async () => {
+        const data = await getFromApiData('balance?currency=Euro')
+        setBalance(data[0])
     }
 
 
     useEffect(() => {
         handleGetTransactions();
+        handleGetBalance();
     }, [])
+
+    const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
+    const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
+
+        const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0)
+
+        const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
+
 
     return (
         <Container maxWidth={false}>
@@ -40,7 +55,7 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            R$ 100,00 <Chip label="12.8%" color="success" size="small"></Chip>
+                            {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success" size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -65,7 +80,7 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            -R$ 30,00 <Chip label="12.8%" color="warning" size="small"></Chip>
+                            -{balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning" size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -91,7 +106,7 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            R$ 70,00 <Chip label="12.8%" color="success" size="small"></Chip>
+                            {balance.symbol} {balance.amount} <Chip label="12.8%" color="success" size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -103,7 +118,7 @@ export const TransactionsDashboard = () => {
                 </Card>
             </Box>
 
-            <Box sx={{gap: "24px", display:"none"}}>
+            <Box sx={{gap: "24px", display: "none"}}>
                 <Card sx={{maxWidth: "60%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
                     one</Card>
                 <Card sx={{maxWidth: "40%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
