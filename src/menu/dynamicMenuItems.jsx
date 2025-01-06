@@ -31,7 +31,6 @@ const MenuGroup = ({route}) => {
     return route.children.map((childRoute) => {
         if (childRoute.isInMenu && childRoute.isEnabled) {
             const currentPath = `${route.path}/${childRoute.path}`
-            const isChildRouteDerivativePage = isParentPathSelected && location.pathname.split('/')[2] === childRoute.path
 
             switch (!!childRoute.parentLabel) {
                 case true:
@@ -50,7 +49,7 @@ const MenuGroup = ({route}) => {
                         <NavLink to={currentPath} end role={undefined}
                                  style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <MenuItem selected={isActive || isChildRouteDerivativePage} sx={{display: isVisible ? "block" : "none"}}>
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
                                     <ListItemText primary={childRoute.label} inset/>
                                 </MenuItem>
                             )}
@@ -60,10 +59,10 @@ const MenuGroup = ({route}) => {
 
                 default:
                     return (
-                        <NavLink to={currentPath} end key={currentPath}
+                        <NavLink to={currentPath} key={currentPath}
                                  style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <MenuItem selected={isActive || isChildRouteDerivativePage} sx={{display: isVisible ? "block" : "none"}}>
+                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
                                     {childRoute.icon &&
                                         <ListItemIcon>
                                             {childRoute.icon}
