@@ -81,8 +81,8 @@ const MenuGroup = ({route}) => {
 
 
 const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
-    margin: 8,
-    borderRadius: 8,
+    margin: theme.spacing(1),
+    borderRadius: theme.borderRadius,
     color:blueGrey[900],
     '&.Mui-selected': {
         'color': '#fff',
@@ -95,8 +95,8 @@ const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
 }));
 
 const MenuItem = styled(ListItemButton)(({theme}) => ({
-    margin: 8,
-    borderRadius: 8,
+    margin: theme.spacing(1),
+    borderRadius: theme.borderRadius,
     color:blueGrey[900],
     '&.Mui-selected': {
         'color': blueGrey[800],
