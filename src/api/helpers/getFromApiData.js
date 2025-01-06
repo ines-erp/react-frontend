@@ -5,7 +5,7 @@ export const getFromApiData = async (endpoint) => {
         const response = await inesDataApiV1.get(endpoint)
         return response.data
 
-    }catch (e){
-        console.log(e)
+    } catch (e) {
+        return null
     }
 }
