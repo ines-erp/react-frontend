@@ -24,7 +24,7 @@ export const TransactionsDetails = () => {
         return (
             <Container maxWidth={false}>
 
-                <Typography variant={"h1"}>Trnasctions details</Typography>
+                <Typography variant="h1">Trnasctions details</Typography>
 
                 <Box sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: "16px", mt: "32px"}}>
                     <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>

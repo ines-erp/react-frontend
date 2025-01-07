@@ -21,7 +21,18 @@ export const inesMainTheme = createTheme({
                     borderRadius: 8,
                 }
             }
+        },
+        MuiTypography: {
+            styleOverrides: {
+                root: {
+                    fontSize: "1rem",
+                },
+            },
+            variants: [
+                {props: {variant: "h1"}, style: {color: "red"}},
+                {props: {variant: "h2"}, style: {color: "purple"}}
+            ]
         }
-    }
+    },
 })
 
