@@ -59,7 +59,7 @@ const MenuGroup = ({route}) => {
 
                 default:
                     return (
-                        <NavLink to={currentPath} end key={currentPath}
+                        <NavLink to={currentPath} key={currentPath}
                                  style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
                                 <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
