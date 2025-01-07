@@ -1,8 +1,10 @@
+import {PaymentMethodDashboard} from "@/pages/finance/paymentMethod/index.jsx";
+
 export const paymentMethodsRoutesList = [
     {
         path: "",
-        element: <div>All payments</div>,
-        label: "Dashboard trasactions",
+        element: <PaymentMethodDashboard />,
+        label: "Dashboard",
         isInMenu: true,
         isEnabled: true,
     },
