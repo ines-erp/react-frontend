@@ -1,8 +1,8 @@
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/helpers/getFromApiData.js";
 import {
-    Box,
+    Box, Breadcrumbs,
     Button,
     Chip,
     Container, Grid2,
@@ -10,12 +10,11 @@ import {
     List,
     ListItem,
     ListItemButton,
-    ListItemText,
     Paper,
     Typography
 } from "@mui/material";
 import {blue, blueGrey, grey} from "@mui/material/colors";
-import {ContentCopy, Description, DescriptionOutlined, UploadFile} from "@mui/icons-material";
+import {ArrowBack, ContentCopy, DescriptionOutlined, NavigateBeforeRounded, UploadFile} from "@mui/icons-material";
 
 export const TransactionsDetails = () => {
 
@@ -42,20 +41,46 @@ export const TransactionsDetails = () => {
 
         return (
             <Container sx={{ml: 0}}>
+                <Box sx={{display: "flex", gap: 1}}>
+                    {/*<IconButton color="inherit">*/}
+                    {/*    <ArrowBack/>*/}
+                    {/*</IconButton>*/}
+                    <Box sx={{display: "flex", alignItems: "center", gap: 3}}>
+                        <Typography variant="h1">
+                            Transactions details
+                        </Typography>
 
-                <Typography variant="h1">Transactions details</Typography>
-                <Typography variant="h5" color={grey[500]}>
-                    <IconButton size="small" color={"inherit"} onClick={() => addToClipboard(transaction.id)}>
-                        <ContentCopy fontSize=".8rem"/>
-                    </IconButton>
+                        <Typography variant="h5" color={grey[500]}>
+                            <IconButton size="small" color={"inherit"} onClick={() => addToClipboard(transaction.id)}>
+                                <ContentCopy fontSize=".8rem"/>
+                            </IconButton>
 
-                    {transaction.id}
-                </Typography>
+                            {transaction.id}
+                        </Typography>
+                    </Box>
+                </Box>
+
+                <Breadcrumbs>
+                    <Link to={"/"}>
+                        <Typography variant="h5" color={grey[500]}>
+                            Home
+                        </Typography>
+                    </Link>
+                    <Link to={"../"}>
+                        <Typography variant="h5" color={grey[500]}>
+                            Transactions
+                        </Typography>
+                    </Link>
+
+                    <Typography variant="h5" color={grey[500]}>
+                        Bread crumbs
+                    </Typography>
+                </Breadcrumbs>
 
                 <Box sx={{
                     display: "flex",
                     justifyContent: "space-between",
-                    mt: 4,
+                    mt: 6,
                     pb: 4,
                     alignItems: "center",
                     borderBottom: `1px solid ${grey[300]}`
@@ -87,7 +112,7 @@ export const TransactionsDetails = () => {
                     </Box>
 
                     <Box
-                        sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 3, mt: 4}}>
+                        sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 1, mt: 4}}>
                         <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>
                         <Button variant={"outlined"} sx={{background: "#fff"}}>Edit</Button>
                         <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}}>Delete</Button>
