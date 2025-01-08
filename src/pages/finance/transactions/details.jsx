@@ -1,8 +1,9 @@
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/helpers/getFromApiData.js";
-import {Box, Button, Chip, Container, Paper, Typography} from "@mui/material";
+import {Box, Button, Chip, Container, IconButton, Paper, Typography} from "@mui/material";
 import {grey} from "@mui/material/colors";
+import {ContentCopy} from "@mui/icons-material";
 
 export const TransactionsDetails = () => {
 
@@ -25,10 +26,22 @@ export const TransactionsDetails = () => {
         return (
             <Container maxWidth={false}>
 
-                <Typography variant="h1">Transctions details</Typography>
-                <Typography variant="h5" color={grey[500]}>{transaction.id}</Typography>
+                <Typography variant="h1">Transactions details</Typography>
+                <Typography variant="h5" color={grey[500]}>
+                    {transaction.id}
+                    <IconButton color={grey[300]}>
+                        <ContentCopy fontSize=".8rem" color={grey[500]}/>
+                    </IconButton>
+                </Typography>
 
-                <Box sx={{display: "flex", justifyContent: "space-between", mt: 4, pb: 4, alignItems: "center", borderBottom:"1px solid"}}>
+                <Box sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    mt: 4,
+                    pb: 4,
+                    alignItems: "center",
+                    borderBottom: `1px solid ${grey[300]}`
+                }}>
                     <Box>
                         <Typography variant="h5"
                                     sx={{
