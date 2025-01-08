@@ -19,6 +19,11 @@ export const TransactionsDetails = () => {
         handleGetTransaction();
     }, [])
 
+    //TODO: extract that to a new file and make it wide avaliable
+    const addToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+    }
+
     if (transaction) {
 
         const transactionDate = new Date(Date.parse(transaction.date))
@@ -28,10 +33,11 @@ export const TransactionsDetails = () => {
 
                 <Typography variant="h1">Transactions details</Typography>
                 <Typography variant="h5" color={grey[500]}>
-                    {transaction.id}
-                    <IconButton color={grey[300]}>
-                        <ContentCopy fontSize=".8rem" color={grey[500]}/>
+                    <IconButton size="small" color={"inherit"} onClick={() => addToClipboard(transaction.id)}>
+                        <ContentCopy fontSize=".8rem"/>
                     </IconButton>
+
+                    {transaction.id}
                 </Typography>
 
                 <Box sx={{
@@ -42,7 +48,7 @@ export const TransactionsDetails = () => {
                     alignItems: "center",
                     borderBottom: `1px solid ${grey[300]}`
                 }}>
-                    <Box>
+                    <Box sx={{width: "100%", pr:"32px"}}>
                         <Typography variant="h5"
                                     sx={{
                                         display: "flex",
@@ -54,17 +60,15 @@ export const TransactionsDetails = () => {
                                   color={(transaction.transactionType.name).toLowerCase() === "income" ? "success" : "warning"}/>
                             {transactionDate.toLocaleDateString()}
                         </Typography>
-                        <Box>
-                            <Box sx={{display: "flex", justifyContent: "space-between", mb: '0'}}>
-                                <Typography variant={"h2"}>
-                                    {transaction.name}
-                                </Typography>
+                        <Box sx={{display: "flex", justifyContent: "space-between", mb: '0', flex: 1, width: "100%"}}>
+                            <Typography variant={"h2"}>
+                                {transaction.name}
+                            </Typography>
 
-                                <Typography variant={"h2"} sx={{gap: "1rem", display: "flex"}}>
-                                    <span>{transaction.currency.symbol}</span>
-                                    <span>{transaction.amount.toFixed(2)}</span>
-                                </Typography>
-                            </Box>
+                            <Typography variant={"h2"} sx={{gap: "1rem", display: "flex"}} color={transaction.amount > 0 ? "success":"warning"}>
+                                <span>{transaction.currency.symbol}</span>
+                                <span >{transaction.amount.toFixed(2)}</span>
+                            </Typography>
                         </Box>
                     </Box>
 
