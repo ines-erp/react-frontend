@@ -111,7 +111,8 @@ export const TransactionsDetails = () => {
                         <Grid2 spacing={2} container columns={3}>
                             <Grid2 size={3}>
                                 <Typography variant={"h5"}>Transaction type:</Typography>
-                                <Typography fontSize={"2rem"}>{transaction.transactionType.name}</Typography>
+                                <Typography fontSize={"2rem"}
+                                            color={transaction.amount > 0 ? "success" : "warning"}>{transaction.transactionType.name}</Typography>
                             </Grid2>
 
                             <Grid2 size={1}>
@@ -151,9 +152,9 @@ export const TransactionsDetails = () => {
                         <Grid2 container spacing={2} columns={3}
                                sx={{mt: "auto", mb: "0", flex: 1, width: "100%"}}>
                             <Grid2 size={3}>
-                                <Typography variant={"h5"}>Amount::</Typography>
-                                <Typography
-                                    fontSize={'2rem'}>{transaction.currency.symbol} {transaction.amount}</Typography>
+                                <Typography variant={"h5"}>Amount:</Typography>
+                                <Typography color={transaction.amount > 0 ? "success" : "warning"}
+                                            fontSize={'2rem'}>{transaction.currency.symbol} {transaction.amount}</Typography>
                             </Grid2>
 
                             <Grid2 size={1}>
@@ -177,9 +178,13 @@ export const TransactionsDetails = () => {
                     <Box sx={{mb: 4}}>
                         <Typography variant={"h3"} sx={{mb: 4}}>Attachments</Typography>
 
-                        <List sx={{display: "flex", justifyContent: "start", gap:3}}>
+                        <List sx={{display: "flex", justifyContent: "start", gap: 3}}>
                             <ListItem sx={{
-                                flex: 1, maxWidth: "25%", minWidth: "200px", border: `1px solid ${blue[600]}`, borderRadius: 2
+                                flex: 1,
+                                maxWidth: "25%",
+                                minWidth: "200px",
+                                border: `1px solid ${blue[600]}`,
+                                borderRadius: 2
                             }}>
                                 <DescriptionOutlined sx={{fontSize: "48px"}} color={"primary"}/>
                                 <Typography color={"primary"}>
@@ -193,7 +198,7 @@ export const TransactionsDetails = () => {
                                 border: `4px dashed ${grey[300]}`,
                                 color: grey[300],
                                 paddingY: "16px",
-                                m:0
+                                m: 0
                             }}>
                                 <UploadFile sx={{fontSize: "48px"}}/>
                                 <Typography>
