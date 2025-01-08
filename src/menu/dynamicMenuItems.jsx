@@ -2,7 +2,7 @@ import {NavLink, useLocation} from "react-router-dom";
 import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import {blue, blueGrey} from "@mui/material/colors";
+import {blue, blueGrey, grey} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -36,7 +36,7 @@ const MenuGroup = ({route}) => {
                 case true:
                     return (<
                         React.Fragment key={currentPath}>
-                        <MenuGroupParent selected={isParentPathSelected} onClick={() => {
+                        <MenuItem selected={isParentPathSelected} onClick={() => {
                             setIsVisible((prev) => !prev)
                         }}>
                             {childRoute.icon && <ListItemIcon sx={{color: 'inherit'}}>
@@ -44,12 +44,13 @@ const MenuGroup = ({route}) => {
                             </ListItemIcon>}
                             <ListItemText primary={childRoute.parentLabel}/>
                             {isVisible ? <ExpandLess/> : <ExpandMore/>}
-                        </MenuGroupParent>
+                        </MenuItem>
 
                         <NavLink to={currentPath} end role={undefined}
                                  style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
+                                <MenuItem menuLevel={1} selected={isActive}
+                                          sx={{display: isVisible ? "block" : "none"}}>
                                     <ListItemText primary={childRoute.label} inset/>
                                 </MenuItem>
                             )}
@@ -62,7 +63,8 @@ const MenuGroup = ({route}) => {
                         <NavLink to={currentPath} key={currentPath}
                                  style={{textDecoration: 'none', color: 'inherit'}}>
                             {({isActive}) => (
-                                <MenuItem selected={isActive} sx={{display: isVisible ? "block" : "none"}}>
+                                <MenuItem menuLevel={1} selected={isActive}
+                                          sx={{display: isVisible ? "block" : "none"}}>
                                     {childRoute.icon &&
                                         <ListItemIcon>
                                             {childRoute.icon}
@@ -80,33 +82,34 @@ const MenuGroup = ({route}) => {
 }
 
 
-const MenuGroupParent = styled(ListItemButton)(({theme}) => ({
-    margin: 8,
-    borderRadius: 8,
-    color:blueGrey[900],
-    '&.Mui-selected': {
-        'color': '#fff',
-        'background-color': blue[600],
-        '&:hover': {
+const MenuItem = styled(ListItemButton)(
+    ({theme}) => ({
+
+        color: blueGrey[900],
+        '&.Mui-selected': {
             'color': '#fff',
             'background-color': blue[600],
+            '&:hover': {
+                'color': '#fff',
+                'background-color': blue[600],
+            },
         },
-    },
-}));
 
-const MenuItem = styled(ListItemButton)(({theme}) => ({
-    margin: 8,
-    borderRadius: 8,
-    color:blueGrey[900],
-    '&.Mui-selected': {
-        'color': blueGrey[800],
-        'background-color': blue[100],
-        '&:hover': {
-            'color': blueGrey[800],
-            'background-color': blue[100],
-        },
-        '&:active': {
-            'color': blueGrey[800],
-        }
-    },
-}));
+        variants: [{
+            props: (props) =>
+                props.menuLevel === 1,
+            style: {
+                '&.Mui-selected': {
+                    'color': blueGrey[800],
+                    'background-color': blue[100],
+                    '&:hover': {
+                        'color': blueGrey[800],
+                        'background-color': blue[100],
+                    },
+                    '&:active': {
+                        'color': blueGrey[800],
+                    }
+                }
+            }
+        }]
+    }));
