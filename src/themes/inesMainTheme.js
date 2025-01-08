@@ -34,7 +34,7 @@ export const inesMainTheme = createTheme({
                 {props: {variant: "h3"}, style: {fontSize: '1.6rem', fontWeight: 300}},
                 {props: {variant: "h4"}, style: {fontSize: '1.2rem', fontWeight: 300}},
                 {props: {variant: "h5"}, style: {fontSize: '0.8rem', fontWeight: 100}},
-                {props: {variant: "h6"}, style: {fontSize: '0.4rem', fontWeight: 100}},
+                {props: {variant: "h6"}, style: {fontSize: '0.6rem', fontWeight: 100}},
             ]
         }
     },
