@@ -5,7 +5,7 @@ import {
     Box,
     Button,
     Chip,
-    Container,
+    Container, Grid2,
     IconButton,
     List,
     ListItem,
@@ -14,7 +14,7 @@ import {
     Paper,
     Typography
 } from "@mui/material";
-import {blueGrey, grey} from "@mui/material/colors";
+import {blue, blueGrey, grey} from "@mui/material/colors";
 import {ContentCopy, Description, DescriptionOutlined, UploadFile} from "@mui/icons-material";
 
 export const TransactionsDetails = () => {
@@ -105,39 +105,100 @@ export const TransactionsDetails = () => {
 
                 <Box sx={{display: "flex", gap: 4}}>
                     <Paper variant={"outlined"}
-                           sx={{padding: 4, mt: 4, borderRadius: 2, border: "none", mb: 4, maxWidth: "50%", flex: 1}}>
+                           sx={{padding: 4, mt: 4, borderRadius: 2, border: "none", flex: 1, maxWidth: "50%"}}>
                         <Typography variant={"h3"} sx={{mb: 4}}>Transaction info</Typography>
-                        <Typography>Paid by: {transaction.paidBy}</Typography>
-                        <Typography>Recieved by: {transaction.recievedBy}</Typography>
-                        <Typography>Transaction type: {transaction.transactionType.name}</Typography>
-                        <Typography>Payment method: {transaction.paymentMethod.name}</Typography>
+
+                        <Grid2 spacing={2} container columns={3}>
+                            <Grid2 size={3}>
+                                <Typography variant={"h5"}>Transaction type:</Typography>
+                                <Typography fontSize={"2rem"}>{transaction.transactionType.name}</Typography>
+                            </Grid2>
+
+                            <Grid2 size={1}>
+                                <Typography variant={"h5"}>Payment method:</Typography>
+                                <Typography>{transaction.paymentMethod.name}</Typography>
+                            </Grid2>
+
+                            <Grid2 size={1}>
+                                <Typography variant={"h5"}>Paid by:</Typography>
+                                <Typography>{transaction.paidBy}</Typography>
+                            </Grid2>
+
+                            <Grid2 size={1}>
+                                <Typography variant={"h5"}>Recieved by:</Typography>
+                                <Typography>{transaction.recievedBy}</Typography>
+                            </Grid2>
+                        </Grid2>
+
                     </Paper>
 
                     <Paper variant={"outlined"}
-                           sx={{padding: 4, mt: 4, borderRadius: 2, border: "none", mb: 4, maxWidth: "50%", flex: 1}}>
+                           sx={{
+                               padding: 4,
+                               mt: 4,
+                               borderRadius: 2,
+                               border: "none",
+                               maxWidth: "50%",
+                               flex: 1,
+                               display: 'flex',
+                               flexDirection: "Column",
+                               alignItems: "start",
+                               justifyContent: ""
+                           }}>
+
                         <Typography variant={"h3"} sx={{mb: 4}}>Currency info</Typography>
-                        <Typography>Currency name: <strong>{transaction.currency.name}</strong></Typography>
-                        <Typography>Currency symbol: <strong>{transaction.currency.symbol}</strong></Typography>
-                        <Typography>Currency code: <strong>{transaction.currency.symbol}</strong></Typography>
-                        <Typography>amount: <strong>{transaction.amount}</strong></Typography>
+
+                        <Grid2 container spacing={2} columns={3}
+                               sx={{mt: "auto", mb: "0", flex: 1, width: "100%"}}>
+                            <Grid2 size={3}>
+                                <Typography variant={"h5"}>Amount::</Typography>
+                                <Typography
+                                    fontSize={'2rem'}>{transaction.currency.symbol} {transaction.amount}</Typography>
+                            </Grid2>
+
+                            <Grid2 size={1}>
+                                <Typography variant={"h5"}>Currency name:</Typography>
+                                <Typography>{transaction.currency.name}</Typography>
+                            </Grid2>
+
+                            <Grid2 size={1}>
+                                <Typography variant={"h5"}>Currency code:</Typography>
+                                {/*TODO: IN API CREATE A CODE THAT MATCHES THE ISO CODE FOR CURRENCY*/}
+                                <Typography>BRL</Typography>
+                                {/*<Typography>{transaction.currency.symbol}</Typography>*/}
+                            </Grid2>
+
+                        </Grid2>
                     </Paper>
                 </Box>
 
 
-                <Paper variant={"outlined"} sx={{padding: 4, mt: 4, borderRadius: 1, border: "none"}}>
+                <Paper variant={"outlined"} sx={{padding: 4, mt: 4, borderRadius: 2, border: "none"}}>
                     <Box sx={{mb: 4}}>
                         <Typography variant={"h3"} sx={{mb: 4}}>Attachments</Typography>
 
-                        <List sx={{display: "flex", justifyContent: "start"}}>
-                            <ListItem sx={{flex: 1, maxWidth: "25%", minWidth: "200px"}}>
-                                <DescriptionOutlined sx={{fontSize: "48px"}}/>
-                                File name
+                        <List sx={{display: "flex", justifyContent: "start", gap:3}}>
+                            <ListItem sx={{
+                                flex: 1, maxWidth: "25%", minWidth: "200px", border: `1px solid ${blue[600]}`, borderRadius: 2
+                            }}>
+                                <DescriptionOutlined sx={{fontSize: "48px"}} color={"primary"}/>
+                                <Typography color={"primary"}>
+                                    File name
+                                </Typography>
                             </ListItem>
 
                             {/*//TODO: CREATE THE STYLE TO CONFIG HOVER FOR THAT*/}
-                            <ListItemButton sx={{maxWidth:"200px", border: `4px dashed ${grey[300]}`, color:grey[300], paddingY:"16px"}}>
+                            <ListItemButton sx={{
+                                maxWidth: "200px",
+                                border: `4px dashed ${grey[300]}`,
+                                color: grey[300],
+                                paddingY: "16px",
+                                m:0
+                            }}>
                                 <UploadFile sx={{fontSize: "48px"}}/>
-                                Add new attachment
+                                <Typography>
+                                    Add new attachment
+                                </Typography>
                             </ListItemButton>
                         </List>
                     </Box>
