@@ -1,6 +1,6 @@
-import {Link, useParams} from "react-router-dom";
+import {Link, useParams, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getFromApiData} from "@/api/helpers/getFromApiData.js";
+import {DeleteFromApiData, getFromApiData} from "@/api/helpers/getFromApiData.js";
 import {
     Box, Breadcrumbs,
     Button,
@@ -20,6 +20,7 @@ export const TransactionsDetails = () => {
 
     const {id} = useParams()
     const [transaction, setTransaction] = useState();
+    const navigate = useNavigate();
 
     const handleGetTransaction = async () => {
         const data = await getFromApiData(`transactions/${id}`)
@@ -33,6 +34,13 @@ export const TransactionsDetails = () => {
     //TODO: extract that to a new file and make it wide avaliable
     const addToClipboard = (text) => {
         navigator.clipboard.writeText(text)
+    }
+
+    const handleDelete = async (id) => {
+        const response = await DeleteFromApiData(`transactions/${id}`);
+        if(response){
+            navigate(-1)
+        }
     }
 
     if (transaction) {
@@ -112,7 +120,7 @@ export const TransactionsDetails = () => {
                         sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 1, mt: 4}}>
                         <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>
                         <Button variant={"outlined"} sx={{background: "#fff"}}>Edit</Button>
-                        <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}}>Delete</Button>
+                        <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}} onClick={() => handleDelete(transaction.id)}>Delete</Button>
                     </Box>
 
                 </Box>

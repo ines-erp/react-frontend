@@ -53,7 +53,7 @@ export const TransactionsDashboard = () => {
     }
 
     const handlePostTransaction = async (body) => {
-        const data = await PostToApiData('transactions', body)
+        await PostToApiData('transactions', body)
         handleGetTransactions()
     }
 
