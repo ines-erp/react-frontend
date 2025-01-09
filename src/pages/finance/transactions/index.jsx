@@ -6,8 +6,8 @@ import {
     Card,
     CardContent,
     Chip,
-    Container,
-    IconButton,
+    Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+    IconButton, TextField,
     Typography
 } from "@mui/material";
 import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
@@ -21,7 +21,15 @@ export const TransactionsDashboard = () => {
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
     const [currency, setCurrenty] = useState("Brazilian Real")
+    const [open, setOpen] = useState(false);
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleGetTransactions = async () => {
         const data = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
@@ -49,6 +57,7 @@ export const TransactionsDashboard = () => {
 
     return (
         <Container sx={{ml: 0}}>
+            <TringModal isOpen={open} handleClose={handleClose}/>
             <Box sx={{display: "flex", gap: 1}}>
                 <Box sx={{
                     display: "flex",
@@ -57,7 +66,7 @@ export const TransactionsDashboard = () => {
                     justifyContent: "space-between",
                 }}>
                     <Typography variant={"h1"}>Transactions</Typography>
-                    <Button variant="contained" startIcon={<Add/>}>
+                    <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
                         New
                     </Button>
                 </Box>
@@ -210,4 +219,37 @@ export const TransactionsDashboard = () => {
         </Container>
     )
 
+}
+
+const TringModal = ({isOpen, handleClose}) => {
+
+    return (
+        <Dialog
+            open={isOpen}
+            onClose={handleClose}
+            PaperProps={{
+                component: "form",
+                onSubmit: (event) => {
+                    event.preventDefault();
+                    console.log("form submited")
+                    handleClose()
+                }
+            }}>
+            <DialogTitle>
+                Add new transaction
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Some example text
+                </DialogContentText>
+                <TextField
+                    required id={"name"} name={"name"} label={"Name"} type={"text"}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button type="submit">Create</Button>
+            </DialogActions>
+        < /Dialog>
+    )
 }
