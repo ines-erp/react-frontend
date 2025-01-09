@@ -25,13 +25,13 @@ import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
 import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
+import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
 
 export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
-    const [currency, setCurrenty] = useState("Euro")
+    const [currency, setCurrenty] = useState("Brazilian Real")
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -57,6 +57,12 @@ export const TransactionsDashboard = () => {
         handleGetTransactions()
     }
 
+    const handleDelete = async (id) => {
+        const response = await DeleteFromApiData(`transactions/${id}`);
+        if(response){
+            handleGetTransactions()
+        }
+    }
 
     useEffect(() => {
         handleGetTransactions();
@@ -222,7 +228,7 @@ export const TransactionsDashboard = () => {
                                         <Button as={Link} variant={"outlined"} sx={{background: "#fff"}}
                                                 to={`details/${transaction.id}`}>Details</Button>
                                         <Button componet={Link} variant={"outlined"} color={"error"}
-                                                sx={{background: "#fff"}}>Delete</Button>
+                                                sx={{background: "#fff"}} onClick={() => handleDelete(transaction.id)}>Delete</Button>
                                     </Box>
                                 </CardContent>
                                 <Box></Box>
