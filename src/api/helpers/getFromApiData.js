@@ -19,3 +19,13 @@ export const PostToApiData = async (endpoint, dataBody) => {
         return null
     }
 }
+
+export const DeleteFromApiData = async (endpoint) => {
+    try {
+        const response = await inesDataApiV1.delete(endpoint)
+        return response.data
+
+    } catch (e) {
+        return null
+    } 
+}
