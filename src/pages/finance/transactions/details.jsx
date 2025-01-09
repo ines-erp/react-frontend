@@ -42,9 +42,6 @@ export const TransactionsDetails = () => {
         return (
             <Container sx={{ml: 0}}>
                 <Box sx={{display: "flex", gap: 1}}>
-                    {/*<IconButton color="inherit">*/}
-                    {/*    <ArrowBack/>*/}
-                    {/*</IconButton>*/}
                     <Box sx={{display: "flex", alignItems: "center", gap: 3}}>
                         <Typography variant="h1">
                             Transactions details

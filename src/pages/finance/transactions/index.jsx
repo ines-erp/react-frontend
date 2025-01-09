@@ -1,6 +1,17 @@
-import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
-import {MonetizationOnOutlined} from "@mui/icons-material";
-import {green} from "@mui/material/colors"
+import {
+    Box,
+    Breadcrumbs,
+    Button,
+    ButtonGroup,
+    Card,
+    CardContent,
+    Chip,
+    Container,
+    IconButton,
+    Typography
+} from "@mui/material";
+import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
+import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/helpers/getFromApiData.js";
@@ -37,10 +48,34 @@ export const TransactionsDashboard = () => {
 
 
     return (
-        <Container maxWidth={false}>
-            <Typography variant={"h1"} gutterBottom fontSize={"3rem"}>Transactions</Typography>
+        <Container sx={{ml: 0}}>
+            <Box sx={{display: "flex", gap: 1}}>
+                <Box sx={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}>
+                    <Typography variant={"h1"}>Transactions</Typography>
+                    <Button variant="contained" startIcon={<Add/>}>
+                        New
+                    </Button>
+                </Box>
+            </Box>
 
-            <Box sx={{display: "flex", gap: "24px", mb: "32px"}}>
+            <Breadcrumbs>
+                <Link to={"/"}>
+                    <Typography variant="h5" color={grey[500]}>
+                        Home
+                    </Typography>
+                </Link>
+                <Typography variant="h5" color={grey[500]}>
+                    Transactions
+                </Typography>
+            </Breadcrumbs>
+
+
+            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 6}}>
                 <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
@@ -159,9 +194,10 @@ export const TransactionsDashboard = () => {
                                     <Typography>{transaction.description}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                        <Button as={Link} variant={"outlined"} sx={{background:"#fff"}}
+                                        <Button as={Link} variant={"outlined"} sx={{background: "#fff"}}
                                                 to={`details/${transaction.id}`}>Details</Button>
-                                        <Button componet={Link} variant={"outlined"} color={"error"} sx={{background:"#fff"}}>Delete</Button>
+                                        <Button componet={Link} variant={"outlined"} color={"error"}
+                                                sx={{background: "#fff"}}>Delete</Button>
                                     </Box>
                                 </CardContent>
                                 <Box></Box>
