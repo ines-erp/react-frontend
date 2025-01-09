@@ -5,9 +5,20 @@ import {
     ButtonGroup,
     Card,
     CardContent,
+    Checkbox,
     Chip,
-    Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
-    IconButton, TextField,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    FormLabel,
+    IconButton, MenuItem, Radio,
+    RadioGroup,
+    TextField,
     Typography
 } from "@mui/material";
 import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
@@ -231,25 +242,169 @@ const TringModal = ({isOpen, handleClose}) => {
                 component: "form",
                 onSubmit: (event) => {
                     event.preventDefault();
-                    console.log("form submited")
-                    handleClose()
+                    console.log(event.target.date.value)
+                    // handleClose()
                 }
-            }}>
-            <DialogTitle>
+            }}
+            fullWidth={true}
+            maxWidth={"md"}
+
+        >
+            <DialogTitle variant={"h3"}>
                 Add new transaction
             </DialogTitle>
-            <DialogContent>
-                <DialogContentText>
+
+            <DialogContent sx={{gap: 4, display: "flex", flexDirection: "column"}}>
+                <DialogContentText sx={{mb: 3}}>
                     Some example text
                 </DialogContentText>
+
+                <FormControl>
+                    <FormLabel>Transaction type</FormLabel>
+                    <RadioGroup defaultValue={"income"} name={"transaction-type"}
+                                sx={{display: "flex", flexDirection: "row", gap: 2}}>
+                        <FormControlLabel value={"income"} control={<Radio/>} label={"Income"}/>
+                        <FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>
+                    </RadioGroup>
+                </FormControl>
                 <TextField
-                    required id={"name"} name={"name"} label={"Name"} type={"text"}
+                    required id={"name"}
+                    name={"name"}
+                    label={"Name"}
+                    type={"text"}
+                    fullWidth={true}
                 />
+
+                <TextField
+                    id={"description"}
+                    name={"description"}
+                    label={"Description"}
+                    multiline
+                    rows={6}
+                    maxRows={6}
+                    fullWidth={true}
+                />
+
+                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                    <TextField
+                        id={"amount"}
+                        name={"amount"}
+                        label={"Amount"}
+                        type={"number"}
+                        sx={{flex: 1}}
+                    />
+
+                    <TextField
+                        id={"currency"}
+                        name={"currency"}
+                        label={"Currency"}
+                        select
+                        sx={{minWidth: "25%"}}
+                    >
+                        {currencies.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        id={"paymentMethod"}
+                        name={"paymentMethod"}
+                        label={"Payment method"}
+                        select
+                        sx={{minWidth: "25%"}}
+                    >
+                        {paymentMethods.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                        ))}
+                    </TextField>
+
+                    <TextField
+                        id={"date"}
+                        name={"date"}
+                        label={"Date"}
+                        type={"date"}
+                        defaultValue={new Date().toISOString().split("T")[0]}
+                        sx={{minWidth: "25%"}}
+                    />
+                </Box>
+
+
+                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                    <TextField
+                        id={"paidBy"}
+                        name={"paidBy"}
+                        label={"Paid By"}
+                        type={"text"}
+                        sx={{flex:1}}
+                    />
+                    <TextField
+                        id={"receivedBy"}
+                        name={"receivedBy"}
+                        label={"Received By"}
+                        type={"text"}
+                        sx={{minWidth: "50%"}}
+                    />
+                </Box>
+
+                <TextField
+                    id={"category"}
+                    name={"category"}
+                    label={"Category"}
+                    select
+                >
+                    {categories.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                    ))}
+                </TextField>
+
             </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button type="submit">Create</Button>
+            <DialogActions sx={{pb: 4}}>
+                <Button type="submit" variant={"outlined"}>Create</Button>
+                <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
             </DialogActions>
         < /Dialog>
     )
 }
+
+
+const categories = [
+    {
+        value: 'bils',
+        label: 'Bills',
+    },
+    {
+        value: 'investments',
+        label: 'Investments',
+    }
+];
+
+const paymentMethods = [
+    {
+        value: 'cash',
+        label: 'Cash',
+    },
+    {
+        value: 'card-0244',
+        label: 'Card final: 0244',
+    }
+];
+
+const currencies = [
+    {
+        value: 'USD',
+        label: '$',
+    },
+    {
+        value: 'EUR',
+        label: '€',
+    },
+    {
+        value: 'BTC',
+        label: '฿',
+    },
+    {
+        value: 'JPY',
+        label: '¥',
+    },
+];
+
