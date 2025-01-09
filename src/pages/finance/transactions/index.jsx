@@ -25,7 +25,7 @@ import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
 import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getFromApiData} from "@/api/helpers/getFromApiData.js";
+import {getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
 
 export const TransactionsDashboard = () => {
 
@@ -52,6 +52,12 @@ export const TransactionsDashboard = () => {
         setBalance(data[0])
     }
 
+    const handlePostTransaction = async (body) => {
+        const data = await PostToApiData('transactions', body)
+        // setBalance(data[0])
+        console.log(data, data.status, "posting transaction")
+    }
+
 
     useEffect(() => {
         handleGetTransactions();
@@ -68,7 +74,7 @@ export const TransactionsDashboard = () => {
 
     return (
         <Container sx={{ml: 0}}>
-            <TringModal isOpen={open} handleClose={handleClose}/>
+            <TringModal isOpen={open} handleClose={handleClose} handlePost={handlePostTransaction}/>
             <Box sx={{display: "flex", gap: 1}}>
                 <Box sx={{
                     display: "flex",
@@ -232,7 +238,7 @@ export const TransactionsDashboard = () => {
 
 }
 
-const TringModal = ({isOpen, handleClose}) => {
+const TringModal = ({isOpen, handleClose, handlePost}) => {
 
     return (
         <Dialog
@@ -242,7 +248,27 @@ const TringModal = ({isOpen, handleClose}) => {
                 component: "form",
                 onSubmit: (event) => {
                     event.preventDefault();
-                    console.log(event.target.date.value)
+
+                    const newTransaction = {
+                        "Name": event.target.name.value,
+                        "Description": event.target.description.value,
+                        "Amount": event.target.amount.value,
+                        "Date": new Date(event.target.date.value).toISOString(),
+                        // "CreatedAt": "2023-11-28T10:35:24.123Z",
+                        // "UpdatedAt": "2023-11-28T10:35:24.123Z",
+                        "PaidBy": event.target.paidBy.value,
+                        "RecievedBy": event.target.receivedBy.value,
+                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957",
+                        "CurrencyId": "7df7cddf-471b-4e17-bc59-70b0ff0a144d",
+                        "PaymentMethodId": "1d69c5c3-9887-47e3-a07d-6cffbb5051f5",
+                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7"
+                    }
+
+                    console.log(newTransaction)
+                    handlePost(newTransaction)
+
+
+                    // console.log(event.target.date.value)
                     // handleClose()
                 }
             }}
@@ -335,7 +361,7 @@ const TringModal = ({isOpen, handleClose}) => {
                         name={"paidBy"}
                         label={"Paid By"}
                         type={"text"}
-                        sx={{flex:1}}
+                        sx={{flex: 1}}
                     />
                     <TextField
                         id={"receivedBy"}

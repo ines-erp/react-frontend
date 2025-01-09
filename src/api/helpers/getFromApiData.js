@@ -9,3 +9,13 @@ export const getFromApiData = async (endpoint) => {
         return null
     }
 }
+
+export const PostToApiData = async (endpoint, dataBody) => {
+    try {
+        const response = (await inesDataApiV1.post(endpoint, dataBody))
+        return response.data
+
+    } catch (e) {
+        return null
+    }
+}
