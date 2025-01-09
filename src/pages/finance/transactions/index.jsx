@@ -31,7 +31,7 @@ export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
-    const [currency, setCurrenty] = useState("Brazilian Real")
+    const [currency, setCurrenty] = useState("Euro")
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -217,7 +217,7 @@ export const TransactionsDashboard = () => {
                                     <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
                                     <Typography>{transaction.transactionType.name}</Typography>
                                     <Typography>{transaction.currency.symbol}: {transaction.amount.toFixed(2)}</Typography>
-                                    <Typography>{transaction.description}</Typography>
+                                    <Typography>{transaction.description.substring(0, 30)+"..."}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
                                         <Button as={Link} variant={"outlined"} sx={{background: "#fff"}}
@@ -266,10 +266,8 @@ const TringModal = ({isOpen, handleClose, handlePost}) => {
 
                     console.log(newTransaction)
                     handlePost(newTransaction)
+                    handleClose()
 
-
-                    // console.log(event.target.date.value)
-                    // handleClose()
                 }
             }}
             fullWidth={true}
