@@ -54,8 +54,7 @@ export const TransactionsDashboard = () => {
 
     const handlePostTransaction = async (body) => {
         const data = await PostToApiData('transactions', body)
-        // setBalance(data[0])
-        console.log(data, data.status, "posting transaction")
+        handleGetTransactions()
     }
 
 
