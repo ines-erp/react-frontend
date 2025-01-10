@@ -23,7 +23,7 @@ export const NewTransactionModal = ({
                                         currencies,
                                         categories,
                                         paymentMethods,
-                                        amount = 0
+                                        data = {}
                                     }) => {
 
     return (
@@ -81,6 +81,7 @@ export const NewTransactionModal = ({
                     label={"Name"}
                     type={"text"}
                     fullWidth={true}
+                    defaultValue={data.name && data.name}
                 />
 
                 <TextField
@@ -91,6 +92,7 @@ export const NewTransactionModal = ({
                     rows={6}
                     maxRows={6}
                     fullWidth={true}
+                    defaultValue={data.description && data.description}
                 />
 
                 <Box sx={{width: "100%", display: "flex", gap: 2}}>
@@ -100,6 +102,7 @@ export const NewTransactionModal = ({
                         label={"Amount"}
                         type={"number"}
                         sx={{flex: 1}}
+                        defaultValue={data.amount && data.amount}
                     />
 
                     <TextField
@@ -108,6 +111,7 @@ export const NewTransactionModal = ({
                         label={"Currency"}
                         select
                         sx={{minWidth: "25%"}}
+                        defaultValue={data.currency && data.currency}
                     >
                         {currencies.map((option) => (
                             <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
@@ -120,6 +124,7 @@ export const NewTransactionModal = ({
                         label={"Payment method"}
                         select
                         sx={{minWidth: "25%"}}
+                        defaultValue={data.paymentMethod && data.paymentMethod}
                     >
                         {paymentMethods.map((option) => (
                             <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
@@ -131,8 +136,9 @@ export const NewTransactionModal = ({
                         name={"date"}
                         label={"Date"}
                         type={"date"}
-                        defaultValue={new Date().toISOString().split("T")[0]}
+                        defaultValue={data.date ? data.date : new Date().toISOString().split("T")[0]}
                         sx={{minWidth: "25%"}}
+
                     />
                 </Box>
 
@@ -144,6 +150,7 @@ export const NewTransactionModal = ({
                         label={"Paid By"}
                         type={"text"}
                         sx={{flex: 1}}
+                        defaultValue={data.paidBy && data.paidBy}
                     />
                     <TextField
                         id={"receivedBy"}
@@ -151,6 +158,7 @@ export const NewTransactionModal = ({
                         label={"Received By"}
                         type={"text"}
                         sx={{minWidth: "50%"}}
+                        defaultValue={data.receivedBy && data.receivedBy}
                     />
                 </Box>
 
@@ -159,6 +167,7 @@ export const NewTransactionModal = ({
                     name={"category"}
                     label={"Category"}
                     select
+                    defaultValue={data.category && data.category}
                 >
                     {categories.map((option) => (
                         <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>

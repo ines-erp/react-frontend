@@ -122,6 +122,7 @@ export const TransactionsDashboard = () => {
                 currencies={currencies}
                 categories={categories}
                 paymentMethods={paymentMethods}
+                data={{currency, paidBy: "Wes"}}
             />
 
             <Box sx={{display: "flex", gap: 1}}>
