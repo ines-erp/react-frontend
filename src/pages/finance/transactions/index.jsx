@@ -60,10 +60,11 @@ export const TransactionsDashboard = () => {
         const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
         const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
 
-        Promise.all([transactionsResponse, balanceResponse]).then(([transactions, balance]) => {
-            setTransactions(transactions);
-            setBalance(balance);
-        })
+        Promise.all([transactionsResponse, balanceResponse])
+            .then(([transactions, balance]) => {
+                setTransactions(transactions);
+                setBalance(balance);
+            })
     }
 
     useEffect(() => {
@@ -107,20 +108,16 @@ export const TransactionsDashboard = () => {
             </Breadcrumbs>
 
 
-            <TextField
-                id={"currency"}
-                name={"currency"}
-                label={"Currency"}
-                select
-                sx={{minWidth: "25%"}}
-                onChange={(e) => handleSelectCurrency(e.target.value)}
-            >
+            <Box sx={{minWidth: "25%", mt: 6,  gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
+                    <Chip label={`${option.label} - ${option.name}`} size={"medium"} key={option.value}
+                          value={option.name} color={currency === option.name ? "primary" : ""} onClick={() => {
+                        handleSelectCurrency(option.name)
+                    }}/>
                 ))}
-            </TextField>
+            </Box>
 
-            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 6}}>
+            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
                 <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
