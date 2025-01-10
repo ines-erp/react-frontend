@@ -23,9 +23,13 @@ export const NewTransactionModal = ({
                                         currencies,
                                         categories,
                                         paymentMethods,
-                                        data = {}
+                                        data = {},
+                                        isEditing=false,
                                     }) => {
 
+    
+    console.log(data)
+    
     return (
         <Dialog
             open={isOpen}
@@ -69,11 +73,14 @@ export const NewTransactionModal = ({
 
                 <FormControl>
                     <FormLabel>Transaction type</FormLabel>
-                    <RadioGroup defaultValue={"income"} name={"transaction-type"}
+
+                    <RadioGroup defaultValue={data.transactionType ? data.transactionType : "income"}
+                                name={"transaction-type"}
                                 sx={{display: "flex", flexDirection: "row", gap: 2}}>
                         <FormControlLabel value={"income"} control={<Radio/>} label={"Income"}/>
                         <FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>
                     </RadioGroup>
+
                 </FormControl>
                 <TextField
                     required id={"name"}
@@ -158,7 +165,7 @@ export const NewTransactionModal = ({
                         label={"Received By"}
                         type={"text"}
                         sx={{minWidth: "50%"}}
-                        defaultValue={data.receivedBy && data.receivedBy}
+                        defaultValue={data.recievedBy && data.recievedBy}
                     />
                 </Box>
 
@@ -176,7 +183,7 @@ export const NewTransactionModal = ({
 
             </DialogContent>
             <DialogActions sx={{pb: 4}}>
-                <Button type="submit" variant={"outlined"}>Create</Button>
+                <Button type="submit" variant={"outlined"}>{isEditing ? "Save": "Create"}</Button>
                 <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
             </DialogActions>
         < /Dialog>

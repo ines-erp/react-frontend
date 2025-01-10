@@ -1,6 +1,6 @@
 import {Link, useParams, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {DeleteFromApiData, getFromApiData} from "@/api/helpers/getFromApiData.js";
+import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/helpers/getFromApiData.js";
 import {
     Box, Breadcrumbs,
     Button,
@@ -15,6 +15,57 @@ import {
 } from "@mui/material";
 import {blue, blueGrey, grey} from "@mui/material/colors";
 import {ArrowBack, ContentCopy, DescriptionOutlined, NavigateBeforeRounded, UploadFile} from "@mui/icons-material";
+import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
+
+
+const CATEGORIES = [
+    {
+        value: 'bils',
+        label: 'Bills',
+    },
+    {
+        value: 'investments',
+        label: 'Investments',
+    }
+];
+
+const PAYMENTMETHODS = [
+    {
+        value: 'cash',
+        label: 'Cash',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    },
+    {
+        value: 'card-0244',
+        label: 'Card final: 0244',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    }
+];
+
+const CURRENCIES = [
+    {
+        value: 'EUR',
+        label: '€',
+        name: 'Euro'
+    },
+    {
+        value: 'BRL',
+        label: 'R$',
+        name: 'Brazilian Real'
+    },
+
+];
+
 
 export const TransactionsDetails = () => {
 
@@ -22,9 +73,28 @@ export const TransactionsDetails = () => {
     const [transaction, setTransaction] = useState();
     const navigate = useNavigate();
 
+    const [categories, setCategories] = useState(CATEGORIES);
+    const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
+    const [currencies, setCurrencies] = useState(CURRENCIES);
+
+    const [open, setOpen] = useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleSelectCurrency = (currency) => {
+        setCurrency(currency)
+    }
+
     const handleGetTransaction = async () => {
         const data = await getFromApiData(`transactions/${id}`)
         setTransaction(data)
+    }
+    const handlePutTransaction = async (body) => {
+        await putToApiData(`transactions/${id}`, body)
+        handleGetTransaction()
     }
 
     useEffect(() => {
@@ -38,7 +108,7 @@ export const TransactionsDetails = () => {
 
     const handleDelete = async (id) => {
         const response = await DeleteFromApiData(`transactions/${id}`);
-        if(response){
+        if (response) {
             navigate(-1)
         }
     }
@@ -49,6 +119,28 @@ export const TransactionsDetails = () => {
 
         return (
             <Container sx={{ml: 0}}>
+                <NewTransactionModal
+                    isOpen={open}
+                    handleClose={handleClose}
+                    handlePost={handlePutTransaction}
+                    currencies={currencies}
+                    categories={categories}
+                    paymentMethods={paymentMethods}
+                    isEditing={true}
+                    data={{
+                        currency: transaction.currency.name,
+                        paymentMethod: transaction.paymentMethod.name.toLowerCase(),
+                        transactionType: transaction.transactionType.name.toLowerCase(),
+                        category: transaction.transactionCategory.name.toLowerCase(),
+                        date: new Date(transaction.date).toISOString().split("T")[0],
+                        paidBy: transaction.paidBy,
+                        recievedBy: transaction.recievedBy,
+                        name: transaction.name,
+                        description: transaction.description,
+                        amount: Number(transaction.amount),
+                    }}
+                />
+
                 <Box sx={{display: "flex", gap: 1}}>
                     <Box sx={{display: "flex", alignItems: "center", gap: 3}}>
                         <Typography variant="h1">
@@ -119,8 +211,10 @@ export const TransactionsDetails = () => {
                     <Box
                         sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 1, mt: 4}}>
                         <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>
-                        <Button variant={"outlined"} sx={{background: "#fff"}}>Edit</Button>
-                        <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}} onClick={() => handleDelete(transaction.id)}>Delete</Button>
+                        <Button variant={"outlined"} sx={{background: "#fff"}}
+                                onClick={() => setOpen(true)}>Edit</Button>
+                        <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}}
+                                onClick={() => handleDelete(transaction.id)}>Delete</Button>
                     </Box>
 
                 </Box>
