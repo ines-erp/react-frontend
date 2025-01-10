@@ -1,31 +1,10 @@
-import {
-    Box,
-    Breadcrumbs,
-    Button,
-    ButtonGroup,
-    Card,
-    CardContent,
-    Checkbox,
-    Chip,
-    Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    IconButton, MenuItem, Radio,
-    RadioGroup,
-    TextField,
-    Typography
-} from "@mui/material";
-import {Add, ContentCopy, MonetizationOnOutlined} from "@mui/icons-material";
+import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
+import {Add, MonetizationOnOutlined} from "@mui/icons-material";
 import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
+import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 
 export const TransactionsDashboard = () => {
 
@@ -81,7 +60,16 @@ export const TransactionsDashboard = () => {
 
     return (
         <Container sx={{ml: 0}}>
-            <TringModal isOpen={open} handleClose={handleClose} handlePost={handlePostTransaction}/>
+
+            <NewTransactionModal
+                isOpen={open}
+                handleClose={handleClose}
+                handlePost={handlePostTransaction}
+                currencies={currencies}
+                categories={categories}
+                paymentMethods={paymentMethods}
+            />
+
             <Box sx={{display: "flex", gap: 1}}>
                 <Box sx={{
                     display: "flex",
@@ -107,10 +95,10 @@ export const TransactionsDashboard = () => {
                 </Typography>
             </Breadcrumbs>
 
-
-            <Box sx={{minWidth: "25%", mt: 6,  gap: 1, display: "flex"}}>
+            <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
-                    <Chip label={`${option.label} - ${option.name}`} size={"medium"} key={option.value}
+                    <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
+                          key={option.value}
                           value={option.name} color={currency === option.name ? "primary" : ""} onClick={() => {
                         handleSelectCurrency(option.name)
                     }}/>
@@ -159,8 +147,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            -{balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
-                                                                               size="small"></Chip>
+                            {balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
+                                                                              size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -255,159 +243,6 @@ export const TransactionsDashboard = () => {
 
 }
 
-const TringModal = ({isOpen, handleClose, handlePost}) => {
-
-    return (
-        <Dialog
-            open={isOpen}
-            onClose={handleClose}
-            PaperProps={{
-                component: "form",
-                onSubmit: (event) => {
-                    event.preventDefault();
-
-                    const newTransaction = {
-                        "Name": event.target.name.value,
-                        "Description": event.target.description.value,
-                        "Amount": event.target.amount.value,
-                        "Date": new Date(event.target.date.value).toISOString(),
-                        // "CreatedAt": "2023-11-28T10:35:24.123Z",
-                        // "UpdatedAt": "2023-11-28T10:35:24.123Z",
-                        "PaidBy": event.target.paidBy.value,
-                        "RecievedBy": event.target.receivedBy.value,
-                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957",
-                        "CurrencyId": "7df7cddf-471b-4e17-bc59-70b0ff0a144d",
-                        "PaymentMethodId": "1d69c5c3-9887-47e3-a07d-6cffbb5051f5",
-                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7"
-                    }
-
-                    console.log(newTransaction)
-                    handlePost(newTransaction)
-                    handleClose()
-
-                }
-            }}
-            fullWidth={true}
-            maxWidth={"md"}
-
-        >
-            <DialogTitle variant={"h3"}>
-                Add new transaction
-            </DialogTitle>
-
-            <DialogContent sx={{gap: 4, display: "flex", flexDirection: "column"}}>
-                <DialogContentText sx={{mb: 3}}>
-                    Some example text
-                </DialogContentText>
-
-                <FormControl>
-                    <FormLabel>Transaction type</FormLabel>
-                    <RadioGroup defaultValue={"income"} name={"transaction-type"}
-                                sx={{display: "flex", flexDirection: "row", gap: 2}}>
-                        <FormControlLabel value={"income"} control={<Radio/>} label={"Income"}/>
-                        <FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>
-                    </RadioGroup>
-                </FormControl>
-                <TextField
-                    required id={"name"}
-                    name={"name"}
-                    label={"Name"}
-                    type={"text"}
-                    fullWidth={true}
-                />
-
-                <TextField
-                    id={"description"}
-                    name={"description"}
-                    label={"Description"}
-                    multiline
-                    rows={6}
-                    maxRows={6}
-                    fullWidth={true}
-                />
-
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
-                    <TextField
-                        id={"amount"}
-                        name={"amount"}
-                        label={"Amount"}
-                        type={"number"}
-                        sx={{flex: 1}}
-                    />
-
-                    <TextField
-                        id={"currency"}
-                        name={"currency"}
-                        label={"Currency"}
-                        select
-                        sx={{minWidth: "25%"}}
-                    >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
-                        ))}
-                    </TextField>
-
-                    <TextField
-                        id={"paymentMethod"}
-                        name={"paymentMethod"}
-                        label={"Payment method"}
-                        select
-                        sx={{minWidth: "25%"}}
-                    >
-                        {paymentMethods.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                        ))}
-                    </TextField>
-
-                    <TextField
-                        id={"date"}
-                        name={"date"}
-                        label={"Date"}
-                        type={"date"}
-                        defaultValue={new Date().toISOString().split("T")[0]}
-                        sx={{minWidth: "25%"}}
-                    />
-                </Box>
-
-
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
-                    <TextField
-                        id={"paidBy"}
-                        name={"paidBy"}
-                        label={"Paid By"}
-                        type={"text"}
-                        sx={{flex: 1}}
-                    />
-                    <TextField
-                        id={"receivedBy"}
-                        name={"receivedBy"}
-                        label={"Received By"}
-                        type={"text"}
-                        sx={{minWidth: "50%"}}
-                    />
-                </Box>
-
-                <TextField
-                    id={"category"}
-                    name={"category"}
-                    label={"Category"}
-                    select
-                >
-                    {categories.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                    ))}
-                </TextField>
-
-            </DialogContent>
-            <DialogActions sx={{pb: 4}}>
-                <Button type="submit" variant={"outlined"}>Create</Button>
-                <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
-            </DialogActions>
-        < /Dialog>
-    )
-}
-
-
 const categories = [
     {
         value: 'bils',
@@ -431,11 +266,6 @@ const paymentMethods = [
 ];
 
 const currencies = [
-    // {
-    //     value: 'USD',
-    //     label: '$',
-    //     name: 'Dollar'
-    // },
     {
         value: 'EUR',
         label: '€',
