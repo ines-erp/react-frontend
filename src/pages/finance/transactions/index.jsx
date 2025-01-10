@@ -6,12 +6,65 @@ import {useEffect, useState} from "react";
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 
+
+const CATEGORIES = [
+    {
+        value: 'bils',
+        label: 'Bills',
+    },
+    {
+        value: 'investments',
+        label: 'Investments',
+    }
+];
+
+const PAYMENTMETHODS = [
+    {
+        value: 'cash',
+        label: 'Cash',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    },
+    {
+        value: 'card-0244',
+        label: 'Card final: 0244',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    }
+];
+
+const CURRENCIES = [
+    {
+        value: 'EUR',
+        label: '€',
+        name: 'Euro'
+    },
+    {
+        value: 'BRL',
+        label: 'R$',
+        name: 'Brazilian Real'
+    },
+
+];
+
 export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
     const [currency, setCurrency] = useState("Brazilian Real")
     const [open, setOpen] = useState(false);
+
+    const [categories, setCategories] = useState(CATEGORIES);
+    const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
+    const [currencies, setCurrencies] = useState(CURRENCIES);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -26,12 +79,12 @@ export const TransactionsDashboard = () => {
     //PROMISES
     const handlePostTransaction = async (body) => {
         await PostToApiData('transactions', body)
-        handleGetTransactions()
+        handleGetTransactionsAndBalances()
     }
     const handleDelete = async (id) => {
         const response = await DeleteFromApiData(`transactions/${id}`);
         if (response) {
-            handleGetTransactions()
+            handleGetTransactionsAndBalances()
         }
     }
 
@@ -49,6 +102,7 @@ export const TransactionsDashboard = () => {
     useEffect(() => {
         handleGetTransactionsAndBalances(currency)
     }, [currency])
+
 
     const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
     const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
@@ -243,39 +297,6 @@ export const TransactionsDashboard = () => {
 
 }
 
-const categories = [
-    {
-        value: 'bils',
-        label: 'Bills',
-    },
-    {
-        value: 'investments',
-        label: 'Investments',
-    }
-];
 
-const paymentMethods = [
-    {
-        value: 'cash',
-        label: 'Cash',
-    },
-    {
-        value: 'card-0244',
-        label: 'Card final: 0244',
-    }
-];
 
-const currencies = [
-    {
-        value: 'EUR',
-        label: '€',
-        name: 'Euro'
-    },
-    {
-        value: 'BRL',
-        label: 'R$',
-        name: 'Brazilian Real'
-    },
-
-];
 
