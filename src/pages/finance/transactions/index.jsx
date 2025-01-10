@@ -31,43 +31,44 @@ export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
-    const [currency, setCurrenty] = useState("Brazilian Real")
+    const [currency, setCurrency] = useState("Brazilian Real")
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
-
     const handleClose = () => {
         setOpen(false);
     };
-
-    const handleGetTransactions = async () => {
-        const data = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
-        setTransactions(data)
+    const handleSelectCurrency = (currency) => {
+        setCurrency(currency)
     }
 
-    const handleGetBalance = async () => {
-        const data = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
-        setBalance(data[0])
-    }
-
+    //PROMISES
     const handlePostTransaction = async (body) => {
         await PostToApiData('transactions', body)
         handleGetTransactions()
     }
-
     const handleDelete = async (id) => {
         const response = await DeleteFromApiData(`transactions/${id}`);
-        if(response){
+        if (response) {
             handleGetTransactions()
         }
     }
 
+    const handleGetTransactionsAndBalances = async (currency) => {
+        const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
+        const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
+
+        Promise.all([transactionsResponse, balanceResponse]).then(([transactions, balance]) => {
+            setTransactions(transactions);
+            setBalance(balance);
+        })
+    }
+
     useEffect(() => {
-        handleGetTransactions();
-        handleGetBalance();
-    }, [])
+        handleGetTransactionsAndBalances(currency)
+    }, [currency])
 
     const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
     const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
@@ -105,6 +106,19 @@ export const TransactionsDashboard = () => {
                 </Typography>
             </Breadcrumbs>
 
+
+            <TextField
+                id={"currency"}
+                name={"currency"}
+                label={"Currency"}
+                select
+                sx={{minWidth: "25%"}}
+                onChange={(e) => handleSelectCurrency(e.target.value)}
+            >
+                {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
+                ))}
+            </TextField>
 
             <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 6}}>
                 <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
@@ -222,13 +236,14 @@ export const TransactionsDashboard = () => {
                                     <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
                                     <Typography>{transaction.transactionType.name}</Typography>
                                     <Typography>{transaction.currency.symbol}: {transaction.amount.toFixed(2)}</Typography>
-                                    <Typography>{transaction.description.substring(0, 30)+"..."}</Typography>
+                                    <Typography>{transaction.description.substring(0, 30) + "..."}</Typography>
 
                                     <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
                                         <Button as={Link} variant={"outlined"} sx={{background: "#fff"}}
                                                 to={`details/${transaction.id}`}>Details</Button>
                                         <Button componet={Link} variant={"outlined"} color={"error"}
-                                                sx={{background: "#fff"}} onClick={() => handleDelete(transaction.id)}>Delete</Button>
+                                                sx={{background: "#fff"}}
+                                                onClick={() => handleDelete(transaction.id)}>Delete</Button>
                                     </Box>
                                 </CardContent>
                                 <Box></Box>
@@ -331,7 +346,7 @@ const TringModal = ({isOpen, handleClose, handlePost}) => {
                         sx={{minWidth: "25%"}}
                     >
                         {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                            <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
                         ))}
                     </TextField>
 
@@ -419,21 +434,21 @@ const paymentMethods = [
 ];
 
 const currencies = [
-    {
-        value: 'USD',
-        label: '$',
-    },
+    // {
+    //     value: 'USD',
+    //     label: '$',
+    //     name: 'Dollar'
+    // },
     {
         value: 'EUR',
         label: '€',
+        name: 'Euro'
     },
     {
-        value: 'BTC',
-        label: '฿',
+        value: 'BRL',
+        label: 'R$',
+        name: 'Brazilian Real'
     },
-    {
-        value: 'JPY',
-        label: '¥',
-    },
+
 ];
 
