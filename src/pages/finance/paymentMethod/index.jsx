@@ -1,24 +1,51 @@
 import {
-    Box, Button,
-    Card, CardActions,
-    CardContent, Container,InputAdornment, Modal, Stack, TextField,
+    Box,
+    Breadcrumbs,
+    Button, ButtonGroup,
+    Card,
+    CardActions,
+    CardContent, CardHeader,
+    Chip,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle, FormControl,
+    InputAdornment, InputLabel, MenuItem,
+    Modal, Pagination, Paper, Select,
+    Stack,
+    TextField,
     Typography
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {BiPencil} from "react-icons/bi";
-import {Add, Search} from "@mui/icons-material";
+import {Add, CreditCard, LocalAtm, MonetizationOnOutlined, Search, Today} from "@mui/icons-material";
 import {useEffect, useState} from "react";
-import {getFromApiData} from "@/api/helpers/getFromApiData.js";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
+import {getFromApiData} from "@/api/inesDataApiV1.js";
+import {Link} from "react-router-dom";
+import {grey} from "@mui/material/colors";
+import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
+import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 
 export const PaymentMethodDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState([])
-    const [searchBy, setSearchBy] = useState(null)
+    const [filters, setFilters] = useState({
+        type: undefined,
+        name: undefined,
+        currencyCode: undefined,
+    })
+
+    // TODO: last used payment methods
+    const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
+
+    const currenciesAvailable = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
+    const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+
+    const typesOfPm = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.type).filter((value, index, array) => array.indexOf(value) === index) : undefined;
 
     const getPaymentMethods = async () => {
-
-        const filter = searchBy ? `search=${searchBy}` : ""
-        const data = await getFromApiData(`paymentmethod?${filter}`);
+        const data = await getFromApiData(`paymentmethods`);
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
@@ -35,40 +62,71 @@ export const PaymentMethodDashboard = () => {
 
     useEffect(() => {
         getPaymentMethods();
-    }, [searchBy])
+    }, [])
 
     return (
-        <Container sx={{ml:0, display: "flex", flexDirection: "column", gap: 4}}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                <Typography variant="h4" component="h1">
-                    Payment methods
-                </Typography>
-                <ActionModal type="create" size="medium" onSave={() => {
-                    console.log("saving create")
-                }}/>
-            </Stack>
-            <TextField
-                id="search bar"
-                placeholder="Search by..."
-                slotProps={{
-                    input: {
-                        startAdornment: (
-                            <InputAdornment position="start">
-                                <Search />
-                            </InputAdornment>
-                        ),
-                    },
-                }}
-                variant="outlined"
-                size="small"
-                sx={{maxWidth: "16rem"}}
-            />
+        <Container sx={{ml: 0, display: "flex", flexDirection: "column", gap: 4}}>
+            <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+                    <Typography variant="h1">
+                        Payment methods
+                    </Typography>
+                    <ActionModalPM type="create" size="medium" onSave={() => {
+                        console.log("saving create")
+                    }}/>
+                </Stack>
+                <Breadcrumbs>
+                    <Link to={"/"}>
+                        <Typography variant="h5" color={grey[500]}>
+                            Home
+                        </Typography>
+                    </Link>
+                    <Typography variant="h5" color={grey[500]}>
+                        Payment methods
+                    </Typography>
+                </Breadcrumbs>
+            </Box>
+
+            {currenciesOnPm && (
+                <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
+                    <Chip label="All" sx={{fontWeight: "bold"}} size={"medium"} color="primary"
+                          variant={filters.currencyCode === undefined ? "filled" : "outlined"}
+                          onClick={() => {
+                              setFilters((prev) => {
+                                  return {
+                                      ...prev,
+                                      currencyCode: undefined,
+                                  }
+                              })
+                          }}/>
+                    {currenciesOnPm.map((currency) => {
+                        const data = currenciesAvailable.find(c => c.isoCode === currency);
+                        return (
+                            <Chip key={data.symbol}
+                                  size={"medium"}
+                                  // sx={{color:"primary"}}
+                                  label={`${data.symbol} - ${data.name}`} sx={{fontWeight: "bold"}}
+                                  value={data.isoCode}
+                                  color="primary"
+                                  variant={filters.currencyCode === data.isoCode ? "filled" : "outlined"}
+                                  onClick={() => {
+                                      setFilters((prev) => {
+                                          return {
+                                              ...prev,
+                                              currencyCode: data.isoCode,
+                                          }
+                                      })
+                                  }}/>
+                        )
+                    })}
+                </Box>
+            )}
 
             {paymentMethods.length === 0 && <EmptyState>
                 <Box sx={{display: "flex", flexDirection: "column", gap: 1, alignItems: "center"}}>
-                    {searchBy && <Typography>Try adjust your search</Typography>}
+                    {Object.values(filters) && <Typography>Try adjust your search</Typography>}
 
-                    {searchBy === null && <>
+                    {Object.values(filters) === undefined && <>
                         <Typography>Start by adding one payment method</Typography>
                         <Button onClick={() => {
                             console.log("not implemented")
@@ -77,8 +135,83 @@ export const PaymentMethodDashboard = () => {
                 </Box>
             </EmptyState>}
 
+
+            {lastPaymentMethods && lastPaymentMethods.length > 0 &&
+                <Box>
+                    <Typography variant={"h2"} fontSize={"1.5rem"}>Last used</Typography>
+                    <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
+                        {lastPaymentMethods.map(pm => {
+                            return (
+                                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}}
+                                      variant={"outlined"}>
+                                    <CardContent>
+                                        <Typography variant={"h3"} sx={{
+                                            color: 'text.secondary',
+                                            fontSize: 14,
+                                            alignItems: "center",
+                                            display: "flex",
+                                            gap: "8px",
+                                            mb: "16px"
+                                        }}>
+                                            {pm.type.toLowerCase().includes("card") ? <CreditCard/> : <LocalAtm/>}
+                                            {pm.type}
+                                        </Typography>
+
+                                        <Typography variant="caption" color={"text.secondary"}>
+                                            {pm.currency.symbol} - {pm.currency.name}
+                                        </Typography>
+                                        <Typography gutterBottom variant={"h3"} component="div">
+                                            {pm.name}
+                                        </Typography>
+
+                                        <Typography variant="caption" color={"text.secondary"}>
+                                            Used on - 01/01/1970
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            )
+                        })}
+                    </Box>
+                </Box>
+            }
+
             {paymentMethods.length > 0 && (
-                <Box sx={{display: "flex", flexDirection: "column", gap: 2}}>
+                <Paper elevation={0}
+                       sx={{display: "flex", flexDirection: "column", gap: 4, padding: 4, borderRadius: 4}}>
+
+                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
+                        <Typography variant={"h2"} fontSize={"1.5rem"}>Payment methods</Typography>
+                        <ButtonGroup>
+                            <Button
+                                variant={filters.type === undefined ? "contained" : "outlined"}
+                                onClick={() => setFilters((prev) => {
+                                    return {
+                                        ...prev,
+                                        type: undefined
+                                    }
+                                })}>
+                                All
+                            </Button>
+                            {typesOfPm && typesOfPm.map(
+                                type => {
+                                    return (
+                                        <Button
+                                            key={type}
+                                            variant={filters.type === type ? "contained" : "outlined"}
+                                            onClick={() => setFilters((prev) => {
+                                                return {
+                                                    ...prev,
+                                                    type: type
+                                                }
+                                            })}>
+                                            {type}
+                                        </Button>
+                                    )
+                                }
+                            )}
+                        </ButtonGroup>
+                    </Box>
+
                     {paymentMethods.map((paymentMethod) => {
                         return (
                             <PaymentMethodsCard
@@ -88,77 +221,24 @@ export const PaymentMethodDashboard = () => {
                             />
                         )
                     })}
-                </Box>
-            )}
+                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems:"center", marginTop:4}}>
+                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                            <InputLabel id="perpage">Per page</InputLabel>
+                        <Select variant="outlined" label="Per page" size="small" onChange={() => console.log("not implemented")}>
+                            {Array.from([1, 2, 3, 4, 5], (x) => x * 10).map(option => {
+                                if(option < 1) return null;
+                                return <MenuItem key={option} value={option}>{option}</MenuItem>;
+                            })}
+                        </Select>
+                        </FormControl>
+                        <Pagination count={10} shape="rounded" color="primary"/>
+                    </Box>
 
+                </Paper>
+            )}
         </Container>
     )
 }
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    borderRadius: 4,
-    boxShadow: 24,
-    p: 4,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 2
-};
 
-const PaymentMethodsCard = ({paymentMethod, onUpdate}) => {
-    return (
-        <Card key={paymentMethod.id}>
-            <CardContent>
-                <Typography sx={{color: "text.secondary", mb: 1.5}}>{paymentMethod.type}</Typography>
-                <Typography variant="h5" component="div">{paymentMethod.name}</Typography>
-                <Typography>{paymentMethod.description}</Typography>
-                <Typography sx={{color: "text.secondary", mb: 1.5}}>{paymentMethod.createdAt}</Typography>
-            </CardContent>
-            <CardActions sx={{justifyContent: "end"}}>
-                <ActionModal onSave={onUpdate}/>
-                <Button variant="outlined" size="small" color="error" startIcon={<DeleteIcon/>}>
-                    Delete
-                </Button>
-            </CardActions>
-        </Card>
-    )
-}
 
-const ActionModal = ({onSave, type = "update", ...rest}) => {
-    const [open, setOpen] = useState(false);
-    const handleClose = () => setOpen(false);
-    const handleOpen = () => {
-        setOpen(true);
-    }
-    return (
-        <>
-            <Button variant={type === "update" ? "outlined" : "contained"} size="small"
-                    startIcon={type === "update" ? <BiPencil/> : <Add/>}
-                    onClick={handleOpen} {...rest}>{type}</Button>
-
-            <Modal
-                open={open}
-                onClose={handleClose}
-            >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2" sx={{textTransform: "uppercase"}}>
-                        {type} Payment Method
-                    </Typography>
-                    <TextField label="Type" variant="outlined" fullWidth/>
-                    <TextField label="Name" variant="outlined" fullWidth/>
-                    <TextField label="Description" variant="outlined" multiline fullWidth/>
-                    <Stack direction="row" spacing={2} justifyContent="end">
-
-                        <Button variant="contained" onClick={onSave}>{type}</Button>
-                        <Button variant="contained" onClick={handleClose} color="error">Cancel</Button>
-                    </Stack>
-                </Box>
-            </Modal>
-        </>
-    )
-}
