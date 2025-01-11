@@ -5,4 +5,42 @@ export const inesDataApiV1 = axios.create({
     headers: {"Content-Type": "application/json"}
 })
 
-// inesDataApiV1.get("PaymentMethod?"+ new URLSearchParams({name:"Cash"}).toString()).then(res => console.log(res.data))
+export const getFromApiData = async (endpoint) => {
+    try {
+        const response = await inesDataApiV1.get(endpoint)
+        return response.data
+
+    } catch (e) {
+        return null
+    }
+}
+
+export const PostToApiData = async (endpoint, dataBody) => {
+    try {
+        const response = (await inesDataApiV1.post(endpoint, dataBody))
+        return response.data
+
+    } catch (e) {
+        return null
+    }
+}
+
+export const putToApiData = async (endpoint, dataBody) => {
+    try {
+        const response = (await inesDataApiV1.put(endpoint, dataBody))
+        return response.data
+
+    } catch (e) {
+        return null
+    }
+}
+
+export const DeleteFromApiData = async (endpoint) => {
+    try {
+        const response = await inesDataApiV1.delete(endpoint)
+        return response.data
+
+    } catch (e) {
+        return null
+    }
+}
