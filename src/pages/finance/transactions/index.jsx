@@ -1,32 +1,127 @@
-import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
-import {MonetizationOnOutlined} from "@mui/icons-material";
-import {green} from "@mui/material/colors"
+import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
+import {Add, MonetizationOnOutlined} from "@mui/icons-material";
+import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getFromApiData} from "@/api/helpers/getFromApiData.js";
+import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
+import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
+import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
+
+
+// TODO: COLLECT THAT INFORMATION FROM API
+const CATEGORIES = [
+    {
+        value: 'bils',
+        label: 'Bills',
+    },
+    {
+        value: 'investments',
+        label: 'Investments',
+    }
+];
+const PAYMENTMETHODS = [
+    {
+        value: 'cash',
+        label: 'Cash',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    },
+    {
+        value: 'card-0244',
+        label: 'Card final: 0244',
+        currency: {
+            value: 'EUR',
+            label: '€',
+            name: 'Euro'
+
+        }
+    }
+];
+const CURRENCIES = [
+    {
+        value: 'EUR',
+        label: '€',
+        name: 'Euro'
+    },
+    {
+        value: 'BRL',
+        label: 'R$',
+        name: 'Brazilian Real'
+    },
+
+];
+
 
 export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
-    const [currency, setCurrenty] = useState("Brazilian Real")
+    const [currency, setCurrency] = useState("BRL")
 
+    //modal
+    const [open, setOpen] = useState(false);
+    const [categories, setCategories] = useState(CATEGORIES);
+    const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
+    const [currencies, setCurrencies] = useState(CURRENCIES);
 
-    const handleGetTransactions = async () => {
-        const data = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
-        setTransactions(data)
+    //filters
+    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false})
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleSelectCurrency = (currency) => {
+        setCurrency(currency)
     }
 
-    const handleGetBalance = async () => {
-        const data = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
-        setBalance(data[0])
+    //PROMISES
+    const handlePostTransaction = async (body) => {
+        await PostToApiData('transactions', body)
+        handleGetTransactionsAndBalances()
+    }
+    const handleDelete = async (id) => {
+        const response = await DeleteFromApiData(`transactions/${id}`);
+        if (response) {
+            handleGetTransactionsAndBalances()
+        }
     }
 
+    const handleGetTransactionsAndBalances = async (currency) => {
+        const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
+        const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
+
+        Promise.all([transactionsResponse, balanceResponse])
+            .then(([transactions, balance]) => {
+                setTransactions(transactions);
+                setBalance(balance);
+            })
+    }
 
     useEffect(() => {
-        handleGetTransactions();
-        handleGetBalance();
-    }, [])
+        handleGetTransactionsAndBalances(currency)
+    }, [currency])
+
+
+    const handleSelectTransactionType = (key) => {
+        setFilterTransactionType(() => {
+            const selected = {
+                all: false,
+                incomes: false,
+                outcomes: false,
+            }
+
+            selected[key] = true;
+
+            return selected;
+        })
+    }
 
     const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
     const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
@@ -35,12 +130,56 @@ export const TransactionsDashboard = () => {
 
     const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
 
-
+    // TODO: CREATE THEMES AND STYLES FOR ELEMENTS DOWN HERE
     return (
-        <Container maxWidth={false}>
-            <Typography variant={"h1"} gutterBottom fontSize={"3rem"}>Transactions</Typography>
+        <Container sx={{ml: 0}}>
 
-            <Box sx={{display: "flex", gap: "24px", mb: "32px"}}>
+            <NewTransactionModal
+                isOpen={open}
+                handleClose={handleClose}
+                handlePost={handlePostTransaction}
+                currencies={currencies}
+                categories={categories}
+                paymentMethods={paymentMethods}
+                data={{currency, paidBy: "Wes"}}
+            />
+
+            <Box sx={{display: "flex", gap: 1}}>
+                <Box sx={{
+                    display: "flex",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}>
+                    <Typography variant={"h1"}>Transactions</Typography>
+                    <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
+                        New
+                    </Button>
+                </Box>
+            </Box>
+
+            <Breadcrumbs>
+                <Link to={"/"}>
+                    <Typography variant="h5" color={grey[500]}>
+                        Home
+                    </Typography>
+                </Link>
+                <Typography variant="h5" color={grey[500]}>
+                    Transactions
+                </Typography>
+            </Breadcrumbs>
+
+            <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
+                {currencies.map((option) => (
+                    <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
+                          key={option.value}
+                          value={option.value} color={currency === option.value ? "primary" : ""} onClick={() => {
+                        handleSelectCurrency(option.value)
+                    }}/>
+                ))}
+            </Box>
+
+            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
                 <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
@@ -82,8 +221,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            -{balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
-                                                                               size="small"></Chip>
+                            {balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
+                                                                              size="small"></Chip>
                         </Typography>
 
                         <Typography variant="caption">
@@ -140,34 +279,20 @@ export const TransactionsDashboard = () => {
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}>Latests Transactions</Typography>
                     <ButtonGroup>
-                        <Button variant={"contained"}>All</Button>
-                        <Button>Incomes</Button>
-                        <Button>Outcomes</Button>
+                        <Button variant={filterTransactionType.all ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("all")}>All</Button>
+
+                        <Button variant={filterTransactionType.incomes ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("incomes")}> Incomes < /Button>
+
+                        <Button variant={filterTransactionType.outcomes ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("outcomes")}>Outcomes</Button>
                     </ButtonGroup>
                 </Box>
 
                 <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
-                    {transactions.map(transaction => {
-                        return (
-                            <Card variant={"outlined"} key={transaction.id}
-                                  sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? "#00ff0009" : "#ff000009"}}>
-                                <CardContent
-                                    sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                                    <Typography variant={"h3"} fontSize={"1rem"}>{transaction.name}</Typography>
-                                    <Typography>{transaction.transactionType.name}</Typography>
-                                    <Typography>{transaction.currency.symbol}: {transaction.amount.toFixed(2)}</Typography>
-                                    <Typography>{transaction.description}</Typography>
-
-                                    <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                                        <Button as={Link} variant={"outlined"} sx={{background:"#fff"}}
-                                                to={`details/${transaction.id}`}>Details</Button>
-                                        <Button componet={Link} variant={"outlined"} color={"error"} sx={{background:"#fff"}}>Delete</Button>
-                                    </Box>
-                                </CardContent>
-                                <Box></Box>
-                            </Card>
-                        )
-                    })}
+                    {transactions.map(transaction => <TransactionCardResume transaction={transaction}
+                                                                            onDelete={() => handleDelete(id)}/>)}
                 </Box>
             </Box>
 
@@ -175,3 +300,7 @@ export const TransactionsDashboard = () => {
     )
 
 }
+
+
+
+
