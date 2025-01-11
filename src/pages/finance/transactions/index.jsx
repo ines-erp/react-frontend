@@ -159,7 +159,7 @@ export const TransactionsDashboard = () => {
                 {currencies.map((option) => (
                     <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
                           key={option.value}
-                          value={option.name} color={currency === option.name ? "primary" : ""} onClick={() => {
+                          value={option.value} color={currency === option.value ? "primary" : ""} onClick={() => {
                         handleSelectCurrency(option.value)
                     }}/>
                 ))}
