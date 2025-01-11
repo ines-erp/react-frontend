@@ -15,7 +15,7 @@ import {
 import {blue, blueGrey, grey} from "@mui/material/colors";
 import {ArrowBack, ContentCopy, DescriptionOutlined, NavigateBeforeRounded, UploadFile} from "@mui/icons-material";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
-import {getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 
 
 const CATEGORIES = [
