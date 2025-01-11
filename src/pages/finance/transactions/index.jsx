@@ -7,6 +7,7 @@ import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/helpers/ge
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 
 
+// TODO: COLLECT THAT INFORMATION FROM API
 const CATEGORIES = [
     {
         value: 'bils',
@@ -17,7 +18,6 @@ const CATEGORIES = [
         label: 'Investments',
     }
 ];
-
 const PAYMENTMETHODS = [
     {
         value: 'cash',
@@ -40,7 +40,6 @@ const PAYMENTMETHODS = [
         }
     }
 ];
-
 const CURRENCIES = [
     {
         value: 'EUR',
@@ -55,13 +54,15 @@ const CURRENCIES = [
 
 ];
 
+
 export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([])
     const [balance, setBalance] = useState({})
     const [currency, setCurrency] = useState("Brazilian Real")
-    const [open, setOpen] = useState(false);
 
+    //modal
+    const [open, setOpen] = useState(false);
     const [categories, setCategories] = useState(CATEGORIES);
     const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
     const [currencies, setCurrencies] = useState(CURRENCIES);
@@ -111,7 +112,7 @@ export const TransactionsDashboard = () => {
 
     const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
 
-
+    // TODO: CREATE THEMES AND STYLES FOR ELEMENTS DOWN HERE
     return (
         <Container sx={{ml: 0}}>
 
