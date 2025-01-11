@@ -67,9 +67,9 @@ export default [
 
 
             "no-await-in-loop":
-                "warning",
+                "warn",
             "no-console":
-                "warning"
+                "warn"
 
         },
         linterOptions: {
