@@ -26,9 +26,9 @@ export const PaymentMethodDashboard = () => {
         type: undefined,
         name: undefined,
         currencyCode: undefined,
-    })
+    }) //TODO: Add filters when the endpoint is able to it
 
-    // TODO: last used payment methods
+    // TODO: last used payment methods on transactions
     const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
     const currenciesAvailable = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
@@ -48,10 +48,14 @@ export const PaymentMethodDashboard = () => {
         setPaymentMethods(formatted);
     }
 
-    const handleUpdate = (paymentMethod) => {
-        console.log(paymentMethod)
+    const handleUpdate = (data) => {
+        const {name, type, description, currencyCode} = data
+        console.log(data)
     }
 
+    const handleCreatePaymentMethod = (data) => {
+        console.log(e)
+    }
     useEffect(() => {
         getPaymentMethods();
     }, [])
@@ -63,9 +67,7 @@ export const PaymentMethodDashboard = () => {
                     <Typography variant="h1">
                         Payment methods
                     </Typography>
-                    <ActionModalPM type="create" size="medium" onSave={() => {
-                        console.log("saving create")
-                    }}/>
+                    <ActionModalPM type="create" size="medium" onSave={handleCreatePaymentMethod}/>
                 </Stack>
                 <Breadcrumbs>
                     <Link to={"/"}>

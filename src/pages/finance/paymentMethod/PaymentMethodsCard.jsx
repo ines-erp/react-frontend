@@ -24,7 +24,7 @@ export const PaymentMethodsCard = ({paymentMethod, onUpdate}) => {
                 }
             </CardContent>
             <CardActions sx={{justifyContent: "end"}}>
-                <ActionModalPM onSave={onUpdate}/>
+                <ActionModalPM onSave={onUpdate} currentData={paymentMethod}/>
                 <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>}>
                     Delete
                 </Button>
