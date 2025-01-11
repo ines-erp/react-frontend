@@ -66,7 +66,7 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
                         as={Link}
                         variant={"outlined"}
                         sx={{background: "#fff"}}
-                        to={`details/${id}`}
+                        to={`${id}/details`}
                     >
                         Details
                     </Button>

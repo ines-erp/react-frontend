@@ -292,7 +292,7 @@ export const TransactionsDashboard = () => {
 
                 <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
                     {transactions.map(transaction => <TransactionCardResume transaction={transaction}
-                                                                            onDelete={() => handleDelete(id)}/>)}
+                                                                            onDelete={() => handleDelete(transaction.id)}/>)}
                 </Box>
             </Box>
 
