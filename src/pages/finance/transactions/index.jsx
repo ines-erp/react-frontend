@@ -68,6 +68,9 @@ export const TransactionsDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
     const [currencies, setCurrencies] = useState(CURRENCIES);
 
+    //filters
+    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false})
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -94,9 +97,6 @@ export const TransactionsDashboard = () => {
         const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
         const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
 
-        // const transactionsResponse = await getFromApiData('transactions')
-        // const balanceResponse = await getFromApiData('balance')
-
         Promise.all([transactionsResponse, balanceResponse])
             .then(([transactions, balance]) => {
                 setTransactions(transactions);
@@ -108,6 +108,20 @@ export const TransactionsDashboard = () => {
         handleGetTransactionsAndBalances(currency)
     }, [currency])
 
+
+    const handleSelectTransactionType = (key) => {
+        setFilterTransactionType(() => {
+            const selected = {
+                all: false,
+                incomes: false,
+                outcomes: false,
+            }
+
+            selected[key] = true;
+
+            return selected;
+        })
+    }
 
     const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
     const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
@@ -265,9 +279,14 @@ export const TransactionsDashboard = () => {
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}>Latests Transactions</Typography>
                     <ButtonGroup>
-                        <Button variant={"contained"}>All</Button>
-                        <Button>Incomes</Button>
-                        <Button>Outcomes</Button>
+                        <Button variant={filterTransactionType.all ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("all")}>All</Button>
+
+                        <Button variant={filterTransactionType.incomes ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("incomes")}> Incomes < /Button>
+
+                        <Button variant={filterTransactionType.outcomes ? "contained" : "outlined"}
+                                onClick={() => handleSelectTransactionType("outcomes")}>Outcomes</Button>
                     </ButtonGroup>
                 </Box>
 
