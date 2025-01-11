@@ -12,12 +12,14 @@ export default [
             ecmaVersion: 2020,
             globals: globals.browser,
             parserOptions: {
-                ecmaVersion: 'latest',
                 ecmaFeatures: {jsx: true},
+                ecmaVersion: 'latest',
                 sourceType: 'module',
             },
         },
-        settings: {react: {version: '18.3'}},
+        linterOptions: {
+            noInlineConfig: true
+        },
         plugins: {
             react,
             'react-hooks': reactHooks,
@@ -28,53 +30,51 @@ export default [
             ...react.configs.recommended.rules,
             ...react.configs['jsx-runtime'].rules,
             ...reactHooks.configs.recommended.rules,
-            'react/jsx-no-target-blank': 'off',
-            'react-refresh/only-export-components': [
-                'warn',
-                {allowConstantExport: true},
-            ],
-            semi: "error",
-            "prefer-const": "error",
             "array-callback-return": "error",
-            "no-async-promise-executor": "error",
-            "no-duplicate-imports": "error",
-            "no-template-curly-in-string": "error",
-            "no-unreachable-loop": "error",
-            "require-atomic-updates": "error",
             "camelcase": "error",
             "capitalized-comments": "error",
+            "no-async-promise-executor": "error",
+            "no-await-in-loop":
+                "warn",
+            "no-console":
+                "warn",
+            "no-duplicate-imports": "error",
             "no-magic-numbers": "error",
             "no-nested-ternary": "error",
+            "no-template-curly-in-string": "error",
             "no-unneeded-ternary": "error",
+            "no-unreachable-loop": "error",
             "no-var": "error",
-            "prefer-template": "error",
-            "require-await": "error",
-
+            "prefer-const": "error",
             "prefer-destructuring": ["error", {
                 "array": false,
                 "object": true
             }],
+            "prefer-template": "error",
+            'react-refresh/only-export-components': [
+                'warn',
+                {allowConstantExport: true},
+            ],
+            'react/jsx-no-target-blank': 'off',
+
+            "require-atomic-updates": "error",
+
+            "require-await": "error",
+
+            semi: "error",
+
 
             "sort-imports": ["error", {
+                "allowSeparatedGroups": false,
                 "ignoreCase": true,
                 "ignoreDeclarationSort": false,
                 "ignoreMemberSort": false,
-                "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-                "allowSeparatedGroups": false
+                "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
             }],
-
-            "sort-keys": ["error", "asc", {"caseSensitive": true, "natural": false, "minKeys": 2}],
-
-
-            "no-await-in-loop":
-                "warn",
-            "no-console":
-                "warn"
+            "sort-keys": ["error", "asc", {"caseSensitive": true, "natural": false, "minKeys": 2}]
 
         },
-        linterOptions: {
-            noInlineConfig: true
-        }
+        settings: {react: {version: '18.3'}}
     },
 ]
 ;
