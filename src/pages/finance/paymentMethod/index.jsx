@@ -3,23 +3,15 @@ import {
     Breadcrumbs,
     Button, ButtonGroup,
     Card,
-    CardActions,
-    CardContent, CardHeader,
+    CardContent,
     Chip,
     Container,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle, FormControl,
-    InputAdornment, InputLabel, MenuItem,
-    Modal, Pagination, Paper, Select,
+    FormControl, InputLabel, MenuItem,
+    Pagination, Paper, Select,
     Stack,
-    TextField,
     Typography
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import {BiPencil} from "react-icons/bi";
-import {Add, CreditCard, LocalAtm, MonetizationOnOutlined, Search, Today} from "@mui/icons-material";
+import {Add, CreditCard, LocalAtm} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
 import {getFromApiData} from "@/api/inesDataApiV1.js";
@@ -104,7 +96,7 @@ export const PaymentMethodDashboard = () => {
                         return (
                             <Chip key={data.symbol}
                                   size={"medium"}
-                                  // sx={{color:"primary"}}
+                                // sx={{color:"primary"}}
                                   label={`${data.symbol} - ${data.name}`} sx={{fontWeight: "bold"}}
                                   value={data.isoCode}
                                   color="primary"
@@ -221,15 +213,16 @@ export const PaymentMethodDashboard = () => {
                             />
                         )
                     })}
-                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems:"center", marginTop:4}}>
-                        <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4}}>
+                        <FormControl sx={{m: 1, minWidth: 120}} size="small">
                             <InputLabel id="perpage">Per page</InputLabel>
-                        <Select variant="outlined" label="Per page" size="small" onChange={() => console.log("not implemented")}>
-                            {Array.from([1, 2, 3, 4, 5], (x) => x * 10).map(option => {
-                                if(option < 1) return null;
-                                return <MenuItem key={option} value={option}>{option}</MenuItem>;
-                            })}
-                        </Select>
+                            <Select variant="outlined" label="Per page" size="small"
+                                    onChange={() => console.log("not implemented")}>
+                                {Array.from([1, 2, 3, 4, 5], (x) => x * 10).map(option => {
+                                    if (option < 1) return null;
+                                    return <MenuItem key={option} value={option}>{option}</MenuItem>;
+                                })}
+                            </Select>
                         </FormControl>
                         <Pagination count={10} shape="rounded" color="primary"/>
                     </Box>
