@@ -45,12 +45,14 @@ export const ActionModalPM = ({onSave, type = "update",currentData = {}, ...rest
         const {name, type, description, currency} = e.target;
 
         const paymentMethod = {
+            id: currentData.id,
             type: type.value,
             name: name.value,
             description: description.value,
-            currencyCode: currency.value,
+            ISOCurrencySymbol: currency.value,
         }
         onSave(paymentMethod);
+        handleClose();
     }
 
     return (

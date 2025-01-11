@@ -14,11 +14,15 @@ import {
 import {Add, CreditCard, LocalAtm} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
-import {getFromApiData} from "@/api/inesDataApiV1.js";
+import {getFromApiData, PostToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {Link} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
+
+//TODO: add the skeleton
+//TODO: Add filters when the endpoint is able to it
+// TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState([])
@@ -26,9 +30,8 @@ export const PaymentMethodDashboard = () => {
         type: undefined,
         name: undefined,
         currencyCode: undefined,
-    }) //TODO: Add filters when the endpoint is able to it
+    })
 
-    // TODO: last used payment methods on transactions
     const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
     const currenciesAvailable = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
@@ -48,13 +51,22 @@ export const PaymentMethodDashboard = () => {
         setPaymentMethods(formatted);
     }
 
-    const handleUpdate = (data) => {
-        const {name, type, description, currencyCode} = data
-        console.log(data)
+    const handleUpdate = async (data) => {
+        try {
+            await putToApiData(`paymentmethods/${data.id}`, data)
+            await getPaymentMethods();
+        } catch (error) {
+            console.error(error)
+        }
     }
 
-    const handleCreatePaymentMethod = (data) => {
-        console.log(e)
+    const handleCreatePaymentMethod = async (data) => {
+        try {
+            await PostToApiData("paymentmethods", data);
+            await getPaymentMethods();
+        } catch (e) {
+
+        }
     }
     useEffect(() => {
         getPaymentMethods();
@@ -215,6 +227,7 @@ export const PaymentMethodDashboard = () => {
                             />
                         )
                     })}
+
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4}}>
                         <FormControl sx={{m: 1, minWidth: 120}} size="small">
                             <InputLabel id="perpage">Per page</InputLabel>
