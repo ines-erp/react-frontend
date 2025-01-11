@@ -1,7 +1,7 @@
 import {Box, Button, Card, CardContent, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
 
-export const TransactionCardResume = ({transaction}) => {
+export const TransactionCardResume = ({transaction, onDelete}) => {
     const {
         id,
         name,
@@ -76,7 +76,7 @@ export const TransactionCardResume = ({transaction}) => {
                         variant={"outlined"}
                         color={"error"}
                         sx={{background: "#fff"}}
-                        onClick={() => handleDelete(id)}
+                        onClick={onDelete}
                     >
                         Delete
                     </Button>
