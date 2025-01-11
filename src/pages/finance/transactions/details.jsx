@@ -1,6 +1,5 @@
 import {Link, useParams, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/helpers/getFromApiData.js";
 import {
     Box, Breadcrumbs,
     Button,
@@ -16,6 +15,7 @@ import {
 import {blue, blueGrey, grey} from "@mui/material/colors";
 import {ArrowBack, ContentCopy, DescriptionOutlined, NavigateBeforeRounded, UploadFile} from "@mui/icons-material";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
+import {getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 
 
 const CATEGORIES = [

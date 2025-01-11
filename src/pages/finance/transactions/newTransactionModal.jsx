@@ -28,7 +28,6 @@ export const NewTransactionModal = ({
                                     }) => {
 
     
-    console.log(data)
     
     return (
         <Dialog

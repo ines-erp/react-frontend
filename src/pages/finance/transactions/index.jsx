@@ -3,9 +3,9 @@ import {Add, MonetizationOnOutlined} from "@mui/icons-material";
 import {green, grey} from "@mui/material/colors"
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/helpers/getFromApiData.js";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
+import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
@@ -291,7 +291,8 @@ export const TransactionsDashboard = () => {
                 </Box>
 
                 <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
-                    {transactions.map(transaction => <TransactionCardResume transaction={transaction}/>)}
+                    {transactions.map(transaction => <TransactionCardResume transaction={transaction}
+                                                                            onDelete={() => handleDelete(id)}/>)}
                 </Box>
             </Box>
 
