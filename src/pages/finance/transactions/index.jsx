@@ -1,6 +1,6 @@
 import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
 import {Add, MonetizationOnOutlined} from "@mui/icons-material";
-import {green, grey} from "@mui/material/colors"
+import {green, grey} from "@mui/material/colors";
 import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
@@ -11,7 +11,7 @@ import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataAp
 // TODO: COLLECT THAT INFORMATION FROM API
 const CATEGORIES = [
     {
-        value: 'bils',
+        value: 'bills',
         label: 'Bills',
     },
     {
@@ -58,9 +58,9 @@ const CURRENCIES = [
 
 export const TransactionsDashboard = () => {
 
-    const [transactions, setTransactions] = useState([])
-    const [balance, setBalance] = useState({})
-    const [currency, setCurrency] = useState("BRL")
+    const [transactions, setTransactions] = useState([]);
+    const [balance, setBalance] = useState({});
+    const [currency, setCurrency] = useState("BRL");
 
     //modal
     const [open, setOpen] = useState(false);
@@ -69,7 +69,7 @@ export const TransactionsDashboard = () => {
     const [currencies, setCurrencies] = useState(CURRENCIES);
 
     //filters
-    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false})
+    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false});
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -78,35 +78,35 @@ export const TransactionsDashboard = () => {
         setOpen(false);
     };
     const handleSelectCurrency = (currency) => {
-        setCurrency(currency)
-    }
+        setCurrency(currency);
+    };
 
     //PROMISES
     const handlePostTransaction = async (body) => {
-        await PostToApiData('transactions', body)
-        handleGetTransactionsAndBalances()
-    }
+        await PostToApiData('transactions', body);
+        handleGetTransactionsAndBalances();
+    };
     const handleDelete = async (id) => {
         const response = await DeleteFromApiData(`transactions/${id}`);
         if (response) {
-            handleGetTransactionsAndBalances()
+            handleGetTransactionsAndBalances();
         }
-    }
+    };
 
     const handleGetTransactionsAndBalances = async (currency) => {
-        const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString())
-        const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString())
+        const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString());
+        const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString());
 
         Promise.all([transactionsResponse, balanceResponse])
             .then(([transactions, balance]) => {
                 setTransactions(transactions);
                 setBalance(balance);
-            })
-    }
+            });
+    };
 
     useEffect(() => {
-        handleGetTransactionsAndBalances(currency)
-    }, [currency])
+        handleGetTransactionsAndBalances(currency);
+    }, [currency]);
 
 
     const handleSelectTransactionType = (key) => {
@@ -115,20 +115,20 @@ export const TransactionsDashboard = () => {
                 all: false,
                 incomes: false,
                 outcomes: false,
-            }
+            };
 
             selected[key] = true;
 
             return selected;
-        })
-    }
+        });
+    };
 
-    const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome")
-    const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income")
+    const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
+    const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
 
-    const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0)
+    const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0);
 
-    const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0)
+    const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0);
 
     // TODO: CREATE THEMES AND STYLES FOR ELEMENTS DOWN HERE
     return (
@@ -174,7 +174,7 @@ export const TransactionsDashboard = () => {
                     <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
                           key={option.value}
                           value={option.value} color={currency === option.value ? "primary" : ""} onClick={() => {
-                        handleSelectCurrency(option.value)
+                        handleSelectCurrency(option.value);
                     }}/>
                 ))}
             </Box>
@@ -297,9 +297,11 @@ export const TransactionsDashboard = () => {
             </Box>
 
         </Container>
-    )
+    );
 
-}
+};
+
+
 
 
 
