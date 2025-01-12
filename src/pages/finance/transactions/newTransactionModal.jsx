@@ -44,9 +44,8 @@ export const NewTransactionModal = ({
 
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [currencies, setCurrencies] = useState(CURRENCIES);
 
-    const [selectedCurrency, setSelectedCurrency] = useState({});
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({});
 
     const getPaymentMethods = async () => {
         const paymentsResponse = await getFromApiData(`paymentmethods`);
@@ -62,8 +61,7 @@ export const NewTransactionModal = ({
 
 
     const handleSelectPaymentMethod = (paymentMethod) => {
-        // Console.log(paymentMethod);
-        setSelectedCurrency(paymentMethod[0].currency);
+        setSelectedPaymentMethod(paymentMethod[0]);
     };
 
 
@@ -175,11 +173,9 @@ export const NewTransactionModal = ({
                         // Select
                         disabled={true}
                         sx={{minWidth: "25%"}}
-                        value={selectedCurrency.name}
+                        value={!!selectedPaymentMethod.currency ? selectedPaymentMethod.currency.name : "No currency selected"}
                         defaultValue={"No currency selected"}
-                    >
-                        {selectedCurrency ? selectedCurrency.name : "jaca"}
-                    </TextField>
+                    />
 
                     <TextField
                         id={"date"}
