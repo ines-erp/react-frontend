@@ -20,96 +20,15 @@ import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionMo
 import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 
 
-const CATEGORIES = [
-    {
-        label: 'Bills',
-        value: 'bils',
-    },
-    {
-        label: 'Investments',
-        value: 'investments',
-    }
-];
-
-const PAYMENTMETHODS = [
-    {
-        currency: {
-            label: '€',
-            name: 'Euro',
-            value: 'EUR'
-
-        },
-        label: 'Cash',
-        value: 'cash'
-    },
-    {
-        currency: {
-            label: '€',
-            name: 'Euro',
-            value: 'EUR'
-
-        },
-        label: 'Card final: 0244',
-        value: 'card-0244'
-    }
-];
-
-const CURRENCIES = [
-    {
-        label: '€',
-        name: 'Euro',
-        value: 'EUR'
-    },
-    {
-        label: 'R$',
-        name: 'Brazilian Real',
-        value: 'BRL'
-    },
-
-];
-
-const INITIALTRANSACTION = {
-    "amount": null,
-    "createdAt": null,
-    "date": null,
-    "description": null,
-    "id": null,
-    "name": null,
-    "paidBy": null,
-    "paymentMethod": {
-        "createdAt": null,
-        "currency": {
-            "isoCode": null,
-            "name": null,
-            "symbol": null
-        },
-        "description": null,
-        "id": null,
-        "name": null,
-        "type": null,
-        "updatedAt": null
-    },
-    "receivedBy": null,
-    "transactionCategory": {
-        "id": null,
-        "name": null
-    },
-    "transactionType": {
-        "id": null,
-        "name": null
-    },
-    "updatedAt": null
-};
-
 export const TransactionsDetails = () => {
 
     const {id} = useParams();
-    const [transaction, setTransaction] = useState(INITIALTRANSACTION);
+    const [transaction, setTransaction] = useState();
     const navigate = useNavigate();
 
-    const [categories, setCategories] = useState(CATEGORIES);
-    const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
-    const [currencies, setCurrencies] = useState(CURRENCIES);
+    const [categories, setCategories] = useState();
+    const [paymentMethods, setPaymentMethods] = useState();
+    const [currencies, setCurrencies] = useState();
 
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
@@ -146,6 +65,10 @@ export const TransactionsDetails = () => {
             navigate(-1);
         }
     };
+
+    if (!transaction) {
+        return <>loading...</>;
+    }
 
     const {
         name,
@@ -185,6 +108,7 @@ export const TransactionsDetails = () => {
     } = transaction.paymentMethod.currency;
 
     const transactionDate = new Date(Date.parse(transaction.date));
+
 
     return (
         <Container sx={{ml: 0}}>
@@ -362,7 +286,7 @@ export const TransactionsDetails = () => {
                         <Grid2 size={1}>
                             <Typography variant={"h5"}>Currency code:</Typography>
                             {/*TODO: IN API CREATE A CODE THAT MATCHES THE ISO CODE FOR CURRENCY*/}
-                            <Typography>BRL</Typography>
+                            <Typography>{currencyIsoCode}</Typography>
                             {/*<Typography>{transaction.currency.symbol}</Typography>*/}
                         </Grid2>
 
