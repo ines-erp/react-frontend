@@ -1,4 +1,6 @@
 //TODO: Make generic, extract form and and make a component
+import {useEffect, useState} from "react";
+import {getFromApiData} from "@/api/inesDataApiV1.js";
 import {
     Box,
     Button,
@@ -16,19 +18,60 @@ import {
     TextField
 } from "@mui/material";
 
+const CURRENCIES = [
+    {
+        label: '€',
+        name: 'Euro',
+        value: 'EUR'
+    },
+    {
+        label: 'R$',
+        name: 'Brazilian Real',
+        value: 'BRL'
+    },
+
+];
+
+
 export const NewTransactionModal = ({
                                         isOpen,
                                         handleClose,
                                         handlePost,
-                                        currencies,
-                                        categories,
-                                        paymentMethods,
                                         data = {},
-                                        isEditing=false,
+                                        isEditing = false,
                                     }) => {
 
-    
-    
+
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [currencies, setCurrencies] = useState(CURRENCIES);
+
+    const [selectedCurrency, setSelectedCurrency] = useState({});
+
+    const getPaymentMethods = async () => {
+        const paymentsResponse = await getFromApiData(`paymentmethods`);
+        const categoriesResponse = await getFromApiData(`transactionCategories`);
+
+        Promise.all([paymentsResponse, categoriesResponse])
+            .then(([paymentMethods, categories]) => {
+                setPaymentMethods(paymentMethods);
+                setCategories(categories);
+            });
+
+    };
+
+
+    const handleSelectPaymentMethod = (paymentMethod) => {
+        // Console.log(paymentMethod);
+        setSelectedCurrency(paymentMethod[0].currency);
+    };
+
+
+    useEffect(() => {
+        getPaymentMethods();
+    }, []);
+
+
     return (
         <Dialog
             open={isOpen}
@@ -40,18 +83,16 @@ export const NewTransactionModal = ({
 
                     const newTransaction = {
                         "Amount": event.target.amount.value,
-                        "CurrencyId": "7df7cddf-471b-4e17-bc59-70b0ff0a144d",
                         "Date": new Date(event.target.date.value).toISOString(),
                         "Description": event.target.description.value,
                         "Name": event.target.name.value,
                         "PaidBy": event.target.paidBy.value,
-                        "PaymentMethodId": "1d69c5c3-9887-47e3-a07d-6cffbb5051f5",
+                        "PaymentMethodId": event.target.paymentMethod.value,
                         "RecievedBy": event.target.receivedBy.value,
                         "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7",
                         "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957"
                     };
 
-                    console.log(newTransaction);
                     handlePost(newTransaction);
                     handleClose();
 
@@ -112,29 +153,32 @@ export const NewTransactionModal = ({
                     />
 
                     <TextField
-                        id={"currency"}
-                        name={"currency"}
-                        label={"Currency"}
-                        select
-                        sx={{minWidth: "25%"}}
-                        defaultValue={data.currency && data.currency}
-                    >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
-                        ))}
-                    </TextField>
-
-                    <TextField
                         id={"paymentMethod"}
                         name={"paymentMethod"}
                         label={"Payment method"}
                         select
                         sx={{minWidth: "25%"}}
-                        defaultValue={data.paymentMethod && data.paymentMethod}
+                        defaultValue={paymentMethods && paymentMethods}
+                        onChange={(e) => handleSelectPaymentMethod(paymentMethods.filter(pm => pm.id === e.target.value))}
                     >
-                        {paymentMethods.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                        ))}
+                        {paymentMethods.map((option) => {
+                            return (
+                                <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+                            );
+                        })}
+                    </TextField>
+
+                    <TextField
+                        id={"currency"}
+                        name={"currency"}
+                        label={"Currency"}
+                        // Select
+                        disabled={true}
+                        sx={{minWidth: "25%"}}
+                        value={selectedCurrency.name}
+                        defaultValue={"No currency selected"}
+                    >
+                        {selectedCurrency ? selectedCurrency.name : "jaca"}
                     </TextField>
 
                     <TextField
@@ -176,13 +220,13 @@ export const NewTransactionModal = ({
                     defaultValue={data.category && data.category}
                 >
                     {categories.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                        <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
                     ))}
                 </TextField>
 
             </DialogContent>
             <DialogActions sx={{pb: 4}}>
-                <Button type="submit" variant={"outlined"}>{isEditing ? "Save": "Create"}</Button>
+                <Button type="submit" variant={"outlined"}>{isEditing ? "Save" : "Create"}</Button>
                 <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
             </DialogActions>
         < /Dialog>

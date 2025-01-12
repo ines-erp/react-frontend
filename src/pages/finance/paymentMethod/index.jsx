@@ -1,13 +1,18 @@
 import {
     Box,
     Breadcrumbs,
-    Button, ButtonGroup,
+    Button,
+    ButtonGroup,
     Card,
     CardContent,
     Chip,
     Container,
-    FormControl, InputLabel, MenuItem,
-    Pagination, Paper, Select,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Pagination,
+    Paper,
+    Select,
     Stack,
     Typography
 } from "@mui/material";
@@ -25,12 +30,12 @@ import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCa
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
-    const [paymentMethods, setPaymentMethods] = useState([])
+    const [paymentMethods, setPaymentMethods] = useState([]);
     const [filters, setFilters] = useState({
-        type: undefined,
-        name: undefined,
         currencyCode: undefined,
-    })
+        name: undefined,
+        type: undefined,
+    });
 
     const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
@@ -42,23 +47,23 @@ export const PaymentMethodDashboard = () => {
     const getPaymentMethods = async () => {
         const data = await getFromApiData(`paymentmethods`);
         const formatted = data.map((item) => {
-            const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
+            const createdDate = item.createdAt && new Date(item.createdAt).toDateString();
             return {
                 ...item,
                 createdAt: createdDate
-            }
-        })
+            };
+        });
         setPaymentMethods(formatted);
-    }
+    };
 
     const handleUpdate = async (data) => {
         try {
-            await putToApiData(`paymentmethods/${data.id}`, data)
+            await putToApiData(`paymentmethods/${data.id}`, data);
             await getPaymentMethods();
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
     const handleCreatePaymentMethod = async (data) => {
         try {
@@ -67,19 +72,19 @@ export const PaymentMethodDashboard = () => {
         } catch (e) {
 
         }
-    }
+    };
 
     const handleDeletePaymentMethod = async (id) => {
         try{
-            await DeleteFromApiData(`paymentmethods/${id}` )
+            await DeleteFromApiData(`paymentmethods/${id}`);
             await getPaymentMethods();
         }catch(error){
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
     useEffect(() => {
         getPaymentMethods();
-    }, [])
+    }, []);
 
     return (
         <Container sx={{ml: 0, display: "flex", flexDirection: "column", gap: 4}}>
@@ -111,15 +116,15 @@ export const PaymentMethodDashboard = () => {
                                   return {
                                       ...prev,
                                       currencyCode: undefined,
-                                  }
-                              })
+                                  };
+                              });
                           }}/>
                     {currenciesOnPm.map((currency) => {
                         const data = currenciesAvailable.find(c => c.isoCode === currency);
                         return (
                             <Chip key={data.symbol}
                                   size={"medium"}
-                                // sx={{color:"primary"}}
+                                // Sx={{color:"primary"}}
                                   label={`${data.symbol} - ${data.name}`} sx={{fontWeight: "bold"}}
                                   value={data.isoCode}
                                   color="primary"
@@ -129,22 +134,22 @@ export const PaymentMethodDashboard = () => {
                                           return {
                                               ...prev,
                                               currencyCode: data.isoCode,
-                                          }
-                                      })
+                                          };
+                                      });
                                   }}/>
-                        )
+                        );
                     })}
                 </Box>
             )}
 
             {paymentMethods.length === 0 && <EmptyState>
-                <Box sx={{display: "flex", flexDirection: "column", gap: 1, alignItems: "center"}}>
+                <Box sx={{alignItems: "center", display: "flex", flexDirection: "column", gap: 1}}>
                     {Object.values(filters) && <Typography>Try adjust your search</Typography>}
 
                     {Object.values(filters) === undefined && <>
                         <Typography>Start by adding one payment method</Typography>
                         <Button onClick={() => {
-                            console.log("not implemented")
+                            console.log("not implemented");
                         }} variant="contained" startIcon={<Add/>}>Add new</Button>
                     </>}
                 </Box>
@@ -157,14 +162,14 @@ export const PaymentMethodDashboard = () => {
                     <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
                         {lastPaymentMethods.map(pm => {
                             return (
-                                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}}
+                                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}}
                                       variant={"outlined"}>
                                     <CardContent>
                                         <Typography variant={"h3"} sx={{
-                                            color: 'text.secondary',
-                                            fontSize: 14,
                                             alignItems: "center",
+                                            color: 'text.secondary',
                                             display: "flex",
+                                            fontSize: 14,
                                             gap: "8px",
                                             mb: "16px"
                                         }}>
@@ -184,7 +189,7 @@ export const PaymentMethodDashboard = () => {
                                         </Typography>
                                     </CardContent>
                                 </Card>
-                            )
+                            );
                         })}
                     </Box>
                 </Box>
@@ -192,7 +197,7 @@ export const PaymentMethodDashboard = () => {
 
             {paymentMethods.length > 0 && (
                 <Paper elevation={0}
-                       sx={{display: "flex", flexDirection: "column", gap: 4, padding: 4, borderRadius: 4}}>
+                       sx={{borderRadius: 4, display: "flex", flexDirection: "column", gap: 4, padding: 4}}>
 
                     <Box sx={{display: "flex", justifyContent: "space-between"}}>
                         <Typography variant={"h2"} fontSize={"1.5rem"}>Payment methods</Typography>
@@ -203,7 +208,7 @@ export const PaymentMethodDashboard = () => {
                                     return {
                                         ...prev,
                                         type: undefined
-                                    }
+                                    };
                                 })}>
                                 All
                             </Button>
@@ -217,11 +222,11 @@ export const PaymentMethodDashboard = () => {
                                                 return {
                                                     ...prev,
                                                     type: type
-                                                }
+                                                };
                                             })}>
                                             {type}
                                         </Button>
-                                    )
+                                    );
                                 }
                             )}
                         </ButtonGroup>
@@ -235,10 +240,10 @@ export const PaymentMethodDashboard = () => {
                                 onUpdate={handleUpdate}
                                 onDelete={handleDeletePaymentMethod}
                             />
-                        )
+                        );
                     })}
 
-                    <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4}}>
+                    <Box sx={{alignItems: "center", display: "flex", justifyContent: "space-between", marginTop: 4}}>
                         <FormControl sx={{m: 1, minWidth: 120}} size="small">
                             <InputLabel id="perpage">Per page</InputLabel>
                             <Select variant="outlined" label="Per page" size="small"
@@ -255,8 +260,8 @@ export const PaymentMethodDashboard = () => {
                 </Paper>
             )}
         </Container>
-    )
-}
+    );
+};
 
 
 
