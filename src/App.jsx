@@ -1,7 +1,7 @@
-import {RouterProvider} from "react-router-dom";
-import router from "@/routes/router.jsx"
-import {ThemeProvider} from "@mui/material";
 import {inesMainTheme} from "@/themes/inesMainTheme.js";
+import router from "@/routes/router.jsx";
+import {RouterProvider} from "react-router-dom";
+import {ThemeProvider} from "@mui/material";
 
 function App() {
 
@@ -9,8 +9,8 @@ function App() {
         <ThemeProvider theme={inesMainTheme}>
             <RouterProvider router={router}/>
         </ThemeProvider>
-    )
+    );
 }
 
 
-export default App
+export default App;
