@@ -18,20 +18,6 @@ import {
     TextField
 } from "@mui/material";
 
-const CURRENCIES = [
-    {
-        label: '€',
-        name: 'Euro',
-        value: 'EUR'
-    },
-    {
-        label: 'R$',
-        name: 'Brazilian Real',
-        value: 'BRL'
-    },
-
-];
-
 
 export const NewTransactionModal = ({
                                         isOpen,
@@ -44,17 +30,20 @@ export const NewTransactionModal = ({
 
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [types, setTypes] = useState([]);
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({});
 
     const getPaymentMethods = async () => {
         const paymentsResponse = await getFromApiData(`paymentmethods`);
         const categoriesResponse = await getFromApiData(`transactionCategories`);
+        const typesResponse = await getFromApiData(`transactionTypes`);
 
-        Promise.all([paymentsResponse, categoriesResponse])
-            .then(([paymentMethods, categories]) => {
+        Promise.all([paymentsResponse, categoriesResponse, typesResponse])
+            .then(([paymentMethods, categories, types]) => {
                 setPaymentMethods(paymentMethods);
                 setCategories(categories);
+                setTypes(types);
             });
 
     };
@@ -70,6 +59,11 @@ export const NewTransactionModal = ({
     }, []);
 
 
+    if (!categories & !paymentMethods && !types) {
+        return <>... loading</>;
+    }
+    
+    
     return (
         <Dialog
             open={isOpen}
@@ -87,8 +81,8 @@ export const NewTransactionModal = ({
                         "PaidBy": event.target.paidBy.value,
                         "PaymentMethodId": event.target.paymentMethod.value,
                         "RecievedBy": event.target.receivedBy.value,
-                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7",
-                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957"
+                        "TransactionCategoryId": event.target.category.value,
+                        "TransactionTypeId": event.target.transactionType.value
                     };
 
                     handlePost(newTransaction);
@@ -113,10 +107,17 @@ export const NewTransactionModal = ({
                     <FormLabel>Transaction type</FormLabel>
 
                     <RadioGroup defaultValue={data.transactionType ? data.transactionType : "income"}
-                                name={"transaction-type"}
+                                id={"transactionType"}
+                                name={"transactionType"}
                                 sx={{display: "flex", flexDirection: "row", gap: 2}}>
-                        <FormControlLabel value={"income"} control={<Radio/>} label={"Income"}/>
-                        <FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>
+                        {types.map(transactionType => {
+                            return (
+                                <FormControlLabel required value={transactionType.id} key={transactionType.id}
+                                                  control={<Radio/>}
+                                                  label={transactionType.name}/>
+                            );
+                        })}
+                        {/*<FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>*/}
                     </RadioGroup>
 
                 </FormControl>
@@ -213,7 +214,6 @@ export const NewTransactionModal = ({
                     name={"category"}
                     label={"Category"}
                     select
-                    defaultValue={data.category && data.category}
                 >
                     {categories.map((option) => (
                         <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
