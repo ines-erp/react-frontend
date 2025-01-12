@@ -39,7 +39,6 @@ export default [
             "no-console":
                 "warn",
             "no-duplicate-imports": "error",
-            "no-magic-numbers": "error",
             "no-nested-ternary": "error",
             "no-template-curly-in-string": "error",
             "no-unneeded-ternary": "error",
@@ -63,14 +62,6 @@ export default [
 
             semi: "error",
 
-
-            "sort-imports": ["error", {
-                "allowSeparatedGroups": false,
-                "ignoreCase": true,
-                "ignoreDeclarationSort": false,
-                "ignoreMemberSort": false,
-                "memberSyntaxSortOrder": ["none", "all", "multiple", "single"]
-            }],
             "sort-keys": ["error", "asc", {"caseSensitive": true, "natural": false, "minKeys": 2}]
 
         },
