@@ -122,15 +122,15 @@ export const TransactionsDetails = () => {
                 isEditing={true}
                 data={{
                     amount: Number(amount),
-                    category: categoryName,
+                    category: categoryId,
                     currency: currencyName,
                     date: new Date(date).toISOString().split("T")[0],
                     description: description,
                     name: name,
                     paidBy: paidBy,
-                    paymentMethod: pymentMethodName,
-                    recievedBy: receivedBy,
-                    transactionType: transactionTypeName,
+                    paymentMethod: pymentMethodId,
+                    receivedBy: receivedBy,
+                    transactionType: transactionTypeId,
                 }}
             />
 
@@ -248,7 +248,7 @@ export const TransactionsDetails = () => {
 
                         <Grid2 size={1}>
                             <Typography variant={"h5"}>Recieved by:</Typography>
-                            <Typography>{transaction.recievedBy}</Typography>
+                            <Typography>{receivedBy}</Typography>
                         </Grid2>
                     </Grid2>
 

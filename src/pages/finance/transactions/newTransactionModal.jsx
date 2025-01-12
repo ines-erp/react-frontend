@@ -28,11 +28,10 @@ export const NewTransactionModal = ({
                                     }) => {
 
 
-    const [paymentMethods, setPaymentMethods] = useState([]);
-    const [categories, setCategories] = useState([]);
-    const [types, setTypes] = useState([]);
-
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({});
+    const [paymentMethods, setPaymentMethods] = useState();
+    const [categories, setCategories] = useState();
+    const [types, setTypes] = useState();
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
 
     const getPaymentMethods = async () => {
         const paymentsResponse = await getFromApiData(`paymentmethods`);
@@ -62,8 +61,8 @@ export const NewTransactionModal = ({
     if (!categories & !paymentMethods && !types) {
         return <>... loading</>;
     }
-    
-    
+
+
     return (
         <Dialog
             open={isOpen}
@@ -80,7 +79,7 @@ export const NewTransactionModal = ({
                         "Name": event.target.name.value,
                         "PaidBy": event.target.paidBy.value,
                         "PaymentMethodId": event.target.paymentMethod.value,
-                        "RecievedBy": event.target.receivedBy.value,
+                        "ReceivedBy": event.target.receivedBy.value,
                         "TransactionCategoryId": event.target.category.value,
                         "TransactionTypeId": event.target.transactionType.value
                     };
@@ -106,7 +105,7 @@ export const NewTransactionModal = ({
                 <FormControl>
                     <FormLabel>Transaction type</FormLabel>
 
-                    <RadioGroup defaultValue={data.transactionType ? data.transactionType : "income"}
+                    <RadioGroup defaultValue={data.transactionType}
                                 id={"transactionType"}
                                 name={"transactionType"}
                                 sx={{display: "flex", flexDirection: "row", gap: 2}}>
@@ -127,7 +126,7 @@ export const NewTransactionModal = ({
                     label={"Name"}
                     type={"text"}
                     fullWidth={true}
-                    defaultValue={data.name && data.name}
+                    defaultValue={data.name}
                 />
 
                 <TextField
@@ -138,7 +137,7 @@ export const NewTransactionModal = ({
                     rows={6}
                     maxRows={6}
                     fullWidth={true}
-                    defaultValue={data.description && data.description}
+                    defaultValue={data.description}
                 />
 
                 <Box sx={{display: "flex", gap: 2, width: "100%"}}>
@@ -148,7 +147,7 @@ export const NewTransactionModal = ({
                         label={"Amount"}
                         type={"number"}
                         sx={{flex: 1}}
-                        defaultValue={data.amount && data.amount}
+                        defaultValue={data.amount}
                     />
 
                     <TextField
@@ -157,7 +156,7 @@ export const NewTransactionModal = ({
                         label={"Payment method"}
                         select
                         sx={{minWidth: "25%"}}
-                        defaultValue={paymentMethods && paymentMethods}
+                        defaultValue={data.paymentMethod}
                         onChange={(e) => handleSelectPaymentMethod(paymentMethods.filter(pm => pm.id === e.target.value))}
                     >
                         {paymentMethods.map((option) => {
@@ -174,8 +173,8 @@ export const NewTransactionModal = ({
                         // Select
                         disabled={true}
                         sx={{minWidth: "25%"}}
-                        value={!!selectedPaymentMethod.currency ? selectedPaymentMethod.currency.name : "No currency selected"}
-                        defaultValue={"No currency selected"}
+                        value={selectedPaymentMethod ? selectedPaymentMethod.currency.name : data.currency ? data.currency : "No currency selected"}
+                        defaultValue={data.currency}
                     />
 
                     <TextField
@@ -183,7 +182,7 @@ export const NewTransactionModal = ({
                         name={"date"}
                         label={"Date"}
                         type={"date"}
-                        defaultValue={data.date ? data.date : new Date().toISOString().split("T")[0]}
+                        defaultValue={data.date}
                         sx={{minWidth: "25%"}}
 
                     />
@@ -205,7 +204,7 @@ export const NewTransactionModal = ({
                         label={"Received By"}
                         type={"text"}
                         sx={{minWidth: "50%"}}
-                        defaultValue={data.recievedBy && data.recievedBy}
+                        defaultValue={data.receivedBy}
                     />
                 </Box>
 
@@ -214,6 +213,7 @@ export const NewTransactionModal = ({
                     name={"category"}
                     label={"Category"}
                     select
+                    defaultValue={data.category}
                 >
                     {categories.map((option) => (
                         <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
