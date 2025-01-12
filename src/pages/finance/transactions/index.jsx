@@ -11,46 +11,46 @@ import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataAp
 // TODO: COLLECT THAT INFORMATION FROM API
 const CATEGORIES = [
     {
-        value: 'bills',
         label: 'Bills',
+        value: 'bills',
     },
     {
-        value: 'investments',
         label: 'Investments',
+        value: 'investments',
     }
 ];
 const PAYMENTMETHODS = [
     {
-        value: 'cash',
-        label: 'Cash',
         currency: {
-            value: 'EUR',
             label: '€',
-            name: 'Euro'
+            name: 'Euro',
+            value: 'EUR'
 
-        }
+        },
+        label: 'Cash',
+        value: 'cash'
     },
     {
-        value: 'card-0244',
-        label: 'Card final: 0244',
         currency: {
-            value: 'EUR',
             label: '€',
-            name: 'Euro'
+            name: 'Euro',
+            value: 'EUR'
 
-        }
+        },
+        label: 'Card final: 0244',
+        value: 'card-0244'
     }
 ];
 const CURRENCIES = [
     {
-        value: 'EUR',
         label: '€',
-        name: 'Euro'
+        name: 'Euro',
+        value: 'EUR'
     },
     {
-        value: 'BRL',
         label: 'R$',
-        name: 'Brazilian Real'
+        name: 'Brazilian Real',
+        value: 'BRL'
     },
 
 ];
@@ -146,10 +146,10 @@ export const TransactionsDashboard = () => {
 
             <Box sx={{display: "flex", gap: 1}}>
                 <Box sx={{
-                    display: "flex",
-                    width: "100%",
                     alignItems: "center",
+                    display: "flex",
                     justifyContent: "space-between",
+                    width: "100%",
                 }}>
                     <Typography variant={"h1"}>Transactions</Typography>
                     <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
@@ -169,7 +169,7 @@ export const TransactionsDashboard = () => {
                 </Typography>
             </Breadcrumbs>
 
-            <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
+            <Box sx={{display: "flex", gap: 1, minWidth: "25%", mt: 6}}>
                 {currencies.map((option) => (
                     <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
                           key={option.value}
@@ -180,13 +180,13 @@ export const TransactionsDashboard = () => {
             </Box>
 
             <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
+                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
                             alignItems: "center",
+                            color: 'text.secondary',
                             display: "flex",
+                            fontSize: 14,
                             gap: "8px",
                             mb: "16px"
                         }}>
@@ -206,13 +206,13 @@ export const TransactionsDashboard = () => {
                     </CardContent>
                 </Card>
 
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
+                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
                             alignItems: "center",
+                            color: 'text.secondary',
                             display: "flex",
+                            fontSize: 14,
                             gap: "8px",
                             mb: "16px"
                         }}>
@@ -232,14 +232,14 @@ export const TransactionsDashboard = () => {
                     </CardContent>
                 </Card>
 
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, background: green[50], border: "none"}}
+                <Card sx={{background: green[50], border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}}
                       variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
                             alignItems: "center",
+                            color: 'text.secondary',
                             display: "flex",
+                            fontSize: 14,
                             gap: "8px",
                             mb: "16px"
                         }}>
@@ -260,21 +260,21 @@ export const TransactionsDashboard = () => {
                 </Card>
             </Box>
 
-            <Box sx={{gap: "24px", display: "none"}}>
-                <Card sx={{maxWidth: "60%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
+            <Box sx={{display: "none", gap: "24px"}}>
+                <Card sx={{border: "none", flex: 1, maxWidth: "60%", minHeight: "350px"}} variant={"outlined"}>Chart
                     one</Card>
-                <Card sx={{maxWidth: "40%", flex: 1, minHeight: "350px", border: "none"}} variant={"outlined"}>Chart
+                <Card sx={{border: "none", flex: 1, maxWidth: "40%", minHeight: "350px"}} variant={"outlined"}>Chart
                     one</Card>
             </Box>
 
             <Box sx={{
                 background: "#fff",
-                padding: "32px",
-                mt: "32px",
                 borderRadius: "8px",
                 display: "flex",
                 flexDirection: "column",
-                gap: "24px"
+                gap: "24px",
+                mt: "32px",
+                padding: "32px"
             }}>
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}>Latests Transactions</Typography>
@@ -290,7 +290,7 @@ export const TransactionsDashboard = () => {
                     </ButtonGroup>
                 </Box>
 
-                <Box sx={{display: "flex", gap: "16px", flexDirection: "column"}}>
+                <Box sx={{display: "flex", flexDirection: "column", gap: "16px"}}>
                     {transactions.map(transaction => <TransactionCardResume transaction={transaction}
                                                                             onDelete={() => handleDelete(transaction.id)}/>)}
                 </Box>

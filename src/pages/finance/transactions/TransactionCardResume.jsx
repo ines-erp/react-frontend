@@ -43,7 +43,7 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
         >
 
             <CardContent
-                sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
+                sx={{alignItems: "center", display: "flex", justifyContent: "space-between"}}
             >
 
                 <Typography variant={"h3"} fontSize={"1rem"}>
@@ -61,7 +61,7 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
                     {description.substring(0, 30) + "..."}
                 </Typography>
 
-                <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
+                <Box sx={{alignItems: "center", display: "flex", gap: "8px", my: "auto"}}>
                     <Button
                         as={Link}
                         variant={"outlined"}
