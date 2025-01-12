@@ -1,6 +1,6 @@
 import {TransactionTypesDashboard} from "@/pages/finance/transactionTypes/index.jsx";
 
-export const transactionTypesRoutes = [
+export const transactionTypesRoutesList = [
     {
         element: <TransactionTypesDashboard/>,
         isEnabled: true,
