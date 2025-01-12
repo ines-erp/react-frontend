@@ -3,8 +3,16 @@ import {TransactionsDashboard} from "@/pages/finance/transactions/index.jsx";
 import {TransactionsDetails} from "@/pages/finance/transactions/details.jsx";
 
 export const transactionsRoutesList = [
-    {path: "", element: <TransactionsDashboard />, label:"Dashboard trasactions", isInMenu: true, isEnabled: true, parentLabel:"Finance", icon:<BiUser />},
-    {path: "add", element: <h1>Any other</h1>, label:"New transaction", isInMenu: false, isEnabled: false},
-    {path: ":id/details", element: <TransactionsDetails />, label:"Details", isInMenu: false, isEnabled: true},
-    {path: ":id/delete", element: <h1>Any other</h1>, label:"Delete transaction", isInMenu: false, isEnabled: false},
+    {
+        element: <TransactionsDashboard/>,
+        icon: <BiUser/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Dashboard trasactions",
+        parentLabel: "Finance",
+        path: ""
+    },
+    {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "New transaction", path: "add"},
+    {element: <TransactionsDetails/>, isEnabled: true, isInMenu: false, label: "Details", path: ":id/details"},
+    {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "Delete transaction", path: ":id/delete"},
 ]

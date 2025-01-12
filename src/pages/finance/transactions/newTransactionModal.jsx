@@ -39,21 +39,21 @@ export const NewTransactionModal = ({
                     event.preventDefault();
 
                     const newTransaction = {
-                        "Name": event.target.name.value,
-                        "Description": event.target.description.value,
                         "Amount": event.target.amount.value,
-                        "Date": new Date(event.target.date.value).toISOString(),
-                        "PaidBy": event.target.paidBy.value,
-                        "RecievedBy": event.target.receivedBy.value,
-                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957",
                         "CurrencyId": "7df7cddf-471b-4e17-bc59-70b0ff0a144d",
+                        "Date": new Date(event.target.date.value).toISOString(),
+                        "Description": event.target.description.value,
+                        "Name": event.target.name.value,
+                        "PaidBy": event.target.paidBy.value,
                         "PaymentMethodId": "1d69c5c3-9887-47e3-a07d-6cffbb5051f5",
-                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7"
-                    }
+                        "RecievedBy": event.target.receivedBy.value,
+                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7",
+                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957"
+                    };
 
-                    console.log(newTransaction)
-                    handlePost(newTransaction)
-                    handleClose()
+                    console.log(newTransaction);
+                    handlePost(newTransaction);
+                    handleClose();
 
                 }
             }}
@@ -65,7 +65,7 @@ export const NewTransactionModal = ({
                 Add new transaction
             </DialogTitle>
 
-            <DialogContent sx={{gap: 4, display: "flex", flexDirection: "column"}}>
+            <DialogContent sx={{display: "flex", flexDirection: "column", gap: 4}}>
                 <DialogContentText sx={{mb: 3}}>
                     Some example text
                 </DialogContentText>
@@ -101,7 +101,7 @@ export const NewTransactionModal = ({
                     defaultValue={data.description && data.description}
                 />
 
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                <Box sx={{display: "flex", gap: 2, width: "100%"}}>
                     <TextField
                         id={"amount"}
                         name={"amount"}
@@ -149,7 +149,7 @@ export const NewTransactionModal = ({
                 </Box>
 
 
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                <Box sx={{display: "flex", gap: 2, width: "100%"}}>
                     <TextField
                         id={"paidBy"}
                         name={"paidBy"}
@@ -186,5 +186,5 @@ export const NewTransactionModal = ({
                 <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
             </DialogActions>
         < /Dialog>
-    )
-}
+    );
+};
