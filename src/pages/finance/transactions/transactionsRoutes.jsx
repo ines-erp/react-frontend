@@ -15,4 +15,4 @@ export const transactionsRoutesList = [
     {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "New transaction", path: "add"},
     {element: <TransactionsDetails/>, isEnabled: true, isInMenu: false, label: "Details", path: ":id/details"},
     {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "Delete transaction", path: ":id/delete"},
-]
+];
