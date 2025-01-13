@@ -2,12 +2,12 @@ import {PaymentMethodDashboard} from "@/pages/finance/paymentMethod/index.jsx";
 
 export const paymentMethodsRoutesList = [
     {
-        path: "",
-        element: <PaymentMethodDashboard />,
-        label: "Dashboard",
-        isInMenu: true,
+        element: <PaymentMethodDashboard/>,
         isEnabled: true,
+        isInMenu: true,
+        label: "Dashboard",
+        path: "",
     },
-    {path: ":id/details", element: <div>Details</div>, label: "Details", isInMenu: false, isEnabled: true},
-]
+    {element: <div>Details</div>, isEnabled: true, isInMenu: false, label: "Details", path: ":id/details"},
+];
 
