@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
+import {Badge} from "@/components/base/Badge.jsx";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
@@ -171,11 +172,8 @@ export const TransactionsDashboard = () => {
 
             <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
-                    <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
-                          key={option.value}
-                          value={option.value} color={currency === option.value ? "primary" : ""} onClick={() => {
-                        handleSelectCurrency(option.value);
-                    }}/>
+                    <Badge label={`${option.label} - ${option.name}`} key={option.value} onClick={() => {
+                         handleSelectCurrency(option.value)}} isSelected={currency === option.value}/>
                 ))}
             </Box>
 

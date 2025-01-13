@@ -19,6 +19,7 @@ import {Link} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
+import {Badge} from "@/components/base/Badge.jsx";
 
 //TODO: add the skeleton
 //TODO: Add filters when the endpoint is able to it
@@ -104,8 +105,8 @@ export const PaymentMethodDashboard = () => {
 
             {currenciesOnPm && (
                 <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
-                    <Chip label="All" sx={{fontWeight: "bold"}} size={"medium"} color="primary"
-                          variant={filters.currencyCode === undefined ? "filled" : "outlined"}
+                    <Badge label="All"
+                          isSelected={filters.currencyCode === undefined}
                           onClick={() => {
                               setFilters((prev) => {
                                   return {
@@ -117,13 +118,9 @@ export const PaymentMethodDashboard = () => {
                     {currenciesOnPm.map((currency) => {
                         const data = currenciesAvailable.find(c => c.isoCode === currency);
                         return (
-                            <Chip key={data.symbol}
-                                  size={"medium"}
-                                // sx={{color:"primary"}}
-                                  label={`${data.symbol} - ${data.name}`} sx={{fontWeight: "bold"}}
-                                  value={data.isoCode}
-                                  color="primary"
-                                  variant={filters.currencyCode === data.isoCode ? "filled" : "outlined"}
+                            <Badge key={data.symbol}
+                                  label={`${data.symbol} - ${data.name}`}
+                                  isSelected={filters.currencyCode === data.isoCode}
                                   onClick={() => {
                                       setFilters((prev) => {
                                           return {
