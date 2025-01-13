@@ -5,7 +5,7 @@ export const transactionTypesRoutes = [
         element: <TransactionTypesDashboard/>,
         isEnabled: true,
         isInMenu: true,
-        label: "Dashboard",
+        label: "Transaction types",
         path: ""
     }
 ];
