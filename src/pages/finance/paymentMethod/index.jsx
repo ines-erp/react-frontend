@@ -1,10 +1,8 @@
 import {
     Box,
-    Breadcrumbs,
     Button, ButtonGroup,
     Card,
     CardContent,
-    Chip,
     Container,
     FormControl, InputLabel, MenuItem,
     Pagination, Paper, Select,
@@ -15,11 +13,10 @@ import {Add, CreditCard, LocalAtm} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
 import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/inesDataApiV1.js";
-import {Link} from "react-router-dom";
-import {grey} from "@mui/material/colors";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
+import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
 
 //TODO: add the skeleton
 //TODO: Add filters when the endpoint is able to it
@@ -91,16 +88,7 @@ export const PaymentMethodDashboard = () => {
                     </Typography>
                     <ActionModalPM type="create" size="medium" onSave={handleCreatePaymentMethod}/>
                 </Stack>
-                <Breadcrumbs>
-                    <Link to={"/"}>
-                        <Typography variant="h5" color={grey[500]}>
-                            Home
-                        </Typography>
-                    </Link>
-                    <Typography variant="h5" color={grey[500]}>
-                        Payment methods
-                    </Typography>
-                </Breadcrumbs>
+                <Breadcrumbs previousLinks={[{label:"home", path:"/"}]} current="payment methods" />
             </Box>
 
             {currenciesOnPm && (

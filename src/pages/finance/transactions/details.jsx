@@ -1,7 +1,7 @@
-import {Link, useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {
-    Box, Breadcrumbs,
+    Box,
     Button,
     Chip,
     Container, Grid2,
@@ -13,9 +13,10 @@ import {
     Typography
 } from "@mui/material";
 import {blue, blueGrey, grey} from "@mui/material/colors";
-import {ArrowBack, ContentCopy, DescriptionOutlined, NavigateBeforeRounded, UploadFile} from "@mui/icons-material";
+import {ContentCopy, DescriptionOutlined, UploadFile} from "@mui/icons-material";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
 
 
 const CATEGORIES = [
@@ -227,22 +228,28 @@ export const TransactionsDetails = () => {
                 </Box>
             </Box>
 
-            <Breadcrumbs>
-                <Link to={"/"}>
-                    <Typography variant="h5" color={grey[500]}>
-                        Home
-                    </Typography>
-                </Link>
-                <Link to={"../"}>
-                    <Typography variant="h5" color={grey[500]}>
-                        Transactions
-                    </Typography>
-                </Link>
+            <Breadcrumbs
+                previousLinks={[
+                    {path: "/", label: "home"},
+                    {path: "../", label: "Transactions"},
+                ]}
+                current={transaction.name}
+            />
+            {/*    <Link to={"/"}>*/}
+            {/*        <Typography variant="h5" color={grey[500]}>*/}
+            {/*            Home*/}
+            {/*        </Typography>*/}
+            {/*    </Link>*/}
+            {/*    <Link to={"../"}>*/}
+            {/*        <Typography variant="h5" color={grey[500]}>*/}
+            {/*            Transactions*/}
+            {/*        </Typography>*/}
+            {/*    </Link>*/}
 
-                <Typography variant="h5" color={grey[500]}>
-                    Bread crumbs
-                </Typography>
-            </Breadcrumbs>
+            {/*    <Typography variant="h5" color={grey[500]}>*/}
+            {/*        Bread crumbs*/}
+            {/*    </Typography>*/}
+            {/*</Breadcrumbs>*/}
 
             <Box sx={{
                 display: "flex",

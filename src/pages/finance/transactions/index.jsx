@@ -1,12 +1,12 @@
-import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
+import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
 import {Add, MonetizationOnOutlined} from "@mui/icons-material";
-import {green, grey} from "@mui/material/colors";
-import {Link} from "react-router-dom";
+import {green} from "@mui/material/colors";
 import {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
 import {Badge} from "@/components/base/Badge.jsx";
+import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
@@ -159,16 +159,8 @@ export const TransactionsDashboard = () => {
                 </Box>
             </Box>
 
-            <Breadcrumbs>
-                <Link to={"/"}>
-                    <Typography variant="h5" color={grey[500]}>
-                        Home
-                    </Typography>
-                </Link>
-                <Typography variant="h5" color={grey[500]}>
-                    Transactions
-                </Typography>
-            </Breadcrumbs>
+            <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
+
 
             <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
