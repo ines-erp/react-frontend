@@ -36,6 +36,40 @@ export const inesMainTheme = createTheme({
                 {props: {variant: "h5"}, style: {fontSize: '0.8rem', fontWeight: 100}},
                 {props: {variant: "h6"}, style: {fontSize: '0.6rem', fontWeight: 100}},
             ]
+        },
+        MuiPaper: {
+            variants: [
+                {
+                    props: {variant: 'outlined'},
+                    style: {
+                        borderRadius: "8px",
+                        padding: "16px",
+                        border: "none",
+                    },
+                },
+            ],
+        },
+        MuiCard:{
+            variants:[
+                {
+                    props: {variant:'outlined'},
+                    style: {
+                        borderRadius: "8px",
+                        padding: "16px",
+                        border: `1px solid ${grey[300]}`,
+                    }
+                }
+            ]
+        },
+        MuiContainer: {
+            styleOverrides: {
+                root: {
+                    marginLeft: 0,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "24px"
+                }
+            }
         }
     },
 })

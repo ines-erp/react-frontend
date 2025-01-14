@@ -80,7 +80,7 @@ export const PaymentMethodDashboard = () => {
     }, [])
 
     return (
-        <Container sx={{ml: 0, display: "flex", flexDirection: "column", gap: 4}}>
+            <Container>
             <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="h1">
@@ -97,7 +97,7 @@ export const PaymentMethodDashboard = () => {
                           isSelected={filters.currencyCode === undefined}
                           onClick={() => {
                               setFilters((prev) => {
-                                  return {
+                                   return {
                                       ...prev,
                                       currencyCode: undefined,
                                   }

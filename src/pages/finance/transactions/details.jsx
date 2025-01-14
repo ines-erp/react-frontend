@@ -4,12 +4,12 @@ import {
     Box,
     Button,
     Chip,
-    Container, Grid2,
+    Container, Divider, Grid2,
     IconButton,
     List,
     ListItem,
     ListItemButton,
-    Paper,
+    Paper, Stack,
     Typography
 } from "@mui/material";
 import {blue, blueGrey, grey} from "@mui/material/colors";
@@ -186,7 +186,7 @@ export const TransactionsDetails = () => {
     const transactionDate = new Date(Date.parse(transaction.date))
 
     return (
-        <Container sx={{ml: 0}}>
+        <Container>
             <NewTransactionModal
                 isOpen={open}
                 handleClose={handleClose}
@@ -209,8 +209,8 @@ export const TransactionsDetails = () => {
                 }}
             />
 
-            <Box sx={{display: "flex", gap: 1}}>
-                <Box sx={{display: "flex", alignItems: "center", gap: 3}}>
+            <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="h1">
                         Transactions details
                     </Typography>
@@ -225,39 +225,21 @@ export const TransactionsDetails = () => {
                         </IconButton>
                         {id}
                     </Typography>
-                </Box>
+                </Stack>
+
+                <Breadcrumbs
+                    previousLinks={[
+                        {path: "/", label: "home"},
+                        {path: "../", label: "Transactions"},
+                    ]}
+                    current={transaction.name}
+                />
             </Box>
-
-            <Breadcrumbs
-                previousLinks={[
-                    {path: "/", label: "home"},
-                    {path: "../", label: "Transactions"},
-                ]}
-                current={transaction.name}
-            />
-            {/*    <Link to={"/"}>*/}
-            {/*        <Typography variant="h5" color={grey[500]}>*/}
-            {/*            Home*/}
-            {/*        </Typography>*/}
-            {/*    </Link>*/}
-            {/*    <Link to={"../"}>*/}
-            {/*        <Typography variant="h5" color={grey[500]}>*/}
-            {/*            Transactions*/}
-            {/*        </Typography>*/}
-            {/*    </Link>*/}
-
-            {/*    <Typography variant="h5" color={grey[500]}>*/}
-            {/*        Bread crumbs*/}
-            {/*    </Typography>*/}
-            {/*</Breadcrumbs>*/}
 
             <Box sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                mt: 6,
-                pb: 4,
-                alignItems: "center",
-                borderBottom: `1px solid ${grey[300]}`
+                alignItems: "flex-end",
             }}>
                 <Box sx={{width: "100%", pr: "32px"}}>
                     <Typography variant="h5"
@@ -265,7 +247,6 @@ export const TransactionsDetails = () => {
                                     display: "flex",
                                     alignItems: "center",
                                     gap: 2,
-                                    mb: 1
                                 }}
                     >
                         <Chip label={transactionTypeName}
@@ -273,7 +254,14 @@ export const TransactionsDetails = () => {
                               sx={{fontWeight: "bold"}}/>
                         {transactionDate.toLocaleDateString()}
                     </Typography>
-                    <Box sx={{display: "flex", justifyContent: "space-between", mb: '0', flex: 1, width: "100%"}}>
+                    <Box sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        mb: '0',
+                        flex: 1,
+                        width: "100%"
+                    }}>
                         <Typography variant={"h2"} color={blueGrey[600]}>
                             {transaction.name}
                         </Typography>
@@ -287,27 +275,27 @@ export const TransactionsDetails = () => {
                 </Box>
 
                 <Box
-                    sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 1, mt: 4}}>
+                    sx={{display: "flex", justifyContent: "end", alignItem: "center", gap: 1,}}>
                     <Button variant={"outlined"} sx={{background: "#fff"}}>...</Button>
                     <Button variant={"outlined"} sx={{background: "#fff"}}
                             onClick={() => setOpen(true)}>Edit</Button>
                     <Button variant={"outlined"} color={"error"} sx={{background: "#fff"}}
                             onClick={() => handleDelete(transaction.id)}>Delete</Button>
                 </Box>
-
             </Box>
 
-            <Paper variant={"outlined"} sx={{padding: 4, mt: 4, borderRadius: 2, border: "none"}}>
+            <Divider/>
 
-                <Box sx={{mb: 4}}>
-                    <Typography variant={"h3"} sx={{mb: 4}}>Description</Typography>
-                    <Typography variant={"p"} sx={{mb: 4}}>{transaction.description}</Typography>
+            <Paper variant={"outlined"}>
+                <Box>
+                    <Typography variant={"h3"}>Description</Typography>
+                    <Typography variant={"body1"}>{transaction.description}</Typography>
                 </Box>
             </Paper>
 
             <Box sx={{display: "flex", gap: 4}}>
                 <Paper variant={"outlined"}
-                       sx={{padding: 4, mt: 4, borderRadius: 2, border: "none", flex: 1, maxWidth: "50%"}}>
+                       sx={{flex: 1, maxWidth: "50%"}}>
                     <Typography variant={"h3"} sx={{mb: 4}}>Transaction info</Typography>
 
                     <Grid2 spacing={2} container columns={3}>
@@ -332,21 +320,12 @@ export const TransactionsDetails = () => {
                             <Typography>{transaction.recievedBy}</Typography>
                         </Grid2>
                     </Grid2>
-
                 </Paper>
 
                 <Paper variant={"outlined"}
                        sx={{
-                           padding: 4,
-                           mt: 4,
-                           borderRadius: 2,
-                           border: "none",
                            maxWidth: "50%",
                            flex: 1,
-                           display: 'flex',
-                           flexDirection: "Column",
-                           alignItems: "start",
-                           justifyContent: ""
                        }}>
 
                     <Typography variant={"h3"} sx={{mb: 4}}>Currency info</Typography>
@@ -376,8 +355,8 @@ export const TransactionsDetails = () => {
             </Box>
 
 
-            <Paper variant={"outlined"} sx={{padding: 4, mt: 4, borderRadius: 2, border: "none"}}>
-                <Box sx={{mb: 4}}>
+            <Paper variant={"outlined"}>
+                <Box>
                     <Typography variant={"h3"} sx={{mb: 4}}>Attachments</Typography>
 
                     <List sx={{display: "flex", justifyContent: "start", gap: 3}}>
@@ -385,7 +364,7 @@ export const TransactionsDetails = () => {
                             flex: 1,
                             maxWidth: "25%",
                             minWidth: "200px",
-                            border: `1px solid ${blue[600]}`,
+                            border: `2px solid ${blue[600]}`,
                             borderRadius: 2
                         }}>
                             <DescriptionOutlined sx={{fontSize: "48px"}} color={"primary"}/>
@@ -411,19 +390,14 @@ export const TransactionsDetails = () => {
                 </Box>
             </Paper>
 
-            <Box variant={"outlined"} sx={{
-                padding: 4,
-                mt: 4,
-                borderRadius: 1,
-                border: "none",
-                borderTop: `1px solid ${grey[300]}`,
-                opacity: .6
-            }}>
-                <Typography variant={"h4"} sx={{mb: 2}}>Logs</Typography>
+            <Divider/>
+
+            <Box variant={"outlined"}>
+                <Typography variant={"h3"}>Logs</Typography>
 
                 <List>
-                    <ListItem sx={{fontWeight: "bold"}}>
-                        <Typography variant={"h5"}>
+                    <ListItem>
+                        <Typography variant={"body1"}>
                             Jaca element
                         </Typography>
                     </ListItem>

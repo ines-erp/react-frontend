@@ -1,4 +1,4 @@
-import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
+import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Stack, Typography} from "@mui/material";
 import {Add, MonetizationOnOutlined} from "@mui/icons-material";
 import {green} from "@mui/material/colors";
 import {useEffect, useState} from "react";
@@ -133,7 +133,7 @@ export const TransactionsDashboard = () => {
 
     // TODO: CREATE THEMES AND STYLES FOR ELEMENTS DOWN HERE
     return (
-        <Container sx={{ml: 0}}>
+        <Container>
 
             <NewTransactionModal
                 isOpen={open}
@@ -145,31 +145,25 @@ export const TransactionsDashboard = () => {
                 data={{currency, paidBy: "Wes"}}
             />
 
-            <Box sx={{display: "flex", gap: 1}}>
-                <Box sx={{
-                    display: "flex",
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                }}>
+            <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant={"h1"}>Transactions</Typography>
                     <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
                         New
                     </Button>
-                </Box>
+                </Stack>
+            <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
             </Box>
 
-            <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
 
-
-            <Box sx={{minWidth: "25%", mt: 6, gap: 1, display: "flex"}}>
+            <Box sx={{minWidth: "25%", gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
                     <Badge label={`${option.label} - ${option.name}`} key={option.value} onClick={() => {
                          handleSelectCurrency(option.value)}} isSelected={currency === option.value}/>
                 ))}
             </Box>
 
-            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
+            <Box sx={{display: "flex", gap: "24px"}}>
                 <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
                     <CardContent>
                         <Typography variant={"h3"} sx={{
@@ -178,7 +172,6 @@ export const TransactionsDashboard = () => {
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
-                            mb: "16px"
                         }}>
                             <MonetizationOnOutlined/>
                             Incomes
@@ -204,7 +197,6 @@ export const TransactionsDashboard = () => {
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
-                            mb: "16px"
                         }}>
                             <MonetizationOnOutlined/>
                             Outcomes
@@ -231,7 +223,6 @@ export const TransactionsDashboard = () => {
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
-                            mb: "16px"
                         }}>
                             <MonetizationOnOutlined/>
                             Balance
@@ -260,7 +251,6 @@ export const TransactionsDashboard = () => {
             <Box sx={{
                 background: "#fff",
                 padding: "32px",
-                mt: "32px",
                 borderRadius: "8px",
                 display: "flex",
                 flexDirection: "column",
