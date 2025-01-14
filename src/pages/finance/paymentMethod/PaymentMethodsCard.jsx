@@ -5,29 +5,32 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 
 export const PaymentMethodsCard = ({paymentMethod, onUpdate, onDelete}) => {
-    return (<Card key={paymentMethod.id} variant={"outlined"}
-                  sx={{display: "flex", justifyContent: "space-between", gap: 2}}>
-            <CardContent sx={{display: "flex", flexDirection: "column", gap: 1}}
-            >
+    return (
+        <Card key={paymentMethod.id} variant={"outlined"}>
+            <CardContent>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
                     <Chip variant="outlined" label={paymentMethod.type}/>
                     <Typography variant={"h3"}>{paymentMethod.name}</Typography>
                 </Box>
-                <Typography>{paymentMethod.description.substring(0, 60) + "..."}</Typography>
-                {paymentMethod.createdAt && <Typography variant="body1" component="div"
-                                                        sx={{
-                                                            display: "flex",
-                                                            gap: 2,
-                                                            alignItems: "center",
-                                                            color: grey[600]
-                                                        }}>
-                    <Today color="inherit" fontSize="inherit"/>
-                    {paymentMethod.createdAt}
-                </Typography>}
+                <Typography>{paymentMethod.description}</Typography>
+                {paymentMethod.createdAt &&
+                    <Typography variant="body1" component="div"
+                                sx={{
+                                    display: "flex",
+                                    gap: 2,
+                                    alignItems: "center",
+                                    color: grey[600]
+                                }}
+                    >
+                        <Today color="inherit" fontSize="inherit"/>
+                        {paymentMethod.createdAt}
+                    </Typography>}
             </CardContent>
+
             <CardActions sx={{justifyContent: "end"}}>
                 <ActionModalPM onSave={onUpdate} currentData={paymentMethod}/>
-                <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>} onClick={()=>onDelete(paymentMethod.id)}>
+                <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>}
+                        onClick={() => onDelete(paymentMethod.id)}>
                     Delete
                 </Button>
             </CardActions>

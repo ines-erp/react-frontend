@@ -1,4 +1,4 @@
-import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Stack, Typography} from "@mui/material";
+import {Box, Button, ButtonGroup, Card, CardContent, Chip, Container, Paper, Stack, Typography} from "@mui/material";
 import {Add, MonetizationOnOutlined} from "@mui/icons-material";
 import {green} from "@mui/material/colors";
 import {useEffect, useState} from "react";
@@ -152,7 +152,7 @@ export const TransactionsDashboard = () => {
                         New
                     </Button>
                 </Stack>
-            <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
+                <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
             </Box>
 
 
@@ -164,11 +164,9 @@ export const TransactionsDashboard = () => {
             </Box>
 
             <Box sx={{display: "flex", gap: "24px"}}>
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
+                <Card sx={{maxWidth: "240px"}} variant={"filled"}>
                     <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
+                        <Typography variant="caption" sx={{
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
@@ -178,8 +176,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success"
-                                                                             size="small"></Chip>
+                            {balance.symbol} {totalIncomes.toFixed(2)}
+                            <Chip label="12.8%" color="success" size="small" sx={{ml:2}}/>
                         </Typography>
 
                         <Typography variant="caption">
@@ -189,11 +187,9 @@ export const TransactionsDashboard = () => {
                     </CardContent>
                 </Card>
 
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}} variant={"outlined"}>
+                <Card sx={{maxWidth: "240px"}} variant={"filled"}>
                     <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
+                        <Typography variant={"caption"} sx={{
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
@@ -203,8 +199,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
-                                                                              size="small"></Chip>
+                            {balance.symbol} {totalOutcomes.toFixed(2)}
+                            <Chip label="12.8%" color="warning" size="small" sx={{ml:2}}/>
                         </Typography>
 
                         <Typography variant="caption">
@@ -214,12 +210,10 @@ export const TransactionsDashboard = () => {
                     </CardContent>
                 </Card>
 
-                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, background: green[50], border: "none"}}
-                      variant={"outlined"}>
+                <Card sx={{maxWidth: "240px",background: green[50]}}
+                      variant={"filled"}>
                     <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            color: 'text.secondary',
-                            fontSize: 14,
+                        <Typography variant={"caption"} sx={{
                             alignItems: "center",
                             display: "flex",
                             gap: "8px",
@@ -229,7 +223,8 @@ export const TransactionsDashboard = () => {
                         </Typography>
 
                         <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {balance.amount} <Chip label="12.8%" color="success" size="small"></Chip>
+                            {balance.symbol} {balance.amount}
+                            <Chip label="12.8%" color="success" size="small" sx={{ml:2}}/>
                         </Typography>
 
                         <Typography variant="caption">
@@ -248,14 +243,7 @@ export const TransactionsDashboard = () => {
                     one</Card>
             </Box>
 
-            <Box sx={{
-                background: "#fff",
-                padding: "32px",
-                borderRadius: "8px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "24px"
-            }}>
+            <Paper variant="outlined">
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}>Latests Transactions</Typography>
                     <ButtonGroup>
@@ -274,7 +262,7 @@ export const TransactionsDashboard = () => {
                     {transactions.map(transaction => <TransactionCardResume transaction={transaction}
                                                                             onDelete={() => handleDelete(transaction.id)}/>)}
                 </Box>
-            </Box>
+            </Paper>
 
         </Container>
     );

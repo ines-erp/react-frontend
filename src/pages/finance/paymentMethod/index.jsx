@@ -68,10 +68,10 @@ export const PaymentMethodDashboard = () => {
     }
 
     const handleDeletePaymentMethod = async (id) => {
-        try{
-            await DeleteFromApiData(`paymentmethods/${id}` )
+        try {
+            await DeleteFromApiData(`paymentmethods/${id}`)
             await getPaymentMethods();
-        }catch(error){
+        } catch (error) {
             console.error(error)
         }
     }
@@ -80,7 +80,7 @@ export const PaymentMethodDashboard = () => {
     }, [])
 
     return (
-            <Container>
+        <Container>
             <Box>
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                     <Typography variant="h1">
@@ -88,35 +88,35 @@ export const PaymentMethodDashboard = () => {
                     </Typography>
                     <ActionModalPM type="create" size="medium" onSave={handleCreatePaymentMethod}/>
                 </Stack>
-                <Breadcrumbs previousLinks={[{label:"home", path:"/"}]} current="payment methods" />
+                <Breadcrumbs previousLinks={[{label: "home", path: "/"}]} current="payment methods"/>
             </Box>
 
             {currenciesOnPm && (
                 <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
                     <Badge label="All"
-                          isSelected={filters.currencyCode === undefined}
-                          onClick={() => {
-                              setFilters((prev) => {
+                           isSelected={filters.currencyCode === undefined}
+                           onClick={() => {
+                               setFilters((prev) => {
                                    return {
-                                      ...prev,
-                                      currencyCode: undefined,
-                                  }
-                              })
-                          }}/>
+                                       ...prev,
+                                       currencyCode: undefined,
+                                   }
+                               })
+                           }}/>
                     {currenciesOnPm.map((currency) => {
                         const data = currenciesAvailable.find(c => c.isoCode === currency);
                         return (
                             <Badge key={data.symbol}
-                                  label={`${data.symbol} - ${data.name}`}
-                                  isSelected={filters.currencyCode === data.isoCode}
-                                  onClick={() => {
-                                      setFilters((prev) => {
-                                          return {
-                                              ...prev,
-                                              currencyCode: data.isoCode,
-                                          }
-                                      })
-                                  }}/>
+                                   label={`${data.symbol} - ${data.name}`}
+                                   isSelected={filters.currencyCode === data.isoCode}
+                                   onClick={() => {
+                                       setFilters((prev) => {
+                                           return {
+                                               ...prev,
+                                               currencyCode: data.isoCode,
+                                           }
+                                       })
+                                   }}/>
                         )
                     })}
                 </Box>
@@ -142,8 +142,7 @@ export const PaymentMethodDashboard = () => {
                     <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
                         {lastPaymentMethods.map(pm => {
                             return (
-                                <Card sx={{maxWidth: "240px", flex: 1, borderRadius: 4, border: "none"}}
-                                      variant={"outlined"}>
+                                <Card sx={{maxWidth: "240px", flex: 1}} variant={"filled"}>
                                     <CardContent>
                                         <Typography variant={"h3"} sx={{
                                             color: 'text.secondary',
@@ -176,8 +175,7 @@ export const PaymentMethodDashboard = () => {
             }
 
             {paymentMethods.length > 0 && (
-                <Paper elevation={0}
-                       sx={{display: "flex", flexDirection: "column", gap: 4, padding: 4, borderRadius: 4}}>
+                <Paper variant="outlined">
 
                     <Box sx={{display: "flex", justifyContent: "space-between"}}>
                         <Typography variant={"h2"} fontSize={"1.5rem"}>Payment methods</Typography>

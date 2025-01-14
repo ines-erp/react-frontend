@@ -1,17 +1,11 @@
-import {Box, Button, Card, CardContent, Typography} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Chip, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {green, orange} from "@mui/material/colors";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const TransactionCardResume = ({transaction, onDelete}) => {
     const {
-        id,
-        name,
-        description,
-        amount,
-        date,
-        createdAt,
-        updatedAt,
-        paidBy,
-        receivedBy
+        id, name, description, amount, date, createdAt, updatedAt, paidBy, receivedBy
     } = transaction;
 
     const {id: transactionTypeId, name: transactionTypeName} = transaction.transactionType
@@ -19,70 +13,57 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
     const {id: categoryId, name: categoryName} = transaction.transactionCategory
 
     const {
-        id: pymentMethodId,
-        type: pymentMethodType,
-        name: pymentMethodName,
-        description: pymentMethodDescription,
-        createdAt: pymentMethodCreatedAt,
-        updatedAt: pymentMethodUpdatedAt
+        id: paymentMethodId,
+        type: paymentMethodType,
+        name: paymentMethodName,
+        description: paymentMethodDescription,
+        createdAt: paymentMethodCreatedAt,
+        updatedAt: paymentMethodUpdatedAt
     } = transaction.paymentMethod
 
     const {
-        id: currencyId,
-        name: currencyName,
-        symbol: currencySymbol,
-        isoCode: currencyIsoCode
+        id: currencyId, name: currencyName, symbol: currencySymbol, isoCode: currencyIsoCode
     } = transaction.paymentMethod.currency
 
 
-    return (
-        <Card
-            variant={"outlined"}
+    return (<Card
+            variant="outlined"
             key={transaction.id}
-            sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? "#00ff0009" : "#ff000009"}}
+            sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? green[50] : orange[50]}}
         >
 
-            <CardContent
-                sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}
-            >
+            <CardContent>
+                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                    <Chip variant="outlined" label={transactionTypeName}/>
+                    <Typography variant="h3">
+                        {currencySymbol} {amount.toFixed(2)}
+                    </Typography>
+                </Box>
 
-                <Typography variant={"h3"} fontSize={"1rem"}>
+                <Typography variant="h3">
                     {name}
                 </Typography>
 
-                <Typography>
-                    {transactionTypeName}
-                </Typography>
-                <Typography>
-                    {currencySymbol}: {amount.toFixed(2)}
-                </Typography>
-
-                <Typography>
+                <Typography variant="body1">
                     {description.substring(0, 30) + "..."}
                 </Typography>
-
-                <Box sx={{display: "flex", gap: "8px", alignItems: "center", my: "auto"}}>
-                    <Button
-                        as={Link}
-                        variant={"outlined"}
-                        sx={{background: "#fff"}}
-                        to={`${id}/details`}
-                    >
-                        Details
-                    </Button>
-
-                    <Button
-                        componet={Link}
-                        variant={"outlined"}
-                        color={"error"}
-                        sx={{background: "#fff"}}
-                        onClick={onDelete}
-                    >
-                        Delete
-                    </Button>
-                </Box>
-
             </CardContent>
-        </Card>
-    )
+
+            <CardActions>
+                <Button
+                    as={Link}
+                    style={{textDecoration: "none"}}
+                    variant="outlined"
+                    to={`${id}/details`}
+                >
+                    Details
+                </Button>
+
+                <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>}
+                        onClick={onDelete}
+                >
+                    Delete
+                </Button>
+            </CardActions>
+        </Card>)
 }
