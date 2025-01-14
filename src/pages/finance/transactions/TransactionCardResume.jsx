@@ -35,14 +35,14 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
             <CardContent>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
                     <Chip variant="outlined" label={transactionTypeName}/>
+                <Typography variant="h4">
+                    {name}
+                </Typography>
+                </Box>
                     <Typography variant="h3">
                         {currencySymbol} {amount.toFixed(2)}
                     </Typography>
-                </Box>
 
-                <Typography variant="h3">
-                    {name}
-                </Typography>
 
                 <Typography variant="body1">
                     {description.substring(0, 30) + "..."}

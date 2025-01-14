@@ -17,6 +17,7 @@ import {ContentCopy, DescriptionOutlined, UploadFile} from "@mui/icons-material"
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
+import {PageHeader} from "@/components/base/PageHeader.jsx";
 
 
 const CATEGORIES = [
@@ -209,32 +210,12 @@ export const TransactionsDetails = () => {
                 }}
             />
 
-            <Box>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant="h1">
-                        Transactions details
-                    </Typography>
-
-                    <Typography variant="h5" color={grey[500]}>
-                        <IconButton
-                            size="small"
-                            color={"inherit"}
-                            onClick={() => addToClipboard(transaction.id)}
-                        >
-                            <ContentCopy fontSize=".8rem"/>
-                        </IconButton>
-                        {id}
-                    </Typography>
-                </Stack>
-
-                <Breadcrumbs
-                    previousLinks={[
-                        {path: "/", label: "home"},
-                        {path: "../", label: "Transactions"},
-                    ]}
-                    current={transaction.name}
-                />
-            </Box>
+            <PageHeader
+                title="transaction details"
+                actionButton={
+                    <Button onClick={() => addToClipboard(transaction.id)} sx={{color: grey[500]}} variant="text" size="small" startIcon={<ContentCopy fontSize=".8rem"/>}>{id}</Button>
+                }
+            />
 
             <Box sx={{
                 display: "flex",

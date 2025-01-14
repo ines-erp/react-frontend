@@ -7,6 +7,7 @@ import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCar
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
 import {Badge} from "@/components/base/Badge.jsx";
 import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
+import {PageHeader} from "@/components/base/PageHeader.jsx";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
@@ -145,21 +146,21 @@ export const TransactionsDashboard = () => {
                 data={{currency, paidBy: "Wes"}}
             />
 
-            <Box>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant={"h1"}>Transactions</Typography>
+            <PageHeader
+                title={"transactions"}
+                actionButton={
                     <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
                         New
                     </Button>
-                </Stack>
-                <Breadcrumbs previousLinks={[{path:"/", label:"home"}]} current="transactions"/>
-            </Box>
+                }
+            />
 
 
             <Box sx={{minWidth: "25%", gap: 1, display: "flex"}}>
                 {currencies.map((option) => (
                     <Badge label={`${option.label} - ${option.name}`} key={option.value} onClick={() => {
-                         handleSelectCurrency(option.value)}} isSelected={currency === option.value}/>
+                        handleSelectCurrency(option.value)
+                    }} isSelected={currency === option.value}/>
                 ))}
             </Box>
 
@@ -177,7 +178,7 @@ export const TransactionsDashboard = () => {
 
                         <Typography gutterBottom variant="h5" component="div">
                             {balance.symbol} {totalIncomes.toFixed(2)}
-                            <Chip label="12.8%" color="success" size="small" sx={{ml:2}}/>
+                            <Chip label="12.8%" color="success" size="small" sx={{ml: 2}}/>
                         </Typography>
 
                         <Typography variant="caption">
@@ -200,7 +201,7 @@ export const TransactionsDashboard = () => {
 
                         <Typography gutterBottom variant="h5" component="div">
                             {balance.symbol} {totalOutcomes.toFixed(2)}
-                            <Chip label="12.8%" color="warning" size="small" sx={{ml:2}}/>
+                            <Chip label="12.8%" color="warning" size="small" sx={{ml: 2}}/>
                         </Typography>
 
                         <Typography variant="caption">
@@ -210,7 +211,7 @@ export const TransactionsDashboard = () => {
                     </CardContent>
                 </Card>
 
-                <Card sx={{maxWidth: "240px",background: green[50]}}
+                <Card sx={{maxWidth: "240px", background: green[50]}}
                       variant={"filled"}>
                     <CardContent>
                         <Typography variant={"caption"} sx={{
@@ -224,7 +225,7 @@ export const TransactionsDashboard = () => {
 
                         <Typography gutterBottom variant="h5" component="div">
                             {balance.symbol} {balance.amount}
-                            <Chip label="12.8%" color="success" size="small" sx={{ml:2}}/>
+                            <Chip label="12.8%" color="success" size="small" sx={{ml: 2}}/>
                         </Typography>
 
                         <Typography variant="caption">

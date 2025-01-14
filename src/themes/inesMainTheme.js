@@ -71,7 +71,9 @@ export const inesMainTheme = createTheme({
                     borderRadius: "8px",
                     padding: "12px",
                     gap: "4px",
-                    flex: 1
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                 }
             },
             variants: [
@@ -109,9 +111,6 @@ export const inesMainTheme = createTheme({
             styleOverrides: {
                 root: {
                     marginLeft: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "24px"
                 }
             }
         }

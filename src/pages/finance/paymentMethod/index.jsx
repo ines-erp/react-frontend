@@ -17,6 +17,7 @@ import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
 import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
+import {PageHeader} from "@/components/base/PageHeader.jsx";
 
 //TODO: add the skeleton
 //TODO: Add filters when the endpoint is able to it
@@ -81,15 +82,12 @@ export const PaymentMethodDashboard = () => {
 
     return (
         <Container>
-            <Box>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant="h1">
-                        Payment methods
-                    </Typography>
+            <PageHeader
+                title="payment methods"
+                actionButton={
                     <ActionModalPM type="create" size="medium" onSave={handleCreatePaymentMethod}/>
-                </Stack>
-                <Breadcrumbs previousLinks={[{label: "home", path: "/"}]} current="payment methods"/>
-            </Box>
+                }
+            />
 
             {currenciesOnPm && (
                 <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
