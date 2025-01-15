@@ -19,9 +19,13 @@ const dataLayoutOne = {
         "optional2": {
             children: [
                 React.createElement(MyComponent, {customTitle: "Jaca melão"})
-            ], isVisible: false, "title": "Optional two"
+            ], isVisible: true, "title": "Optional two"
         },
-        "optional3": {children: [], isVisible: false, "title": "Optional three"},
+        "optional3": {
+            children: [<MyComponent customTitle="amora abobora"/>],
+            isVisible: true,
+            "title": "Optional three"
+        },
         "optional4": {children: [], isVisible: true, "title": "Optional four"}
     },
     'createFunction': () => {
