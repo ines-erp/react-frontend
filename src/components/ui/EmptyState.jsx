@@ -9,6 +9,9 @@ export const EmptyState = ({children}) => {
             <Typography variant='h4'>
                 No results found
             </Typography>
+            <Typography variant='body1'>
+                Try to clear the filters or add a new one to begin
+            </Typography>
             {children}
         </Container>
     )
