@@ -1,5 +1,5 @@
 import {
-    Button, ButtonGroup,
+    Box,
     Typography
 } from "@mui/material";
 import {AccountBalance, CreditCard, Info, LocalAtm} from "@mui/icons-material";
@@ -11,6 +11,7 @@ import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCa
 
 import {LayoutDataView} from "@/layouts/inner/LayoutDataView.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
+import {Filters} from "@/components/ui/Filters.jsx";
 
 //TODO: add the skeleton
 //TODO: Add filters when the endpoint is able to it
@@ -87,6 +88,25 @@ export const PaymentMethodDashboard = () => {
                 return <Info/>;
         }
     }
+
+    const filterOptionsExample = [
+        {
+            label: "filter by currency", type: "buttons", field: "currencyCode", options: [
+                {value: "USD", label: "Dollar"},
+                {value: "EUR", label: "Euro"},
+                {value: "BRL", label: "Real"},
+            ]
+        }
+    ]
+    const handleFilters = (field, value) => {
+        setFilters((prevState) => {
+            return {
+                ...prevState,
+                [field]: value
+            }
+        })
+    }
+
     return (
         <LayoutDataView
             header={{
@@ -99,6 +119,7 @@ export const PaymentMethodDashboard = () => {
             }}
             dataResume={{
                 isVisible: true,
+                title:"Last used",
                 children:
                     lastPaymentMethods && lastPaymentMethods.map(pm =>
                         React.createElement(SummaryCard,
@@ -113,37 +134,15 @@ export const PaymentMethodDashboard = () => {
                     )
             }}
             data={{
-                title: "Latest Payment methods",
-                actionButtons:
-                    <ButtonGroup>
-                        <Button
-                            variant={filters.type === undefined ? "contained" : "outlined"}
-                            onClick={() => setFilters((prev) => {
-                                return {
-                                    ...prev,
-                                    type: undefined
-                                }
-                            })}>
-                            All
-                        </Button>
-                        {typesOfPm && typesOfPm.map(
-                            type => {
-                                return (
-                                    <Button
-                                        key={type}
-                                        variant={filters.type === type ? "contained" : "outlined"}
-                                        onClick={() => setFilters((prev) => {
-                                            return {
-                                                ...prev,
-                                                type: type
-                                            }
-                                        })}>
-                                        {type}
-                                    </Button>
-                                )
-                            }
-                        )}
-                    </ButtonGroup>,
+                title: "All Payment methods",
+                totalPages: 10,
+                actionButtons: <Box>
+                    <Filters filterOptions={filterOptionsExample}
+                             filters={filters}
+                             onChangeFilters={handleFilters}
+                    />
+                </Box>,
+
                 children: paymentMethods.map((paymentMethod) => {
                     return (
                         <PaymentMethodsCard

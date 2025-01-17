@@ -6,7 +6,7 @@ import {
     Paper,
     Typography
 } from "@mui/material";
-import {PageHeader} from "@/components/base/PageHeader.jsx";
+import {PageHeader} from "@/components/ui/PageHeader.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
 import {Link, useLocation} from "react-router-dom";
@@ -14,7 +14,7 @@ import {Link, useLocation} from "react-router-dom";
 /**
  *
  * @param header {{title:string, actionButton:ReactNode}}
- * @param cardsResume
+ * @param cardsResume [foo]
  * @param filterView
  * @param data
  * @returns {JSX.Element}
@@ -55,7 +55,8 @@ export const LayoutDataView = (
                 <Box sx={{marginY: 8}}>
                     {dataResume.filters && dataResume.filters}
                     {dataResume.title &&
-                        <Typography variant={"h2"} fontSize={"1.5rem"}>{dataResume.title}</Typography>
+                        <Typography variant={"h2"} fontSize={"1.5rem"}
+                                    sx={{marginBottom: 2}}>{dataResume.title}</Typography>
                     }
                     <Box sx={{display: "flex", gap: 2}}>
                         {dataResume.children}
@@ -64,14 +65,11 @@ export const LayoutDataView = (
             }
 
 
-            <Paper variant="outlined">
+            <Paper variant="outlined" sx={{minHeight: "450px", justifyContent: "space-between"}}>
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}
                                 sx={{textTransform: "capitalize"}}>{data.title}</Typography>
                     {data.actionButtons}
-                    {/*<ButtonGroup>*/}
-                    {/*button to sort and filter*/}
-                    {/*</ButtonGroup>*/}
                 </Box>
                 {(!data.children || data.children.length === 0) && <EmptyState/>}
                 {data.children && data.children.length > 0 && data.children}
@@ -89,7 +87,8 @@ export const LayoutDataView = (
                                     {...item}
                                 />
                             )}/>
-                    </Box>}
+                    </Box>
+                }
             </Paper>
 
 
