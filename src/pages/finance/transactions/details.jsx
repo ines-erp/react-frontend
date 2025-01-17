@@ -17,7 +17,7 @@ import {ContentCopy, DescriptionOutlined, UploadFile} from "@mui/icons-material"
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
-import {PageHeader} from "@/components/base/PageHeader.jsx";
+import {PageHeader} from "@/components/ui/PageHeader.jsx";
 
 
 const CATEGORIES = [

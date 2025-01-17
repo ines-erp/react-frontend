@@ -56,7 +56,7 @@ export const LayoutMenuAppbar = () => {
                         flexShrink: 0,
                         [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
                     }}
-                    anchor="left" border={'1px solid red'}>
+                    anchor="left">
                 <Offset/>
                 <RouterMainMenu/>
             </Drawer>

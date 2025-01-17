@@ -7,7 +7,7 @@ import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCar
 import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
 import {Badge} from "@/components/base/Badge.jsx";
 import {Breadcrumbs} from "@/components/base/Breadcrumbs.jsx";
-import {PageHeader} from "@/components/base/PageHeader.jsx";
+import {PageHeader} from "@/components/ui/PageHeader.jsx";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
