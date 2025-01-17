@@ -1,18 +1,11 @@
-import {
-    AppBar,
-    Box, Container, Drawer,
-    IconButton,
-    Toolbar,
-    Typography,
-    useMediaQuery
-} from "@mui/material";
+import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMediaQuery} from "@mui/material";
 import React from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {RouterMainMenu} from "@/menu/index.jsx";
 import {Outlet} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 
-const Offset = () => <Box sx={{height: '86px'}}/>
+const Offset = () => <Box sx={{height: '86px'}}/>;
 
 
 export const LayoutMenuAppbar = () => {
@@ -21,7 +14,7 @@ export const LayoutMenuAppbar = () => {
 
     const handleDrawerToggle = () => {
         setIsDrawerOpen(!isDrawerOpen);
-    }
+    };
 
     const drawerWidth = 240;
     return (
@@ -37,11 +30,11 @@ export const LayoutMenuAppbar = () => {
                         component="a"
                         href="/"
                         sx={{
-                            mr: 4,
+                            color: 'inherit',
                             fontFamily: 'monospace',
                             fontWeight: 900,
                             letterSpacing: '.6rem',
-                            color: 'inherit',
+                            mr: 4,
                             textDecoration: 'none',
                         }}
                     >
@@ -52,9 +45,9 @@ export const LayoutMenuAppbar = () => {
             <Drawer variant={isScreenBigger ? "permanent" : "temporary"}
                     open={isDrawerOpen}
                     sx={{
-                        width: drawerWidth,
-                        flexShrink: 0,
                         [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+                        flexShrink: 0,
+                        width: drawerWidth,
                     }}
                     anchor="left">
                 <Offset/>
@@ -67,5 +60,5 @@ export const LayoutMenuAppbar = () => {
                 <Offset/>
             </Container>
         </Box>
-    )
-}
+    );
+};
