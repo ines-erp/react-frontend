@@ -1,6 +1,6 @@
-import {Outlet} from "react-router-dom";
 import {HomePage} from "@/pages/home/index.jsx";
 import {MailLock} from "@mui/icons-material";
+import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
 
 //example
 export const homeRoutesList = [
@@ -35,7 +35,7 @@ export const homeRoutesList = [
 export const homeRoutes = [
     {
         children: homeRoutesList.filter(item => item.isEnabled === true),
-        element: <Outlet/>,
+        element: <LayoutMenuAppbar/>,
         path: "/home"
     }
 ];
