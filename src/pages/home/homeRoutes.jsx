@@ -5,40 +5,40 @@ import {MailLock} from "@mui/icons-material";
 //example
 export const homeRoutesList = [
     {
-        path: "",
         element: <HomePage/>,
-        label: "Dashboard",
-        isInMenu: true,
-        isEnabled: true,
         icon: <MailLock/>,
-        parentLabel: "Home",
-        namespace: "home"
-    },
-    {
-        path: "finance",
-        element: <h1>Finances</h1>,
-        label: "Finance",
-        isInMenu: true,
-        isEnabled: false,
-        namespace: "finance"
-    },
-    {
-        path: "payment",
-        element: <h1>Any payment</h1>,
-        label: "payment home",
-        isInMenu: false,
         isEnabled: true,
-        namespace: "payment"
+        isInMenu: true,
+        label: "Dashboard",
+        namespace: "home",
+        parentLabel: "Home",
+        path: ""
     },
-]
+    {
+        element: <h1>Finances</h1>,
+        isEnabled: false,
+        isInMenu: true,
+        label: "Finance",
+        namespace: "finance",
+        path: "finance"
+    },
+    {
+        element: <h1>Any payment</h1>,
+        isEnabled: true,
+        isInMenu: false,
+        label: "payment home",
+        namespace: "payment",
+        path: "payment"
+    },
+];
 
 export const homeRoutes = [
     {
-        path: "/home",
-        element: <Outlet />,
-        children: homeRoutesList.filter(item => item.isEnabled === true)
+        children: homeRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        path: "/home"
     }
-]
+];
 
 //
 
