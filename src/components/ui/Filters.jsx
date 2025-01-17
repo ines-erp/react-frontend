@@ -51,7 +51,7 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                                             key={crypto.randomUUID()}
                                             value={option.value}
                                             variant={filters[field] === option.value ? "contained" : "outlined"}
-                                            onClick={() => filters[field] = option.value}>
+                                            onClick={() => onChangeFilters(field, option.value)}>
                                             {option.label}
                                         </Button>
                                     )
