@@ -9,5 +9,5 @@ import {authRoutesRoutes} from "@/pages/auth/login/authRoutes.jsx";
 export const menuRoutes = [
     ...authRoutesRoutes,
     ...homeRoutes,
-    ...financesRoutes,
+    ...financesRoutes
 ];
