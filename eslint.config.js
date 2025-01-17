@@ -32,7 +32,6 @@ export default [
             ...reactHooks.configs.recommended.rules,
             "array-callback-return": "error",
             "camelcase": "error",
-            "capitalized-comments": "error",
             "no-async-promise-executor": "error",
             "no-await-in-loop":
                 "warn",

@@ -6,13 +6,13 @@ import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMet
 
 export const financesRoutesList = [
     {
-        path: "",
         element: <FinancesDashboard/>,
-        label: "Dashboard",
-        isInMenu: true,
+        icon: <BiUser/>,
         isEnabled: true,
+        isInMenu: true,
+        label: "Dashboard",
         parentLabel: "Finance",
-        icon: <BiUser/>
+        path: ""
     },
     {
         path: "transactions", element: <Outlet/>, label: "Transactions", isInMenu: true, isEnabled: true,
