@@ -2,7 +2,7 @@ import {NavLink, useLocation} from "react-router-dom";
 import {Divider, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import React, {useState} from "react";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
-import {blue, blueGrey, grey} from "@mui/material/colors";
+import {blue, blueGrey} from "@mui/material/colors";
 
 /**
  * Function to generate menu items from routes
@@ -11,16 +11,15 @@ import {blue, blueGrey, grey} from "@mui/material/colors";
  */
 export const dynamicMenuItems = (routes) => {
 
-
     return routes.map((route) => {
         return (
             <React.Fragment key={route.path}>
                 <MenuGroup route={route}/>
                 <Divider/>
             </React.Fragment>
-        )
-    })
-}
+        );
+    });
+};
 
 const MenuGroup = ({route}) => {
     const location = useLocation();
@@ -30,14 +29,14 @@ const MenuGroup = ({route}) => {
 
     return route.children.map((childRoute) => {
         if (childRoute.isInMenu && childRoute.isEnabled) {
-            const currentPath = `${route.path}/${childRoute.path}`
+            const currentPath = `${route.path}/${childRoute.path}`;
 
             switch (!!childRoute.parentLabel) {
                 case true:
                     return (<
                         React.Fragment key={currentPath}>
                         <MenuItem selected={isParentPathSelected} onClick={() => {
-                            setIsVisible((prev) => !prev)
+                            setIsVisible((prev) => !prev);
                         }}>
                             {childRoute.icon && <ListItemIcon sx={{color: 'inherit'}}>
                                 {childRoute.icon}
@@ -56,7 +55,7 @@ const MenuGroup = ({route}) => {
                             )}
                         </NavLink>
 
-                    </React.Fragment>)
+                    </React.Fragment>);
 
                 default:
                     return (
@@ -74,12 +73,12 @@ const MenuGroup = ({route}) => {
                                 </MenuItem>
                             )}
                         </NavLink>
-                    )
+                    );
             }
         }
-        return null
-    })
-}
+        return null;
+    });
+};
 
 
 const MenuItem = styled(ListItemButton)(
@@ -100,15 +99,15 @@ const MenuItem = styled(ListItemButton)(
                 props.menuLevel === 1,
             style: {
                 '&.Mui-selected': {
-                    'color': blueGrey[800],
-                    'background-color': blue[100],
+                    '&:active': {
+                        'color': blueGrey[800],
+                    },
                     '&:hover': {
                         'color': blueGrey[800],
                         'background-color': blue[100],
                     },
-                    '&:active': {
-                        'color': blueGrey[800],
-                    }
+                    'background-color': blue[100],
+                    'color': blueGrey[800]
                 }
             }
         }]
