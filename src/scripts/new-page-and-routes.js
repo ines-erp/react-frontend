@@ -14,21 +14,35 @@ const routFile = process.argv.findIndex((arg) =>
 
 let filehandle;
 
-const dataForFiles = (jsxPageName) => {
+const dataForFiles = (jsxPageName, dirPath) => {
     const routesData = `
 
-                        export const paymentMethodsRoutesList = [
-                            {
-                               element: <${jsxPageName}/>,
+import {${jsxPageName}} from "@/pages/${dirPath}/index.jsx"; 
+import {Outlet} from "react-router-dom"; 
+
+export const ${jsxPageName}RoutesList = [
+    {
+        element: <${jsxPageName}/>,
         icon: "",
         isEnabled: true,
         isInMenu: true,
         label: "Dashboard",
         parentLabel: "Finance",
         path: ""
-                            },
-                            {element: <div>Name</div>, isEnabled: true, isInMenu: false, label: "MENU ROUTE NAME", path: "URL PATH"},
-                        ]`;
+    },
+    {element: <div>Name</div>, isEnabled: true, isInMenu: false, label: "MENU ROUTE NAME", path: "URL PATH"},
+];
+
+
+export const ${jsxPageName}Routes = [
+    {
+        children: ${jsxPageName}RoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        path: "/home"
+    }
+];
+
+`;
 
     const indexData = `export const ${jsxPageName} = () => {
     return<h1>${jsxPageName}</h1>
@@ -56,7 +70,7 @@ const addNewPageWithRoutes = async () => {
     const routesFileName = process.argv[routFile + 1];
 
 
-    const [indexData, routesData] = dataForFiles(jsxPageName);
+    const [indexData, routesData] = dataForFiles(jsxPageName, dirPath);
 
 
     try {
