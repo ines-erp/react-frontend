@@ -1,13 +1,12 @@
-import {createBrowserRouter} from "react-router-dom";
+import {createBrowserRouter, Outlet} from "react-router-dom";
 import {menuRoutes} from "@/menu/menuRoutes.jsx";
-import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <LayoutMenuAppbar/>,
+        children: [...menuRoutes],
+        element: <Outlet/>,
         errorElement: <h1>Error</h1>,
-        children: [...menuRoutes]
+        path: "/"
 
     }]);
 
