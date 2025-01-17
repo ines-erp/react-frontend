@@ -37,8 +37,8 @@ export const ${jsxPageName}RoutesList = [
 export const ${jsxPageName}Routes = [
     {
         children: ${jsxPageName}RoutesList.filter(item => item.isEnabled === true),
-        element: <LayoutMenuAppbar/>,
-        path: "/XXXX"
+        element: <Outlet/>,
+        path: "/home"
     }
 ];
 
