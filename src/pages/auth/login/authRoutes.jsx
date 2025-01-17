@@ -1,9 +1,9 @@
 import {LoginPage} from "@/pages/auth/login/index.jsx";
-import {LayoutBlank} from "@/layouts/main/LayoutBlank.jsx";
+import {Outlet} from "react-router-dom";
 
 export const authRoutesList = [
     {
-        element: <LoginPage/>,
+        element: <></>,
         icon: "",
         isEnabled: true,
         isInMenu: false,
@@ -24,7 +24,7 @@ export const authRoutesList = [
 export const authRoutesRoutes = [
     {
         children: authRoutesList.filter(item => item.isEnabled === true),
-        element: <LayoutBlank sx={{display: "flex", alignItems: "center", justifyContent: 'center'}}/>,
+        element: <Outlet/>,
         path: "/auth"
     }
 ];
