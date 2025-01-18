@@ -16,16 +16,16 @@ import {Link, useLocation} from "react-router-dom";
  * @param header {{title:string, actionButton:ReactNode}}
  * @param cardsResume [foo]
  * @param filterView
- * @param data
+ * @param dataList
  * @returns {JSX.Element}
  * @constructor
  */
-export const LayoutDataView = (
+export const LayoutDataViewList = (
     {
         header,
         dataResume = {isVisible: false},
         filterView = {isVisible: false, filters: []},
-        data,
+        dataList,
     }) => {
 
     const location = useLocation();
@@ -64,20 +64,21 @@ export const LayoutDataView = (
                 </Box>)
             }
 
+            {dataList.children === undefined && <EmptyState />}
 
-            <Paper variant="outlined" sx={{minHeight: "450px", justifyContent: "space-between"}}>
+            {dataList.children && <Paper variant="outlined" sx={{minHeight: "450px", justifyContent: "space-between"}}>
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
                     <Typography variant={"h2"} fontSize={"1.5rem"}
-                                sx={{textTransform: "capitalize"}}>{data.title}</Typography>
-                    {data.actionButtons}
+                                sx={{textTransform: "capitalize"}}>{dataList.title}</Typography>
+                    {dataList.actionButtons}
                 </Box>
-                {(!data.children || data.children.length === 0) && <EmptyState/>}
-                {data.children && data.children.length > 0 && data.children}
+                {dataList.children.length === 0 && <EmptyState showFilterMessage={true}/>}
+                {dataList.children.length > 0 && dataList.children}
 
-                {data.totalPages &&
+                {dataList.totalPages &&
                     <Box sx={{display: "flex", justifyContent: "flex-end", alignItems: "center", marginTop: 4}}>
                         <Pagination
-                            count={data.totalPages}
+                            count={dataList.totalPages}
                             shape="rounded" color="primary"
                             page={page}
                             renderItem={(item) => (
@@ -89,7 +90,7 @@ export const LayoutDataView = (
                             )}/>
                     </Box>
                 }
-            </Paper>
+            </Paper>}
 
 
         </Container>

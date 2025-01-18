@@ -9,7 +9,7 @@ import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 
-import {LayoutDataView} from "@/layouts/inner/LayoutDataView.jsx";
+import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 
@@ -18,19 +18,19 @@ import {Filters} from "@/components/ui/Filters.jsx";
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
-    const [paymentMethods, setPaymentMethods] = useState([])
+    const [paymentMethods, setPaymentMethods] = useState(undefined)
     const [filters, setFilters] = useState({
         type: undefined,
         name: undefined,
         currencyCode: undefined,
     })
 
-    const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
+    const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
-    const currenciesAvailable = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
+    const currenciesAvailable = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
     const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
 
-    const typesOfPm = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.type).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const typesOfPm = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.type).filter((value, index, array) => array.indexOf(value) === index) : undefined;
 
     const getPaymentMethods = async () => {
         const data = await getFromApiData(`paymentmethods`);
@@ -108,7 +108,7 @@ export const PaymentMethodDashboard = () => {
     }
 
     return (
-        <LayoutDataView
+        <LayoutDataViewList
             header={{
                 title: "payment methods",
                 actionButton:
@@ -133,7 +133,7 @@ export const PaymentMethodDashboard = () => {
                             })
                     )
             }}
-            data={{
+            dataList={{
                 title: "All Payment methods",
                 totalPages: 10,
                 actionButtons: <Box>
@@ -143,7 +143,7 @@ export const PaymentMethodDashboard = () => {
                     />
                 </Box>,
 
-                children: paymentMethods.map((paymentMethod) => {
+                children: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
                     return (
                         <PaymentMethodsCard
                             key={paymentMethod.id}
