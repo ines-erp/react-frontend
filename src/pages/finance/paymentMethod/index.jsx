@@ -1,8 +1,10 @@
+import {Box, Typography} from "@mui/material";
 import {
-    Box,
-    Typography
-} from "@mui/material";
-import {AccountBalance, CreditCard, Info, LocalAtm} from "@mui/icons-material";
+    AccountBalance,
+    CreditCard,
+    Info,
+    LocalAtm
+} from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 
 import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/inesDataApiV1.js";
@@ -13,7 +15,7 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 
-//TODO: Add filters when the endpoint is able to it
+// TODO: Add filters when the endpoint is able to it
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
@@ -70,13 +72,6 @@ export const PaymentMethodDashboard = () => {
         }
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            getPaymentMethods();
-        }, "3000")
-    }, [])
-
-
     const renderIconCards = (type) => {
         switch (true) {
             case type.toLowerCase().includes('card'):
@@ -92,7 +87,9 @@ export const PaymentMethodDashboard = () => {
 
     const filterListOptions = [
         {
-            label: "filter by type", type: "buttons", field: "type", options: typesOfPm && typesOfPm.map(t => {return {label:t, value:t}})
+            label: "filter by type", type: "buttons", field: "type", options: typesOfPm && typesOfPm.map(t => {
+                return {label: t, value: t}
+            })
         },
         {
             label: "filter by currency", type: "buttons", field: "currencyCode", options: [
@@ -127,6 +124,12 @@ export const PaymentMethodDashboard = () => {
         return undefined
     }
 
+    useEffect(() => {
+        setTimeout(() => {
+            getPaymentMethods();
+        }, "1000")
+    }, [])
+
     return (
         <LayoutDataViewList
             header={{
@@ -139,7 +142,7 @@ export const PaymentMethodDashboard = () => {
             }}
             filterView={{
                 isVisible: true,
-                field:filters.currencyCode,
+                field: filters.currencyCode,
                 onClick: (value) => {
                     console.log(value)
                     handleFilters("currencyCode", value)

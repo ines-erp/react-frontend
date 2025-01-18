@@ -13,20 +13,19 @@ import {Link, useLocation} from "react-router-dom";
 
 /**
  *
- * @param header {{title:string, actionButton:ReactNode}}
- * @param dataSummary [foo]
- * @param filterView [foo]
+ * @param header {{title:string, actionButton:ReactNode || foo}}
+ * @param dataSummary {{isVisible:boolean }} [foo]
+ * @param filterView {{}} [foo]
  * @param dataList
  * @returns {JSX.Element}
  * @constructor
  */
 
-
 export const LayoutDataViewList = (
     {
         header,
         dataSummary = {isVisible: false},
-        filterView = {isVisible: false, filters: []},
+        filterView = {isVisible: false, options: []},
         dataList,
     }) => {
     const isLoading = !dataList.children;
@@ -117,8 +116,7 @@ export const LayoutDataViewList = (
                         {Array.from(Array(dataList.limit ?? 1)).map((index) =>
                             <Skeleton key={index} variant="rounded" width="100%" height={100}
                                       sx={{padding: 0, margin: 0}}/>
-                        )
-                        }
+                        )}
                     </Stack>
                 }
 
