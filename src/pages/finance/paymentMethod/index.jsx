@@ -19,7 +19,7 @@ import {
 import {Add, CreditCard, LocalAtm} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
-import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {Link} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
@@ -67,7 +67,7 @@ export const PaymentMethodDashboard = () => {
 
     const handleCreatePaymentMethod = async (data) => {
         try {
-            await PostToApiData("paymentmethods", data);
+            await postToApiData("paymentmethods", data);
             await getPaymentMethods();
         } catch (e) {
 
@@ -76,7 +76,7 @@ export const PaymentMethodDashboard = () => {
 
     const handleDeletePaymentMethod = async (id) => {
         try{
-            await DeleteFromApiData(`paymentmethods/${id}`);
+            await deleteFromApiData(`paymentmethods/${id}`);
             await getPaymentMethods();
         }catch(error){
             console.error(error);
