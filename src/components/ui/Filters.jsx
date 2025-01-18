@@ -32,80 +32,80 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
         switch (type) {
             case "buttons":
                 return (<Stack key={filter.label} direction="column" spacing={1}>
-                        {label && <Typography variant="caption" component="div" sx={{
-                            textTransform: "capitalize", justifyContent: "space-between"
-                        }}>
-                            {label}
-                        </Typography>}
-                        <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
-                            {options.map(option => {
-                                return (<Button
-                                        key={crypto.randomUUID()}
-                                        value={option.value}
-                                        variant={filters[field] === option.value ? "contained" : "outlined"}
-                                        onClick={() => onChangeFilters(field, option.value)}>
-                                        {option.label}
-                                    </Button>)
-                            })}
-                            {clearButton}
-                        </Box>
+                    {label && <Typography variant="caption" component="div" sx={{
+                        textTransform: "capitalize", justifyContent: "space-between"
+                    }}>
+                        {label}
+                    </Typography>}
+                    <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
+                        {options.map(option => {
+                            return (<Button
+                                key={crypto.randomUUID()}
+                                value={option.value}
+                                variant={filters[field] === option.value ? "contained" : "outlined"}
+                                onClick={() => onChangeFilters(field, option.value)}>
+                                {option.label}
+                            </Button>)
+                        })}
+                        {clearButton}
+                    </Box>
 
-                    </Stack>);
+                </Stack>);
             case "textField":
                 return (<TextField
-                                key={field}
-                                label={label}
-                                variant="outlined"
-                                onChange={(e) => onChangeFilters(field, e.target.value)}
-                                fullWidth={true}
-                                size="small"
-                            />)
+                    key={field}
+                    label={label}
+                    variant="outlined"
+                    onChange={(e) => onChangeFilters(field, e.target.value)}
+                    fullWidth={true}
+                    size="small"
+                />)
         }
     }
 
     return (<>
-            <Button
-                startIcon={<FilterList/>}
-                variant="outlined"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                Filter
-            </Button>
-            <Drawer
-                variant={isOpen ? "permanent" : "temporary"}
-                open={isOpen}
+        <Button
+            startIcon={<FilterList/>}
+            variant="outlined"
+            onClick={() => setIsOpen(!isOpen)}
+        >
+            Filter
+        </Button>
+        <Drawer
+            variant={isOpen ? "permanent" : "temporary"}
+            open={isOpen}
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+            }}
+            anchor="right"
+        >
+            <Box sx={{height: '86px'}}/>
+            <Box
                 sx={{
-                    width: drawerWidth,
-                    flexShrink: 0,
-                    [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
+                    padding: "0px 16px", display: "flex", flexDirection: "column", gap: 4, height: "100%"
                 }}
-                anchor="right"
             >
-                <Box sx={{height: '86px'}}/>
-                <Box
-                    sx={{
-                        padding: "0px 16px", display: "flex", flexDirection: "column", gap: 4, height: "100%"
-                    }}
-                >
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "row",
-                        flexWrap: "wrap",
-                        gap: 1,
-                        justifyContent: "space-between",
-                        alignItems: "center"
-                    }}>
-                        <Typography variant="h3" sx={{marginBottom: 2}}>Filters</Typography>
-                        <Button onClick={() => setIsOpen(false)} size="small" color="grey"
-                                startIcon={<Close/>}>Close</Button>
-                    </Box>
-
-                    {filterOptions.map(filter => RenderFilterOptions(filter))}
-
-                    <Button onClick={handleClearFilters} variant="outlined" color="warning"
-                            startIcon={<FilterListOff/>}>Clear
-                        all</Button>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    gap: 1,
+                    justifyContent: "space-between",
+                    alignItems: "center"
+                }}>
+                    <Typography variant="h3" sx={{marginBottom: 2}}>Filters</Typography>
+                    <Button onClick={() => setIsOpen(false)} size="small" color="grey"
+                            startIcon={<Close/>}>Close</Button>
                 </Box>
-            </Drawer>
-        </>)
+
+                {filterOptions.map(filter => RenderFilterOptions(filter))}
+
+                <Button onClick={handleClearFilters} variant="outlined" color="warning"
+                        startIcon={<FilterListOff/>}>Clear
+                    all</Button>
+            </Box>
+        </Drawer>
+    </>)
 }

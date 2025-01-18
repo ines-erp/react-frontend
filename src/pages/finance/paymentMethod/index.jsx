@@ -13,7 +13,6 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 
-//TODO: add the skeleton
 //TODO: Add filters when the endpoint is able to it
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
@@ -78,7 +77,7 @@ export const PaymentMethodDashboard = () => {
     }, [])
 
 
-    const RenderIconCards = (type) => {
+    const renderIconCards = (type) => {
         switch (true) {
             case type.toLowerCase().includes('card'):
                 return <CreditCard/>;
@@ -91,7 +90,10 @@ export const PaymentMethodDashboard = () => {
         }
     }
 
-    const filterOptionsExample = [
+    const filterListOptions = [
+        {
+            label: "filter by type", type: "buttons", field: "type", options: typesOfPm && typesOfPm.map(t => {return {label:t, value:t}})
+        },
         {
             label: "filter by currency", type: "buttons", field: "currencyCode", options: [
                 {value: "USD", label: "Dollar"},
@@ -100,7 +102,7 @@ export const PaymentMethodDashboard = () => {
             ]
         },
         {
-            label: "Name", type: "textField", field: "name", options:[],
+            label: "Name", type: "textField", field: "name", options: [],
         }
     ]
     const handleFilters = (field, value) => {
@@ -111,7 +113,19 @@ export const PaymentMethodDashboard = () => {
             }
         })
     }
-    console.log(filters)
+
+    const handleOptionsFilterView = () => {
+        if (currenciesOnPm) {
+            const options = currenciesOnPm.map((item) => {
+                const data = currenciesAvailable.filter(c => c.isoCode === item)[0];
+                return {label: data.name, value: data.isoCode}
+            })
+            options.push({label: "All", value: undefined})
+
+            return options
+        }
+        return undefined
+    }
 
     return (
         <LayoutDataViewList
@@ -123,19 +137,28 @@ export const PaymentMethodDashboard = () => {
                         size="medium"
                         onSave={handleCreatePaymentMethod}/>
             }}
-            dataResume={{
+            filterView={{
                 isVisible: true,
-                title:"Last used",
-                limit:4,
+                field:filters.currencyCode,
+                onClick: (value) => {
+                    console.log(value)
+                    handleFilters("currencyCode", value)
+                },
+                options: handleOptionsFilterView()
+            }}
+            dataSummary={{
+                isVisible: true,
+                title: "Last used",
+                limit: 4,
                 children:
                     lastPaymentMethods && lastPaymentMethods.map(pm =>
                         React.createElement(SummaryCard,
                             {
-                                key:pm.id,
+                                key: pm.id,
                                 children: <Typography variant="h3">{pm.name}</Typography>,
                                 header: {
                                     title: pm.type,
-                                    icon: RenderIconCards(pm.type)
+                                    icon: renderIconCards(pm.type)
                                 },
                                 caption: pm.createdAt
                             })
@@ -144,12 +167,12 @@ export const PaymentMethodDashboard = () => {
             dataList={{
                 title: "All Payment methods",
                 totalPages: 10,
-                limit:4,
+                limit: 4,
                 actionButtons: <Box>
-                    <Filters filterOptions={filterOptionsExample}
+                    <Filters filterOptions={filterListOptions}
                              filters={filters}
                              onChangeFilters={handleFilters}
-                             onClearFilters={()=>setFilters({})}
+                             onClearFilters={() => setFilters({})}
                     />
                 </Box>,
 
@@ -166,67 +189,6 @@ export const PaymentMethodDashboard = () => {
             }}
 
         />
-        //     {currenciesOnPm && (
-        //         <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
-        //             <Badge label="All"
-        //                    isSelected={filters.currencyCode === undefined}
-        //                    onClick={() => {
-        //                        setFilters((prev) => {
-        //                            return {
-        //                                ...prev,
-        //                                currencyCode: undefined,
-        //                            }
-        //                        })
-        //                    }}/>
-        //             {currenciesOnPm.map((currency) => {
-        //                 const data = currenciesAvailable.find(c => c.isoCode === currency);
-        //                 return (
-        //                     <Badge key={data.symbol}
-        //                            label={`${data.symbol} - ${data.name}`}
-        //                            isSelected={filters.currencyCode === data.isoCode}
-        //                            onClick={() => {
-        //                                setFilters((prev) => {
-        //                                    return {
-        //                                        ...prev,
-        //                                        currencyCode: data.isoCode,
-        //                                    }
-        //                                })
-        //                            }}/>
-        //                 )
-        //             })}
-        //         </Box>
-        //     )}
-
-        //                 <ButtonGroup>
-        //                     <Button
-        //                         variant={filters.type === undefined ? "contained" : "outlined"}
-        //                         onClick={() => setFilters((prev) => {
-        //                             return {
-        //                                 ...prev,
-        //                                 type: undefined
-        //                             }
-        //                         })}>
-        //                         All
-        //                     </Button>
-        //                     {typesOfPm && typesOfPm.map(
-        //                         type => {
-        //                             return (
-        //                                 <Button
-        //                                     key={type}
-        //                                     variant={filters.type === type ? "contained" : "outlined"}
-        //                                     onClick={() => setFilters((prev) => {
-        //                                         return {
-        //                                             ...prev,
-        //                                             type: type
-        //                                         }
-        //                                     })}>
-        //                                     {type}
-        //                                 </Button>
-        //                             )
-        //                         }
-        //                     )}
-        //                 </ButtonGroup>
-
     )
 }
 
