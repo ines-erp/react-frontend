@@ -7,5 +7,5 @@ import {financesRoutes} from "@/pages/finance/financeRoutes.jsx";
  */
 export const menuRoutes = [
     ...homeRoutes,
-    ...financesRoutes
-]
+    ...financesRoutes,
+];
