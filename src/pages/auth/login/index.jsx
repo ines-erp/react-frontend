@@ -1,5 +1,5 @@
 import {Box, Button, Container, Paper, TextField, Typography} from "@mui/material";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useRef} from "react";
 import {loginToApi} from "@/api/inesAuthApiV1.js";
 
@@ -7,14 +7,35 @@ export const LoginPage = () => {
 
     const userName = useRef();
     const password = useRef();
+    const navigateTo = useNavigate();
+
+
+    //TODO: isolate that to a new file and make it wide available
+    const getLoginToken = () => {
+        const cookies = document.cookie.split(";");
+        const tokenCookie = cookies.find(item => item.trim().startsWith("@inesErpAuthToken"));
+        if (tokenCookie) {
+            console.log(tokenCookie.split("@inesErpAuthToken=")[1]);
+        }
+    };
+
 
     const handleLogin = async () => {
-        // http://localhost:5047/api/v1/Auth/Login 
         const loginData = {"password": password.current.value, "username": userName.current.value};
         const isLogged = await loginToApi(loginData);
-        console.debug(isLogged);
+
+        if (isLogged.jwtToken) {
+            document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost`;
+
+            //TODO: Will put that token in a context
+            getLoginToken();
+
+            //TODO: Dynamically pass that url
+            navigateTo("/home");
+        }
 
     };
+
 
     return (
         <Container sx={{padding: 4}}>
