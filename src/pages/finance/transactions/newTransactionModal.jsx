@@ -1,4 +1,6 @@
 //TODO: Make generic, extract form and and make a component
+import {useEffect, useState} from "react";
+import {getFromApiData} from "@/api/inesDataApiV1.js";
 import {
     Box,
     Button,
@@ -16,19 +18,51 @@ import {
     TextField
 } from "@mui/material";
 
+
 export const NewTransactionModal = ({
                                         isOpen,
                                         handleClose,
                                         handlePost,
-                                        currencies,
-                                        categories,
-                                        paymentMethods,
                                         data = {},
-                                        isEditing=false,
+                                        isEditing = false,
                                     }) => {
 
-    
-    
+
+    const [paymentMethods, setPaymentMethods] = useState();
+    const [categories, setCategories] = useState();
+    const [types, setTypes] = useState();
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState();
+
+    const getPaymentMethods = async () => {
+        const paymentsResponse = await getFromApiData(`paymentmethods`);
+        const categoriesResponse = await getFromApiData(`transactionCategories`);
+        const typesResponse = await getFromApiData(`transactionTypes`);
+
+        Promise.all([paymentsResponse, categoriesResponse, typesResponse])
+            .then(([paymentMethods, categories, types]) => {
+                setPaymentMethods(paymentMethods);
+                setCategories(categories);
+                setTypes(types);
+            });
+
+    };
+
+
+    const handleSelectPaymentMethod = (paymentMethod) => {
+        setSelectedPaymentMethod(paymentMethod[0]);
+    };
+
+
+    useEffect(() => {
+        getPaymentMethods();
+    }, []);
+
+
+    if (!categories & !paymentMethods && !types) {
+        return <>... loading</>;
+    }
+
+
     return (
         <Dialog
             open={isOpen}
@@ -39,21 +73,19 @@ export const NewTransactionModal = ({
                     event.preventDefault();
 
                     const newTransaction = {
-                        "Name": event.target.name.value,
-                        "Description": event.target.description.value,
                         "Amount": event.target.amount.value,
                         "Date": new Date(event.target.date.value).toISOString(),
+                        "Description": event.target.description.value,
+                        "Name": event.target.name.value,
                         "PaidBy": event.target.paidBy.value,
-                        "RecievedBy": event.target.receivedBy.value,
-                        "TransactionTypeId": "fd5e3535-5a7c-4294-abde-49e869d77957",
-                        "CurrencyId": "7df7cddf-471b-4e17-bc59-70b0ff0a144d",
-                        "PaymentMethodId": "1d69c5c3-9887-47e3-a07d-6cffbb5051f5",
-                        "TransactionCategoryId": "e25116d5-911d-4d3c-9a36-1edee0398de7"
-                    }
+                        "PaymentMethodId": event.target.paymentMethod.value,
+                        "ReceivedBy": event.target.receivedBy.value,
+                        "TransactionCategoryId": event.target.category.value,
+                        "TransactionTypeId": event.target.transactionType.value
+                    };
 
-                    console.log(newTransaction)
-                    handlePost(newTransaction)
-                    handleClose()
+                    handlePost(newTransaction);
+                    handleClose();
 
                 }
             }}
@@ -65,7 +97,7 @@ export const NewTransactionModal = ({
                 Add new transaction
             </DialogTitle>
 
-            <DialogContent sx={{gap: 4, display: "flex", flexDirection: "column"}}>
+            <DialogContent sx={{display: "flex", flexDirection: "column", gap: 4}}>
                 <DialogContentText sx={{mb: 3}}>
                     Some example text
                 </DialogContentText>
@@ -73,11 +105,18 @@ export const NewTransactionModal = ({
                 <FormControl>
                     <FormLabel>Transaction type</FormLabel>
 
-                    <RadioGroup defaultValue={data.transactionType ? data.transactionType : "income"}
-                                name={"transaction-type"}
+                    <RadioGroup defaultValue={data.transactionType}
+                                id={"transactionType"}
+                                name={"transactionType"}
                                 sx={{display: "flex", flexDirection: "row", gap: 2}}>
-                        <FormControlLabel value={"income"} control={<Radio/>} label={"Income"}/>
-                        <FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>
+                        {types.map(transactionType => {
+                            return (
+                                <FormControlLabel required value={transactionType.id} key={transactionType.id}
+                                                  control={<Radio/>}
+                                                  label={transactionType.name}/>
+                            );
+                        })}
+                        {/*<FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>*/}
                     </RadioGroup>
 
                 </FormControl>
@@ -87,7 +126,7 @@ export const NewTransactionModal = ({
                     label={"Name"}
                     type={"text"}
                     fullWidth={true}
-                    defaultValue={data.name && data.name}
+                    defaultValue={data.name}
                 />
 
                 <TextField
@@ -98,31 +137,18 @@ export const NewTransactionModal = ({
                     rows={6}
                     maxRows={6}
                     fullWidth={true}
-                    defaultValue={data.description && data.description}
+                    defaultValue={data.description}
                 />
 
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                <Box sx={{display: "flex", gap: 2, width: "100%"}}>
                     <TextField
                         id={"amount"}
                         name={"amount"}
                         label={"Amount"}
                         type={"number"}
                         sx={{flex: 1}}
-                        defaultValue={data.amount && data.amount}
+                        defaultValue={data.amount}
                     />
-
-                    <TextField
-                        id={"currency"}
-                        name={"currency"}
-                        label={"Currency"}
-                        select
-                        sx={{minWidth: "25%"}}
-                        defaultValue={data.currency && data.currency}
-                    >
-                        {currencies.map((option) => (
-                            <MenuItem key={option.value} value={option.name}>{option.label} - {option.name}</MenuItem>
-                        ))}
-                    </TextField>
 
                     <TextField
                         id={"paymentMethod"}
@@ -130,26 +156,40 @@ export const NewTransactionModal = ({
                         label={"Payment method"}
                         select
                         sx={{minWidth: "25%"}}
-                        defaultValue={data.paymentMethod && data.paymentMethod}
+                        defaultValue={data.paymentMethod}
+                        onChange={(e) => handleSelectPaymentMethod(paymentMethods.filter(pm => pm.id === e.target.value))}
                     >
-                        {paymentMethods.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
-                        ))}
+                        {paymentMethods.map((option) => {
+                            return (
+                                <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+                            );
+                        })}
                     </TextField>
+
+                    <TextField
+                        id={"currency"}
+                        name={"currency"}
+                        label={"Currency"}
+                        // Select
+                        disabled={true}
+                        sx={{minWidth: "25%"}}
+                        value={selectedPaymentMethod ? selectedPaymentMethod.currency.name : data.currency ? data.currency : "No currency selected"}
+                        defaultValue={data.currency}
+                    />
 
                     <TextField
                         id={"date"}
                         name={"date"}
                         label={"Date"}
                         type={"date"}
-                        defaultValue={data.date ? data.date : new Date().toISOString().split("T")[0]}
+                        defaultValue={data.date}
                         sx={{minWidth: "25%"}}
 
                     />
                 </Box>
 
 
-                <Box sx={{width: "100%", display: "flex", gap: 2}}>
+                <Box sx={{display: "flex", gap: 2, width: "100%"}}>
                     <TextField
                         id={"paidBy"}
                         name={"paidBy"}
@@ -164,7 +204,7 @@ export const NewTransactionModal = ({
                         label={"Received By"}
                         type={"text"}
                         sx={{minWidth: "50%"}}
-                        defaultValue={data.recievedBy && data.recievedBy}
+                        defaultValue={data.receivedBy}
                     />
                 </Box>
 
@@ -173,18 +213,18 @@ export const NewTransactionModal = ({
                     name={"category"}
                     label={"Category"}
                     select
-                    defaultValue={data.category && data.category}
+                    defaultValue={data.category}
                 >
                     {categories.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>{option.label}</MenuItem>
+                        <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
                     ))}
                 </TextField>
 
             </DialogContent>
             <DialogActions sx={{pb: 4}}>
-                <Button type="submit" variant={"outlined"}>{isEditing ? "Save": "Create"}</Button>
+                <Button type="submit" variant={"outlined"}>{isEditing ? "Save" : "Create"}</Button>
                 <Button onClick={handleClose} variant={"outlined"} color={"error"}>Cancel</Button>
             </DialogActions>
         < /Dialog>
-    )
-}
+    );
+};

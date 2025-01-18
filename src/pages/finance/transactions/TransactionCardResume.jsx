@@ -1,11 +1,17 @@
-import {Box, Button, Card, CardActions, CardContent, Chip, Typography} from "@mui/material";
+import {Box, Button, Card, CardContent, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
-import {green, orange} from "@mui/material/colors";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 export const TransactionCardResume = ({transaction, onDelete}) => {
     const {
-        id, name, description, amount, date, createdAt, updatedAt, paidBy, receivedBy
+        id,
+        name,
+        description,
+        amount,
+        date,
+        createdAt,
+        updatedAt,
+        paidBy,
+        receivedBy
     } = transaction;
 
     const {id: transactionTypeId, name: transactionTypeName} = transaction.transactionType
@@ -13,57 +19,70 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
     const {id: categoryId, name: categoryName} = transaction.transactionCategory
 
     const {
-        id: paymentMethodId,
-        type: paymentMethodType,
-        name: paymentMethodName,
-        description: paymentMethodDescription,
-        createdAt: paymentMethodCreatedAt,
-        updatedAt: paymentMethodUpdatedAt
+        id: pymentMethodId,
+        type: pymentMethodType,
+        name: pymentMethodName,
+        description: pymentMethodDescription,
+        createdAt: pymentMethodCreatedAt,
+        updatedAt: pymentMethodUpdatedAt
     } = transaction.paymentMethod
 
     const {
-        id: currencyId, name: currencyName, symbol: currencySymbol, isoCode: currencyIsoCode
+        id: currencyId,
+        name: currencyName,
+        symbol: currencySymbol,
+        isoCode: currencyIsoCode
     } = transaction.paymentMethod.currency
 
 
-    return (<Card
-            variant="outlined"
+    return (
+        <Card
+            variant={"outlined"}
             key={transaction.id}
-            sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? green[50] : orange[50]}}
+            sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? "#00ff0009" : "#ff000009"}}
         >
 
-            <CardContent>
-                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
-                    <Chip variant="outlined" label={transactionTypeName}/>
-                <Typography variant="h4">
+            <CardContent
+                sx={{alignItems: "center", display: "flex", justifyContent: "space-between"}}
+            >
+
+                <Typography variant={"h3"} fontSize={"1rem"}>
                     {name}
                 </Typography>
-                </Box>
-                    <Typography variant="h3">
-                        {currencySymbol} {amount.toFixed(2)}
-                    </Typography>
 
+                <Typography>
+                    {transactionTypeName}
+                </Typography>
+                <Typography>
+                    {currencySymbol}: {amount.toFixed(2)}
+                </Typography>
 
-                <Typography variant="body1">
+                <Typography>
                     {description.substring(0, 30) + "..."}
                 </Typography>
-            </CardContent>
 
-            <CardActions>
-                <Button
-                    as={Link}
-                    style={{textDecoration: "none"}}
-                    variant="outlined"
-                    to={`${id}/details`}
-                >
-                    Details
-                </Button>
+                <Box sx={{alignItems: "center", display: "flex", gap: "8px", my: "auto"}}>
+                    <Button
+                        as={Link}
+                        variant={"outlined"}
+                        sx={{background: "#fff"}}
+                        to={`${id}/details`}
+                    >
+                        Details
+                    </Button>
 
-                <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>}
+                    <Button
+                        componet={Link}
+                        variant={"outlined"}
+                        color={"error"}
+                        sx={{background: "#fff"}}
                         onClick={onDelete}
-                >
-                    Delete
-                </Button>
-            </CardActions>
-        </Card>)
+                    >
+                        Delete
+                    </Button>
+                </Box>
+
+            </CardContent>
+        </Card>
+    )
 }

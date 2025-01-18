@@ -1,33 +1,51 @@
-import {Outlet} from "react-router-dom";
 import {BiUser} from "react-icons/bi";
 import {FinancesDashboard} from "@/pages/finance/index.jsx";
+import {Outlet} from "react-router-dom";
+import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMethodsRoutes.jsx";
 import {transactionsRoutesList} from "@/pages/finance/transactions/transactionsRoutes.jsx";
-import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMethodsRoutes.jsx"
+import {transactionCategoryRoutes} from "@/pages/finance/category/transactionCategoryRoutes.jsx";
 
 export const financesRoutesList = [
     {
-        path: "",
         element: <FinancesDashboard/>,
-        label: "Dashboard",
-        isInMenu: true,
+        icon: <BiUser/>,
         isEnabled: true,
+        isInMenu: true,
+        label: "Dashboard",
         parentLabel: "Finance",
-        icon: <BiUser/>
+        path: ""
     },
     {
-        path: "transactions", element: <Outlet/>, label: "Transactions", isInMenu: true, isEnabled: true,
-        children: transactionsRoutesList.filter(item => item.isEnabled === true)
+        children: transactionsRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Transactions",
+        path: "transactions"
     },
     {
-        path:"paymentmethods", element: <Outlet/>, label: "Payment methods", isInMenu: true, isEnabled: true,
-        children: paymentMethodsRoutesList.filter(item => item.isEnabled === true)
-    }
-]
+        children: paymentMethodsRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Payment methods",
+        path: "payment-methods"
+    },
+    {
+        children: transactionCategoryRoutes.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Categories",
+        path: "categories"
+    },
+
+];
 
 export const financesRoutes = [
     {
-        path: "/finance",
+        children: financesRoutesList.filter(item => item.isEnabled === true),
         element: <Outlet/>,
-        children: financesRoutesList.filter(item => item.isEnabled === true)
+        path: "/finance"
     }
-]
+];
