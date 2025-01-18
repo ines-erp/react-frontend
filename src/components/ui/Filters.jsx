@@ -1,10 +1,5 @@
 import {
-    Box,
-    Button,
-    Drawer,
-    Stack,
-    TextField,
-    Typography
+    Box, Button, Drawer, Stack, TextField, Typography
 } from "@mui/material";
 import React, {useState} from "react";
 import {FilterListOff, FilterList, Close} from "@mui/icons-material";
@@ -23,6 +18,10 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
     const [isOpen, setIsOpen] = useState(false);
     const drawerWidth = "20%";
 
+    const handleClearFilters = () => {
+        setIsOpen(false);
+        onClearFilters();
+    }
     const RenderFilterOptions = (filter) => {
         const {type, field, label, options} = filter
         const clearButton = <Button aria-label="delete" color="warning"
@@ -32,50 +31,39 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
 
         switch (type) {
             case "buttons":
-                return (
-                    <Stack direction="column" spacing={1}>
-                        {label &&
-                            <Typography variant="caption" component="div" sx={
-                                {
-                                    textTransform: "capitalize",
-                                    justifyContent: "space-between"
-                                }
-                            }>
-                                {label}
-                            </Typography>}
+                return (<Stack key={filter.label} direction="column" spacing={1}>
+                        {label && <Typography variant="caption" component="div" sx={{
+                            textTransform: "capitalize", justifyContent: "space-between"
+                        }}>
+                            {label}
+                        </Typography>}
                         <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
-                            {options.map(
-                                option => {
-                                    return (
-                                        <Button
-                                            key={crypto.randomUUID()}
-                                            value={option.value}
-                                            variant={filters[field] === option.value ? "contained" : "outlined"}
-                                            onClick={() => onChangeFilters(field, option.value)}>
-                                            {option.label}
-                                        </Button>
-                                    )
-                                }
-                            )}
+                            {options.map(option => {
+                                return (<Button
+                                        key={crypto.randomUUID()}
+                                        value={option.value}
+                                        variant={filters[field] === option.value ? "contained" : "outlined"}
+                                        onClick={() => onChangeFilters(field, option.value)}>
+                                        {option.label}
+                                    </Button>)
+                            })}
                             {clearButton}
                         </Box>
 
-                    </Stack>
-                );
+                    </Stack>);
             case "textField":
-                return (
-                    <TextField
-                        label={option.label}
-                        variant="outlined"
-                        value={option.value}
-                        onChange={(e) => onChangeFilters(field, e.target.value)}
-                    />
-                )
+                return (<TextField
+                                key={field}
+                                label={label}
+                                variant="outlined"
+                                onChange={(e) => onChangeFilters(field, e.target.value)}
+                                fullWidth={true}
+                                size="small"
+                            />)
         }
     }
 
-    return (
-        <>
+    return (<>
             <Button
                 startIcon={<FilterList/>}
                 variant="outlined"
@@ -96,11 +84,7 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                 <Box sx={{height: '86px'}}/>
                 <Box
                     sx={{
-                        padding: "0px 16px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
-                        height: "100%"
+                        padding: "0px 16px", display: "flex", flexDirection: "column", gap: 4, height: "100%"
                     }}
                 >
                     <Box sx={{
@@ -118,11 +102,10 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
 
                     {filterOptions.map(filter => RenderFilterOptions(filter))}
 
-                    <Button onClick={onClearFilters} variant="outlined" color="warning"
+                    <Button onClick={handleClearFilters} variant="outlined" color="warning"
                             startIcon={<FilterListOff/>}>Clear
                         all</Button>
                 </Box>
             </Drawer>
-        </>
-    )
+        </>)
 }

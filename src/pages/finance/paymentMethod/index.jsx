@@ -98,6 +98,9 @@ export const PaymentMethodDashboard = () => {
                 {value: "EUR", label: "Euro"},
                 {value: "BRL", label: "Real"},
             ]
+        },
+        {
+            label: "Name", type: "textField", field: "name", options:[],
         }
     ]
     const handleFilters = (field, value) => {
@@ -108,6 +111,7 @@ export const PaymentMethodDashboard = () => {
             }
         })
     }
+    console.log(filters)
 
     return (
         <LayoutDataViewList
@@ -145,6 +149,7 @@ export const PaymentMethodDashboard = () => {
                     <Filters filterOptions={filterOptionsExample}
                              filters={filters}
                              onChangeFilters={handleFilters}
+                             onClearFilters={()=>setFilters({})}
                     />
                 </Box>,
 
