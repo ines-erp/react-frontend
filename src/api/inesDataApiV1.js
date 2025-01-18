@@ -1,9 +1,20 @@
 import axios from "axios";
+import {getLoginToken} from "@/pages/auth/login/index.jsx";
 
 export const inesDataApiV1 = axios.create({
     baseURL: "/api",
     headers: {"Content-Type": "application/json"}
 });
+
+inesDataApiV1.interceptors.request.use(
+    (config) => {
+        const jwtToken = getLoginToken();
+        if (jwtToken) {
+            config.headers.Authorization = `Bearer ${jwtToken}`;
+        }
+        return config;
+    }, (error) => Promise.reject(error)
+);
 
 export const getFromApiData = async (endpoint) => {
     try {
