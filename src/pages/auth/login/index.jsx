@@ -3,22 +3,21 @@ import {Link, useNavigate} from "react-router-dom";
 import {useRef} from "react";
 import {loginToApi} from "@/api/inesAuthApiV1.js";
 
+//TODO: isolate that to a new file and make it wide available
+export const getLoginToken = () => {
+    const cookies = document.cookie.split(";");
+    const tokenCookie = cookies.find(item => item.trim().startsWith("@inesErpAuthToken"));
+    if (tokenCookie) {
+        return tokenCookie.split("@inesErpAuthToken=")[1];
+    }
+    return;
+};
+
 export const LoginPage = () => {
 
     const userName = useRef();
     const password = useRef();
     const navigateTo = useNavigate();
-
-
-    //TODO: isolate that to a new file and make it wide available
-    const getLoginToken = () => {
-        const cookies = document.cookie.split(";");
-        const tokenCookie = cookies.find(item => item.trim().startsWith("@inesErpAuthToken"));
-        if (tokenCookie) {
-            console.log(tokenCookie.split("@inesErpAuthToken=")[1]);
-        }
-    };
-
 
     const handleLogin = async () => {
         const loginData = {"password": password.current.value, "username": userName.current.value};

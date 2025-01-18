@@ -6,10 +6,6 @@ export const inesAuthApiV1 = axios.create({
 });
 
 export const loginToApi = async (dataBody) => {
-    try {
-        const response = await inesAuthApiV1.post("/Auth/Login", dataBody);
-        return response.data;
-    } catch (e) {
-        return e.message;
-    }
+    const response = await inesAuthApiV1.post("/Auth/Login", dataBody);
+    return response.data;
 };
