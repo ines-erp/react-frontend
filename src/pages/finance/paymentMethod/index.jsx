@@ -72,7 +72,9 @@ export const PaymentMethodDashboard = () => {
     }
 
     useEffect(() => {
-        getPaymentMethods();
+        setTimeout(() => {
+            getPaymentMethods();
+        }, "3000")
     }, [])
 
 
@@ -120,10 +122,12 @@ export const PaymentMethodDashboard = () => {
             dataResume={{
                 isVisible: true,
                 title:"Last used",
+                limit:4,
                 children:
                     lastPaymentMethods && lastPaymentMethods.map(pm =>
                         React.createElement(SummaryCard,
                             {
+                                key:pm.id,
                                 children: <Typography variant="h3">{pm.name}</Typography>,
                                 header: {
                                     title: pm.type,
@@ -136,6 +140,7 @@ export const PaymentMethodDashboard = () => {
             dataList={{
                 title: "All Payment methods",
                 totalPages: 10,
+                limit:4,
                 actionButtons: <Box>
                     <Filters filterOptions={filterOptionsExample}
                              filters={filters}
