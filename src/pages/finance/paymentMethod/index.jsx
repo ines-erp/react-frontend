@@ -149,7 +149,7 @@ export const PaymentMethodDashboard = () => {
             dataSummary={{
                 isVisible: true,
                 title: "Last used",
-                limit: 4,
+                limit: 3,
                 children:
                     lastPaymentMethods && lastPaymentMethods.map(pm =>
                         React.createElement(SummaryCard,
@@ -167,7 +167,6 @@ export const PaymentMethodDashboard = () => {
             dataList={{
                 title: "All Payment methods",
                 totalPages: 10,
-                limit: 4,
                 actionButtons: <Box>
                     <Filters filterOptions={filterListOptions}
                              filters={filters}

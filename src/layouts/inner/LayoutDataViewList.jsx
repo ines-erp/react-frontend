@@ -20,6 +20,8 @@ import {Link, useLocation} from "react-router-dom";
  * @returns {JSX.Element}
  * @constructor
  */
+
+
 export const LayoutDataViewList = (
     {
         header,
@@ -37,61 +39,64 @@ export const LayoutDataViewList = (
         <Container>
             <PageHeader title={header.title} actionButton={header.actionButton} isLoading={isLoading}/>
 
-            <Box id="optional-section" sx={{marginY:8}}>
-            {filterView.isVisible &&
-                (isLoading ?
-                        <Box sx={{display: "flex", gap: 2}}>
-                            {Array.from(Array(filterView.limit ?? 3)).map(
-                                (index) => (
-                                    <Skeleton height="32px" width="10%" variant="rounded" key={index}/>
-                                )
-                            )}
-                        </Box>
-                        : filterView.options && filterView.options.length > 0 && (
-                        <Box sx={{display: "flex", gap: 1, alignItems: "center", marginBottom:2}}>
-                            {filterView.options.map((opt) => {
-                                return (
-                                    <Badge key={opt.label}
-                                           label={opt.label}
-                                           isSelected={filterView.field === opt.value}
-                                           value={opt.value}
-                                           onClick={() => filterView.onClick(opt.value)
-                                           }/>
-                                )
-                            })}
-                        </Box>
+            <Box id="optional-section" sx={{marginY: 8}}>
+                {filterView.isVisible &&
+                    (isLoading ?
+                            <Box sx={{display: "flex", gap: 2, maginBottom: 2}}>
+                                {Array.from(Array(filterView.limit ?? 3)).map(
+                                    (index) => (
+                                        <Skeleton sx={{borderRadius:20}} height="32px" width="10%" variant="rounded" key={index}/>
+                                    )
+                                )}
+                            </Box>
+                            : filterView.options && filterView.options.length > 0 && (
+                            <Box sx={{display: "flex", gap: 1, alignItems: "center", marginBottom: 2}}>
+                                {filterView.options.map((opt) => {
+                                    return (
+                                        <Badge key={opt.label}
+                                               label={opt.label}
+                                               isSelected={filterView.field === opt.value}
+                                               value={opt.value}
+                                               onClick={() => filterView.onClick(opt.value)
+                                               }/>
+                                    )
+                                })}
+                            </Box>
+                        )
                     )
-                )
-            }
+                }
 
 
-            {
-                dataSummary.isVisible === true &&
-                (isLoading
-                    ?
-                    <Box sx={{display: "flex", gap: 2, }}>
-                        {/*TODO: Extract to a function an reuse it*/}
-                        {Array.from(Array(dataSummary.limit ?? 1)).map(
-                            (index) => (
-                                <Skeleton height="180px" width="25%" variant="rounded" key={index}/>
-                            )
-                        )}
-                    </Box>
-                    :
-                    <Box id="data-summary" sx={{marginTop:2}}>
-                        {dataSummary.filters && dataSummary.filters}
-                        {dataSummary.title &&
-                            <Typography
-                                variant="h2" fontSize="1.5rem"
-                                sx={{marginBottom: 2}}>
-                                {dataSummary.title}
-                            </Typography>
-                        }
-                        <Box sx={{display: "flex", gap: 2}}>
-                            {dataSummary.children}
+                {
+                    dataSummary.isVisible === true &&
+                    (isLoading
+                        ?
+                        <Box sx={{marginTop: 2}}>
+                            {/*TODO: Extract to a function an reuse it*/}
+                            {dataSummary.title && <Skeleton width={"15%"} height="32px" variant="rounded"/>}
+                            <Box sx={{display: "flex", gap: 2, marginTop: 1}}>
+                                {Array.from(Array(dataSummary.limit ?? 1)).map(
+                                    (index) => (
+                                        <Skeleton height="180px" width="25%" variant="rounded" key={index}/>
+                                    )
+                                )}
+                            </Box>
                         </Box>
-                    </Box>)
-            }
+                        :
+                        <Box id="data-summary" sx={{marginTop: 2}}>
+                            {dataSummary.filters && dataSummary.filters}
+                            {dataSummary.title &&
+                                <Typography
+                                    variant="h2" fontSize="1.5rem"
+                                    sx={{marginBottom: 2}}>
+                                    {dataSummary.title}
+                                </Typography>
+                            }
+                            <Box sx={{display: "flex", gap: 2}}>
+                                {dataSummary.children}
+                            </Box>
+                        </Box>)
+                }
             </Box>
 
             <Paper id="main" variant="outlined" sx={{minHeight: "450px", justifyContent: "space-between"}}>
