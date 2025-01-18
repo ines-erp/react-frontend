@@ -17,7 +17,7 @@ import {
     Typography
 } from "@mui/material";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
-import {DeleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {deleteFromApiData, getFromApiData, putToApiData} from "@/api/inesDataApiV1.js";
 
 
 export const TransactionsDetails = () => {
@@ -60,7 +60,7 @@ export const TransactionsDetails = () => {
     };
 
     const handleDelete = async (id) => {
-        const response = await DeleteFromApiData(`transactions/${id}`);
+        const response = await deleteFromApiData(`transactions/${id}`);
         if (response) {
             navigate(-1);
         }

@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
-import {DeleteFromApiData, getFromApiData, PostToApiData} from "@/api/inesDataApiV1.js";
+import {deleteFromApiData, getFromApiData, postToApiData} from "@/api/inesDataApiV1.js";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API
@@ -83,11 +83,11 @@ export const TransactionsDashboard = () => {
 
     //PROMISES
     const handlePostTransaction = async (body) => {
-        await PostToApiData('transactions', body);
+        await postToApiData('transactions', body);
         handleGetTransactionsAndBalances();
     };
     const handleDelete = async (id) => {
-        const response = await DeleteFromApiData(`transactions/${id}`);
+        const response = await deleteFromApiData(`transactions/${id}`);
         if (response) {
             handleGetTransactionsAndBalances();
         }
