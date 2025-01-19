@@ -5,6 +5,7 @@ import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
 import {loginToApi} from "@/api/inesAuthApiV1.js";
 
 //TODO: isolate that to a new file and make it wide available
+//TODO: create the cookie grab to username
 export const getLoginToken = () => {
     const cookies = document.cookie.split(";");
     const tokenCookie = cookies.find(item => item.trim().startsWith("@inesErpAuthToken"));
@@ -27,7 +28,9 @@ const handleLogin = async (password, userName, dispatch, navigateTo) => {
     const isLogged = await loginToApi(loginData);
 
     if (isLogged.jwtToken) {
+        //TODO: Maybe that should be inside of the dispatch function
         document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost;SameSite=true`;
+        document.cookie = `@inesErpUsername=${userName.current.value};max-age=${60 * 15};domain=localhost;SameSite=true`;
 
         dispatch({
             auth: {token: isLogged.jwtToken, username: userName.current.value},
