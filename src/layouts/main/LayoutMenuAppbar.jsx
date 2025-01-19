@@ -1,10 +1,24 @@
 import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMediaQuery} from "@mui/material";
-import React, {useEffect} from "react";
+import React, {useContext} from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {RouterMainMenu} from "@/menu/index.jsx";
 import {Outlet, useNavigate} from "react-router-dom";
 import {grey} from "@mui/material/colors";
-import {getLoginToken} from "@/pages/auth/login/index.jsx";
+import {AuthContext} from "@/contexts/authContext.js";
+
+// const handleLoggedUser = async () => {
+//     //implement an observable here or some interceptor
+//     //maybe that validation should be a async function and must block the ui to be render
+//     //TODO: implement some cookie validation over api request
+//     const token = getLoginToken();
+//
+//     if (token.length > 0) {
+//         console.log(token);
+//         return token;
+//     }
+//     return null
+// };
+
 
 const Offset = () => <Box sx={{height: '86px'}}/>;
 
@@ -12,6 +26,7 @@ const Offset = () => <Box sx={{height: '86px'}}/>;
 export const LayoutMenuAppbar = () => {
     const isScreenBigger = useMediaQuery('(min-width:600px)');
     const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+    const auth = useContext(AuthContext);
 
     const navigateTo = useNavigate();
 
@@ -21,16 +36,9 @@ export const LayoutMenuAppbar = () => {
 
     const drawerWidth = 240;
 
-    useEffect(() => {
-        //implement an observable here or some interceptor
-        const token = getLoginToken();
-        if (token) {
-            console.log("yee token");
-            return;
-        }
-        navigateTo("/auth/login");
-    }, []);
+    console.debug(auth);
 
+   
     return (
         <Box sx={{display: 'flex'}}>
             <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>

@@ -1,7 +1,7 @@
 import {Box, Button, Container, Paper, TextField, Typography} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
-import {useRef} from "react";
-import {loginToApi} from "@/api/inesAuthApiV1.js";
+import {useContext, useRef} from "react";
+import {AuthDispatchContext} from "@/contexts/authContext.js";
 
 //TODO: isolate that to a new file and make it wide available
 export const getLoginToken = () => {
@@ -19,19 +19,27 @@ export const LoginPage = () => {
     const password = useRef();
     const navigateTo = useNavigate();
 
+    const dispatch = useContext(AuthDispatchContext);
+
     const handleLogin = async () => {
-        const loginData = {"password": password.current.value, "username": userName.current.value};
-        const isLogged = await loginToApi(loginData);
+        // const loginData = {"password": password.current.value, "username": userName.current.value};
+        // const isLogged = await loginToApi(loginData);
 
-        if (isLogged.jwtToken) {
-            document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost`;
+        // if (isLogged.jwtToken) {
+        // document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost;SameSite=true`;
 
-            //TODO: Will put that token in a context
-            getLoginToken();
+        // TODO: Will put that token in a context
+        // getLoginToken();
 
             //TODO: Dynamically pass that url
+
+        dispatch({
+            auth: {token: "valid token", username: "valid username"},
+            type: "login"
+        });
             navigateTo("/home");
-        }
+
+        // }
 
     };
 
