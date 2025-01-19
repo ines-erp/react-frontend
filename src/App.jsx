@@ -4,8 +4,9 @@ import {RouterProvider} from "react-router-dom";
 import {ThemeProvider} from "@mui/material";
 import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
 import {useReducer} from "react";
+import {getLoginToken} from "@/pages/auth/login/index.jsx";
 
-const initialAuth = {token: null, username: null};
+const initialAuth = {token: getLoginToken(), username: null};
 
 const authReducer = (auth, action) => {
     switch (action.type) {
