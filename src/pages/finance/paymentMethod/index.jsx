@@ -85,6 +85,7 @@ export const PaymentMethodDashboard = () => {
         }
     }
 
+    // TODO: request this filters from the api
     const filterListOptions = [
         {
             label: "filter by type", type: "buttons", field: "type", options: typesOfPm && typesOfPm.map(t => {
@@ -102,6 +103,7 @@ export const PaymentMethodDashboard = () => {
             label: "Name", type: "textField", field: "name", options: [],
         }
     ]
+
     const handleFilters = (field, value) => {
         setFilters((prevState) => {
             return {
@@ -124,6 +126,68 @@ export const PaymentMethodDashboard = () => {
         return undefined
     }
 
+
+    const dataHeader = {
+        title: "payment methods",
+        actionButton:
+            <ActionModalPM
+                type="create"
+                size="medium"
+                onSave={handleCreatePaymentMethod}/>
+    }
+
+    const dataFilterView = {
+        isVisible: true,
+        field: filters.currencyCode,
+        onClick: (value) => {
+            console.log(value)
+            handleFilters("currencyCode", value)
+        },
+        options: handleOptionsFilterView()
+    }
+
+    const dataSummaryCards = {
+        isVisible: true,
+        title: "Last used",
+        limit: 3,
+        children:
+            lastPaymentMethods && lastPaymentMethods.map(pm =>
+                React.createElement(SummaryCard,
+                    {
+                        key: pm.id,
+                        children: <Typography variant="h3">{pm.name}</Typography>,
+                        header: {
+                            title: pm.type,
+                            icon: renderIconCards(pm.type)
+                        },
+                        caption: pm.createdAt
+                    })
+            )
+    }
+
+    const dataList = {
+        title: "All Payment methods",
+        totalPages: 10,
+        actionButtons: <Box>
+            <Filters filterOptions={filterListOptions}
+                     filters={filters}
+                     onChangeFilters={handleFilters}
+                     onClearFilters={() => setFilters({})}
+            />
+        </Box>,
+
+        children: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
+            return (
+                <PaymentMethodsCard
+                    key={paymentMethod.id}
+                    paymentMethod={paymentMethod}
+                    onUpdate={handleUpdate}
+                    onDelete={handleDeletePaymentMethod}
+                />
+            )
+        })
+    }
+
     useEffect(() => {
         setTimeout(() => {
             getPaymentMethods();
@@ -132,64 +196,10 @@ export const PaymentMethodDashboard = () => {
 
     return (
         <LayoutDataViewList
-            header={{
-                title: "payment methods",
-                actionButton:
-                    <ActionModalPM
-                        type="create"
-                        size="medium"
-                        onSave={handleCreatePaymentMethod}/>
-            }}
-            filterView={{
-                isVisible: true,
-                field: filters.currencyCode,
-                onClick: (value) => {
-                    console.log(value)
-                    handleFilters("currencyCode", value)
-                },
-                options: handleOptionsFilterView()
-            }}
-            dataSummary={{
-                isVisible: true,
-                title: "Last used",
-                limit: 3,
-                children:
-                    lastPaymentMethods && lastPaymentMethods.map(pm =>
-                        React.createElement(SummaryCard,
-                            {
-                                key: pm.id,
-                                children: <Typography variant="h3">{pm.name}</Typography>,
-                                header: {
-                                    title: pm.type,
-                                    icon: renderIconCards(pm.type)
-                                },
-                                caption: pm.createdAt
-                            })
-                    )
-            }}
-            dataList={{
-                title: "All Payment methods",
-                totalPages: 10,
-                actionButtons: <Box>
-                    <Filters filterOptions={filterListOptions}
-                             filters={filters}
-                             onChangeFilters={handleFilters}
-                             onClearFilters={() => setFilters({})}
-                    />
-                </Box>,
-
-                children: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
-                    return (
-                        <PaymentMethodsCard
-                            key={paymentMethod.id}
-                            paymentMethod={paymentMethod}
-                            onUpdate={handleUpdate}
-                            onDelete={handleDeletePaymentMethod}
-                        />
-                    )
-                })
-            }}
-
+            header={dataHeader}
+            filterView={dataFilterView}
+            dataSummary={dataSummaryCards}
+            dataList={dataList}
         />
     )
 }
