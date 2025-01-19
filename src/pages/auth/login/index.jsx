@@ -11,38 +11,31 @@ export const getLoginToken = () => {
     if (tokenCookie) {
         return tokenCookie.split("@inesErpAuthToken=")[1];
     }
-    return;
+    return null;
 };
 
-export function logHout(dispatch) {
-    const handleLogout = () => {
-        document.cookie = `@inesErpAuthToken=;max-age=${1};domain=localhost;SameSite=true;`;
+export function handleLogout(dispatch) {
+    document.cookie = `@inesErpAuthToken=;max-age=${1};domain=localhost;SameSite=true;`;
+    dispatch({
+        auth: {token: null, username: null},
+        type: "logout"
+    });
+}
+
+const handleLogin = async (password, userName, dispatch, navigateTo) => {
+    const loginData = {"password": password.current.value, "username": userName.current.value};
+    const isLogged = await loginToApi(loginData);
+
+    if (isLogged.jwtToken) {
+        document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost;SameSite=true`;
+
         dispatch({
-            auth: {token: null, username: null},
-            type: "logout"
+            auth: {token: isLogged.jwtToken, username: userName},
+            type: "login"
         });
-    };
-    return handleLogout;
-}
-
-export function login(password, userName, dispatch, navigateTo) {
-    const handleLogin = async () => {
-        const loginData = {"password": password.current.value, "username": userName.current.value};
-        const isLogged = await loginToApi(loginData);
-
-        if (isLogged.jwtToken) {
-            document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost;SameSite=true`;
-
-            dispatch({
-                auth: {token: isLogged.jwtToken, username: userName},
-                type: "login"
-            });
-            navigateTo("/home");
-        }
-
-    };
-    return handleLogin;
-}
+        navigateTo("/home");
+    }
+};
 
 export const LoginPage = () => {
 
@@ -50,17 +43,16 @@ export const LoginPage = () => {
     const password = useRef();
     const navigateTo = useNavigate();
 
-    const {token, username} = useContext(AuthContext)
+    const {token, username} = useContext(AuthContext);
     const dispatch = useContext(AuthDispatchContext);
 
-    const handleLogin = login(password, userName, dispatch, navigateTo);
-    const handleLogout = logHout(dispatch);
-
+    // useEffect(() => {}, [token])
+    console.debug(token)
     if (token) {
         return (
             <>
                 <Typography>Already logged in</Typography>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button onClick={() => handleLogout(dispatch)}>Logout</Button>
             </>
         );
     }
@@ -87,7 +79,8 @@ export const LoginPage = () => {
                 </Typography>
 
                 <Box sx={{display: "flex", justifyContent: "end"}}>
-                    <Button variant={"contained"} onClick={handleLogin}>Login</Button>
+                    <Button variant={"contained"}
+                            onClick={() => handleLogin(password, userName, dispatch, navigateTo)}>Login</Button>
                 </Box>
             </Paper>
         </Container>
