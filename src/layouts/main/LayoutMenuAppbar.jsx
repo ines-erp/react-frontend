@@ -2,31 +2,21 @@ import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMedi
 import React, {useContext, useEffect} from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {RouterMainMenu} from "@/menu/index.jsx";
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {grey} from "@mui/material/colors";
-import {AuthContext} from "@/store/authContext.js";
-
-// const handleLoggedUser = async () => {
-//     //implement an observable here or some interceptor
-//     //maybe that validation should be a async function and must block the ui to be render
-//     //TODO: implement some cookie validation over api request
-//     const token = getLoginToken();
-//
-//     if (token.length > 0) {
-//         console.log(token);
-//         return token;
-//     }
-//     return null
-// };
-
+import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
+import {getLoginToken, handleLogout} from "@/pages/auth/login/index.jsx";
 
 const Offset = () => <Box sx={{height: '86px'}}/>;
-
 
 export const LayoutMenuAppbar = () => {
     const isScreenBigger = useMediaQuery('(min-width:600px)');
     const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-    const auth = useContext(AuthContext);
+
+    const location = useLocation();
+
+    const {token, username} = useContext(AuthContext);
+    const dispatch = useContext(AuthDispatchContext);
 
     const navigateTo = useNavigate();
 
@@ -37,8 +27,13 @@ export const LayoutMenuAppbar = () => {
     const drawerWidth = 240;
 
     useEffect(() => {
-        auth.token ?? navigateTo("/auth/login");
-    }, [auth]);
+        const cookeiToken = getLoginToken();
+        if (cookeiToken) {
+            return;
+        }
+        handleLogout(dispatch)
+        navigateTo("/auth/login");
+    }, [location.pathname]);
 
     return (
         <Box sx={{display: 'flex'}}>
