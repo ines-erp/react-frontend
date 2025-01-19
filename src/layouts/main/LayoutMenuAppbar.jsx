@@ -1,10 +1,10 @@
 import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMediaQuery} from "@mui/material";
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import {RouterMainMenu} from "@/menu/index.jsx";
 import {Outlet, useNavigate} from "react-router-dom";
 import {grey} from "@mui/material/colors";
-import {AuthContext} from "@/contexts/authContext.js";
+import {AuthContext} from "@/store/authContext.js";
 
 // const handleLoggedUser = async () => {
 //     //implement an observable here or some interceptor
@@ -36,9 +36,10 @@ export const LayoutMenuAppbar = () => {
 
     const drawerWidth = 240;
 
-    console.debug(auth);
+    useEffect(() => {
+        auth.token ?? navigateTo("/auth/login");
+    }, [auth]);
 
-   
     return (
         <Box sx={{display: 'flex'}}>
             <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>

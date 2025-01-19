@@ -2,7 +2,7 @@ import {inesMainTheme} from "@/themes/inesMainTheme.js";
 import router from "@/routes/router.jsx";
 import {RouterProvider} from "react-router-dom";
 import {ThemeProvider} from "@mui/material";
-import {AuthContext, AuthDispatchContext} from "@/contexts/authContext.js";
+import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
 import {useReducer} from "react";
 
 const initialAuth = {token: null, username: null};
