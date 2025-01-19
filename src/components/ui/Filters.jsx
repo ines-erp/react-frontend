@@ -24,10 +24,14 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
     }
     const RenderFilterOptions = (filter) => {
         const {type, field, label, options} = filter
-        const clearButton = <Button aria-label="delete" color="warning"
-                                    onClick={() => onChangeFilters(field, undefined)} startIcon={<DeleteIcon/>}>
-            Clear
-        </Button>
+        const clearButton = (
+            <Button
+                aria-label="delete"
+                color="warning"
+                onClick={() => onChangeFilters(field, undefined)} startIcon={<DeleteIcon/>}
+            >
+                Clear
+            </Button>)
 
         switch (type) {
             case "buttons":
@@ -38,9 +42,9 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                         {label}
                     </Typography>}
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
-                        {options.map(option => {
+                        {options.map((option, index) => {
                             return (<Button
-                                key={crypto.randomUUID()}
+                                key={index}
                                 value={option.value}
                                 variant={filters[field] === option.value ? "contained" : "outlined"}
                                 onClick={() => onChangeFilters(field, option.value)}>
@@ -84,7 +88,11 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
             <Box sx={{height: '86px'}}/>
             <Box
                 sx={{
-                    padding: "0px 16px", display: "flex", flexDirection: "column", gap: 4, height: "100%"
+                    padding: "0px 16px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                    height: "100%"
                 }}
             >
                 <Box sx={{
@@ -95,16 +103,29 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    <Typography variant="h3" sx={{marginBottom: 2}}>Filters</Typography>
-                    <Button onClick={() => setIsOpen(false)} size="small" color="grey"
-                            startIcon={<Close/>}>Close</Button>
+                    <Typography variant="h3" sx={{marginBottom: 2}}>
+                        Filters
+                    </Typography>
+                    <Button
+                        onClick={() => setIsOpen(false)}
+                        size="small"
+                        color="grey"
+                        startIcon={<Close/>}
+                    >
+                        Close
+                    </Button>
                 </Box>
 
                 {filterOptions.map(filter => RenderFilterOptions(filter))}
 
-                <Button onClick={handleClearFilters} variant="outlined" color="warning"
-                        startIcon={<FilterListOff/>}>Clear
-                    all</Button>
+                <Button
+                    onClick={handleClearFilters}
+                    variant="outlined"
+                    color="warning"
+                    startIcon={<FilterListOff/>}
+                >
+                    Clear all
+                </Button>
             </Box>
         </Drawer>
     </>)
