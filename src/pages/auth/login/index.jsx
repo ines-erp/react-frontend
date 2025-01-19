@@ -1,6 +1,6 @@
 import {Box, Button, Container, Paper, TextField, Typography} from "@mui/material";
 import {Link, useNavigate} from "react-router-dom";
-import {useContext, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
 import {loginToApi} from "@/api/inesAuthApiV1.js";
 
@@ -30,7 +30,7 @@ const handleLogin = async (password, userName, dispatch, navigateTo) => {
         document.cookie = `@inesErpAuthToken=${isLogged.jwtToken};max-age=${60 * 15};domain=localhost;SameSite=true`;
 
         dispatch({
-            auth: {token: isLogged.jwtToken, username: userName},
+            auth: {token: isLogged.jwtToken, username: userName.current.value},
             type: "login"
         });
         navigateTo("/home");
@@ -46,8 +46,14 @@ export const LoginPage = () => {
     const {token, username} = useContext(AuthContext);
     const dispatch = useContext(AuthDispatchContext);
 
-    // useEffect(() => {}, [token])
-    console.debug(token)
+    useEffect(() => {
+        const cookieToken = getLoginToken();
+        if (cookieToken) {
+            return;
+        }
+    }, []);
+
+
     if (token) {
         return (
             <>

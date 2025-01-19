@@ -27,11 +27,11 @@ export const LayoutMenuAppbar = () => {
     const drawerWidth = 240;
 
     useEffect(() => {
-        const cookeiToken = getLoginToken();
-        if (cookeiToken) {
+        const cookieToken = getLoginToken();
+        if (cookieToken) {
             return;
         }
-        handleLogout(dispatch)
+        handleLogout(dispatch);
         navigateTo("/auth/login");
     }, [location.pathname]);
 
@@ -58,6 +58,9 @@ export const LayoutMenuAppbar = () => {
                         }}
                     >
                         INES
+                    </Typography>
+                    <Typography>
+                        {username}
                     </Typography>
                 </Toolbar>
             </AppBar>
