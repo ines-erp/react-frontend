@@ -42,7 +42,7 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                         {label}
                     </Typography>}
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
-                        {options.map((option, index) => {
+                        {options && options.map((option, index) => {
                             return (<Button
                                 key={index}
                                 value={option.value}
