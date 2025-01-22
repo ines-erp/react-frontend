@@ -4,31 +4,44 @@ import {
 import React, {useState} from "react";
 import {FilterListOff, FilterList, Close} from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
+import {useSearchParams} from "react-router-dom";
 
 /**
  *
  * @param filterOptions
- * @param filters {{field: value}}
- * @param onChangeFilters {(field:string, value) => void}
- * @param onClearFilters {()=>void}
  * @returns {Element}
  * @constructor
  */
-export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters}) => {
+export const Filters = ({filterOptions}) => {
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const newQuery = new URLSearchParams(currentQueryParams);
+
     const [isOpen, setIsOpen] = useState(false);
+
     const drawerWidth = "20%";
 
-    const handleClearFilters = () => {
-        setIsOpen(false);
-        onClearFilters();
+    const handleChangeFilter = (field, value) => {
+        newQuery.set(field, value);
+        setCurrentQueryParams(newQuery);
     }
+
+    const handleClearFilters = () => {
+        //remove all filters from url that matches filterOptions fields.
+        const fields = filterOptions.map((option) => option.field)
+        for (const field of fields) {
+            newQuery.delete(field);
+        }
+        setCurrentQueryParams(newQuery);
+        setIsOpen(false);
+    }
+
     const RenderFilterOptions = (filter) => {
         const {type, field, label, options} = filter
         const clearButton = (
             <Button
                 aria-label="delete"
                 color="warning"
-                onClick={() => onChangeFilters(field, undefined)} startIcon={<DeleteIcon/>}
+                // onClick={() => onChangeFilters(field, undefined)} startIcon={<DeleteIcon/>}
             >
                 Clear
             </Button>)
@@ -43,11 +56,13 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                     </Typography>}
                     <Box sx={{display: "flex", flexWrap: "wrap", gap: 1}}>
                         {options && options.map((option, index) => {
+                            const isSelected = newQuery.get(field) ? newQuery.get(field).toLowerCase() === option.value.toLowerCase() : false
                             return (<Button
                                 key={index}
                                 value={option.value}
-                                variant={filters[field] === option.value ? "contained" : "outlined"}
-                                onClick={() => onChangeFilters(field, option.value)}>
+                                variant={isSelected ? "contained" : "outlined"}
+                                onClick={() => handleChangeFilter(field, option.value)}
+                            >
                                 {option.label}
                             </Button>)
                         })}
@@ -59,8 +74,9 @@ export const Filters = ({filterOptions, filters, onChangeFilters, onClearFilters
                 return (<TextField
                     key={field}
                     label={label}
+                    defaultValue={newQuery.get(field)}
                     variant="outlined"
-                    onChange={(e) => onChangeFilters(field, e.target.value)}
+                    onChange={(e) => handleChangeFilter(field, e.target.value)}
                     fullWidth={true}
                     size="small"
                 />)
