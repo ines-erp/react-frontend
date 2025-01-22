@@ -15,19 +15,21 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
+import {useLocation} from "react-router-dom";
 
 // TODO: Add filters when the endpoint is able to it
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
+    const location = useLocation()
+    const searchParams = location.search;
+
     const [paymentMethods, setPaymentMethods] = useState(undefined)
     const [filters, setFilters] = useState({
         type: "",
         name: "",
         currencyCode: "",
     })
-    const [sortBy, setSortBy] = useState({value:"createdAt", isAscending:true})
-
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
     const currenciesAvailable = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
@@ -41,11 +43,9 @@ export const PaymentMethodDashboard = () => {
     ]
 
     const getPaymentMethods = async () => {
-        const sortRequest=`&sortBy=${sortBy.value}&isAscending=${sortBy.isAscending}`
-        const filterRequest =  Object.values(filters).filter(value => value !== "").length > 0 ? `name=${filters.name}&type=${filters.type}&currency=${filters.currencyCode}`: "";
 
         // //TODO: After the PR of wes be merged, redo this function to receive axios params.
-        const data = await getFromApiData(`paymentmethods?${filterRequest}${sortRequest}`);
+        const data = await getFromApiData(`paymentmethods${searchParams}`);
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
@@ -100,14 +100,14 @@ export const PaymentMethodDashboard = () => {
     const filterListOptions = [
 
         {
-            label: "filter by currency", type: "buttons", field: "currencyCode", options: [
+            label: "Currency", type: "buttons", field: "currencyCode", options: [
                 {value: "USD", label: "Dollar"},
                 {value: "EUR", label: "Euro"},
                 {value: "BRL", label: "Real"},
             ]
         },
         {
-            label: "filter by type", type: "textField", field: "type"
+            label: "Type", type: "textField", field: "type"
         },
         {
             label: "Name", type: "textField", field: "name",
@@ -134,20 +134,6 @@ export const PaymentMethodDashboard = () => {
             return options
         }
         return undefined
-    }
-
-    const handleChangeFilter = (field, value) => {
-        console.log(field, value)
-        setSortBy((prevState) => {
-            if(field === "isAscending")
-            {
-                return {value: prevState.value, isAscending:value}
-            }
-            return {
-                ...prevState,
-                value: value
-            }
-        })
     }
 
     const dataHeader = {
@@ -194,8 +180,6 @@ export const PaymentMethodDashboard = () => {
         actionButtons: <Box sx={{display: "flex", gap: 1}}>
             <SortBy
                 sortOptions={sortOptions}
-                onChange={handleChangeFilter}
-                sortState={sortBy}
             />
             <Filters
                 filterOptions={filterListOptions}
@@ -221,7 +205,7 @@ export const PaymentMethodDashboard = () => {
         setTimeout(() => {
             getPaymentMethods();
         }, "1000")
-    }, [filters, sortBy])
+    }, [filters, searchParams])
 
     return (
         <LayoutDataViewList
