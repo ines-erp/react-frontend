@@ -17,7 +17,8 @@ import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
 import {useLocation} from "react-router-dom";
 
-// TODO: Add filters when the endpoint is able to it
+// TODO: Add pagination
+// FIX: Fix the filter badge applied
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
@@ -25,15 +26,13 @@ export const PaymentMethodDashboard = () => {
     const searchParams = location.search;
 
     const [paymentMethods, setPaymentMethods] = useState(undefined)
-    const [filters, setFilters] = useState({
-        type: "",
-        name: "",
-        currencyCode: "",
-    })
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
-    const currenciesAvailable = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
-    const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const availableCurrencies = [
+        {value: "USD", label: "Dollar"},
+        {value: "EUR", label: "Euro"},
+        {value: "BRL", label: "Real"},
+    ]
 
     const sortOptions = [
         {value: "currency", label: "Currency"},
@@ -100,34 +99,23 @@ export const PaymentMethodDashboard = () => {
     const filterListOptions = [
 
         {
-            label: "Currency", type: "buttons", field: "currencyCode", options: [
-                {value: "USD", label: "Dollar"},
-                {value: "EUR", label: "Euro"},
-                {value: "BRL", label: "Real"},
-            ]
+            label: "Currency", type: "buttons", field: "currency", options: availableCurrencies
         },
         {
             label: "Type", type: "textField", field: "type"
         },
         {
             label: "Name", type: "textField", field: "name",
-        }
+        },
+        {
+            label: "Fruta", type: "textField", field: "jacare",
+        },
     ]
 
-    const handleFilters = (field, value) => {
-        setFilters((prevState) => {
-            return {
-                ...prevState,
-                [field]: value
-            }
-        })
-    }
-
     const handleOptionsFilterView = () => {
-        if (currenciesOnPm) {
-            const options = currenciesOnPm.map((item) => {
-                const data = currenciesAvailable.filter(c => c.isoCode === item)[0];
-                return {label: data.name, value: data.isoCode}
+        if (availableCurrencies) {
+            const options = availableCurrencies.map((item) => {
+                return {label: item.label, value: item.value}
             })
             options.push({label: "All", value: undefined})
 
@@ -147,10 +135,10 @@ export const PaymentMethodDashboard = () => {
 
     const dataFilterView = {
         isVisible: true,
-        field: filters.currencyCode,
+        field: "currency",
         onClick: (value) => {
             console.log(value)
-            handleFilters("currencyCode", value)
+
         },
         options: handleOptionsFilterView()
     }
@@ -183,9 +171,6 @@ export const PaymentMethodDashboard = () => {
             />
             <Filters
                 filterOptions={filterListOptions}
-                filters={filters}
-                onChangeFilters={handleFilters}
-                onClearFilters={() => setFilters({name:"", type:"", currencyCode: ""})}
             />
         </Box>,
 
@@ -205,7 +190,7 @@ export const PaymentMethodDashboard = () => {
         setTimeout(() => {
             getPaymentMethods();
         }, "1000")
-    }, [filters, searchParams])
+    }, [searchParams])
 
     return (
         <LayoutDataViewList
