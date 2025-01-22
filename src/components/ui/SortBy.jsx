@@ -1,12 +1,11 @@
 import {Box, Button, Divider, ListItemButton, ListItemIcon, Menu, MenuItem, styled} from "@mui/material";
 import {ArrowDownward, ArrowLeft, ArrowRight, ArrowUpward, Circle, Sort} from "@mui/icons-material";
 import React, {useState} from "react";
-import {blue, blueGrey, grey, lightBlue} from "@mui/material/colors";
+import {blueGrey, lightBlue} from "@mui/material/colors";
 
 
-export const SortBy = ({sortOptions, onChange, currentValue, isCurrentlyAscending}) => {
-    const [anchorEl, setAnchorEl] = useState(currentValue ?? null);
-    const [isAscending, setIsAscending] = useState(!isCurrentlyAscending ?? true);
+export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAscending:true}}) => {
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const isOpen = Boolean(anchorEl)
 
@@ -14,8 +13,8 @@ export const SortBy = ({sortOptions, onChange, currentValue, isCurrentlyAscendin
         setAnchorEl(event.currentTarget);
     }
 
-    const handleChange = (value) => {
-        onChange(value, isAscending);
+    const handleChange = (field, value) => {
+        onChange(field, value);
         setAnchorEl(null);
     }
 
@@ -33,8 +32,8 @@ export const SortBy = ({sortOptions, onChange, currentValue, isCurrentlyAscendin
             </Button>
             <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose} sx={{padding:4}}>
                 {sortOptions.map(opt => (
-                    <MenuSelectItem key={opt.value} value={opt.value} selected={currentValue === opt.value}
-                              onClick={()=>handleChange(opt.value)}
+                    <MenuSelectItem key={opt.value} value={opt.value} selected={sortState.value === opt.value}
+                              onClick={()=>handleChange("value", opt.value)}
                               sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
                         {opt.label}
 
@@ -44,9 +43,9 @@ export const SortBy = ({sortOptions, onChange, currentValue, isCurrentlyAscendin
                 <Divider/>
 
                 <MenuSelectItem
-                    selected={isAscending}
+                    selected={sortState.isAscending}
                     onClick={() => {
-                        setIsAscending(true)
+                        onChange("isAscending", true)
                     }}
                     sx={{
                         display: "flex",
@@ -58,9 +57,9 @@ export const SortBy = ({sortOptions, onChange, currentValue, isCurrentlyAscendin
                 </MenuSelectItem>
 
                 <MenuSelectItem
-                    selected={!isAscending}
+                    selected={!sortState.isAscending}
                     onClick={() => {
-                        setIsAscending(false)
+                        onChange("isAscending", false)
                     }}
                     sx={{
                         display: "flex",

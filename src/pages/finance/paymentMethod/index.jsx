@@ -1,9 +1,9 @@
-import {Box, Typography} from "@mui/material";
+import {Box, InputAdornment, ListItemIcon, Menu, MenuItem, TextField, Typography} from "@mui/material";
 import {
-    AccountBalance,
+    AccountBalance, ArrowDownward, ArrowUpward,
     CreditCard,
     Info,
-    LocalAtm
+    LocalAtm, Sort
 } from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 
@@ -14,6 +14,7 @@ import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCa
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
+import {SortBy} from "@/components/ui/SortBy.jsx";
 
 // TODO: Add filters when the endpoint is able to it
 // TODO: last used payment methods on transactions when endpoint is filtering by date
@@ -21,20 +22,30 @@ import {Filters} from "@/components/ui/Filters.jsx";
 export const PaymentMethodDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState(undefined)
     const [filters, setFilters] = useState({
-        type: undefined,
-        name: undefined,
-        currencyCode: undefined,
+        type: "",
+        name: "",
+        currencyCode: "",
     })
+    const [sortBy, setSortBy] = useState({value:"createdAt", isAscending:true})
 
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
     const currenciesAvailable = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
     const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
 
-    const typesOfPm = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.type).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const sortOptions = [
+        {value: "currency", label: "Currency"},
+        {value: "name", label: "Name"},
+        {value: "type", label: "Type"},
+        {value: "createdAt", label: "Created At"},
+    ]
 
     const getPaymentMethods = async () => {
-        const data = await getFromApiData(`paymentmethods`);
+        const sortRequest=`&sortBy=${sortBy.value}&isAscending=${sortBy.isAscending}`
+        const filterRequest =  Object.values(filters).filter(value => value !== "").length > 0 ? `name=${filters.name}&type=${filters.type}&currency=${filters.currencyCode}`: "";
+
+        // //TODO: After the PR of wes be merged, redo this function to receive axios params.
+        const data = await getFromApiData(`paymentmethods?${filterRequest}${sortRequest}`);
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
@@ -87,11 +98,7 @@ export const PaymentMethodDashboard = () => {
 
     // TODO: request this filters from the api
     const filterListOptions = [
-        {
-            label: "filter by type", type: "buttons", field: "type", options: typesOfPm && typesOfPm.map(t => {
-                return {label: t, value: t}
-            })
-        },
+
         {
             label: "filter by currency", type: "buttons", field: "currencyCode", options: [
                 {value: "USD", label: "Dollar"},
@@ -100,7 +107,10 @@ export const PaymentMethodDashboard = () => {
             ]
         },
         {
-            label: "Name", type: "textField", field: "name", options: [],
+            label: "filter by type", type: "textField", field: "type"
+        },
+        {
+            label: "Name", type: "textField", field: "name",
         }
     ]
 
@@ -126,6 +136,19 @@ export const PaymentMethodDashboard = () => {
         return undefined
     }
 
+    const handleChangeFilter = (field, value) => {
+        console.log(field, value)
+        setSortBy((prevState) => {
+            if(field === "isAscending")
+            {
+                return {value: prevState.value, isAscending:value}
+            }
+            return {
+                ...prevState,
+                value: value
+            }
+        })
+    }
 
     const dataHeader = {
         title: "payment methods",
@@ -168,11 +191,17 @@ export const PaymentMethodDashboard = () => {
     const dataList = {
         title: "All Payment methods",
         totalPages: 10,
-        actionButtons: <Box>
-            <Filters filterOptions={filterListOptions}
-                     filters={filters}
-                     onChangeFilters={handleFilters}
-                     onClearFilters={() => setFilters({})}
+        actionButtons: <Box sx={{display: "flex", gap: 1}}>
+            <SortBy
+                sortOptions={sortOptions}
+                onChange={handleChangeFilter}
+                sortState={sortBy}
+            />
+            <Filters
+                filterOptions={filterListOptions}
+                filters={filters}
+                onChangeFilters={handleFilters}
+                onClearFilters={() => setFilters({name:"", type:"", currencyCode: ""})}
             />
         </Box>,
 
@@ -192,7 +221,7 @@ export const PaymentMethodDashboard = () => {
         setTimeout(() => {
             getPaymentMethods();
         }, "1000")
-    }, [])
+    }, [filters, sortBy])
 
     return (
         <LayoutDataViewList
