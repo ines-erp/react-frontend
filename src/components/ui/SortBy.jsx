@@ -1,16 +1,10 @@
-import {Button, Divider, Menu, MenuItem, styled} from "@mui/material";
-import {Sort} from "@mui/icons-material";
+import {Box, Button, Divider, ListItemButton, ListItemIcon, Menu, MenuItem, styled} from "@mui/material";
+import {ArrowDownward, ArrowLeft, ArrowRight, ArrowUpward, Circle, Sort} from "@mui/icons-material";
 import React, {useState} from "react";
 import {blueGrey, lightBlue} from "@mui/material/colors";
-import {useSearchParams} from "react-router-dom";
 
 
-export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams}) => {
-    const newQuery = new URLSearchParams(currentQueryParams);
-
-    const sortBy = currentQueryParams.get('sort') || 'createdAt';
-    const orderBy = currentQueryParams.get('order') || 'asc';
-
+export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAscending:true}}) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const isOpen = Boolean(anchorEl)
@@ -20,9 +14,7 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
     }
 
     const handleChange = (field, value) => {
-        newQuery.set(field, value);
-        newQuery.set("page", "1")
-        setCurrentQueryParams(newQuery);
+        onChange(field, value);
         setAnchorEl(null);
     }
 
@@ -40,8 +32,8 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
             </Button>
             <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose} sx={{padding:4}}>
                 {sortOptions.map(opt => (
-                    <MenuSelectItem key={opt.value} value={opt.value} selected={sortBy === opt.value}
-                              onClick={()=>handleChange("sort", opt.value)}
+                    <MenuSelectItem key={opt.value} value={opt.value} selected={sortState.value === opt.value}
+                              onClick={()=>handleChange("value", opt.value)}
                               sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
                         {opt.label}
 
@@ -51,9 +43,9 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
                 <Divider/>
 
                 <MenuSelectItem
-                    selected={orderBy === "asc"}
+                    selected={sortState.isAscending}
                     onClick={() => {
-                        handleChange("order", "asc")
+                        onChange("isAscending", true)
                     }}
                     sx={{
                         display: "flex",
@@ -65,9 +57,9 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
                 </MenuSelectItem>
 
                 <MenuSelectItem
-                    selected={orderBy === "desc"}
+                    selected={!sortState.isAscending}
                     onClick={() => {
-                        handleChange("order", "desc")
+                        onChange("isAscending", false)
                     }}
                     sx={{
                         display: "flex",
