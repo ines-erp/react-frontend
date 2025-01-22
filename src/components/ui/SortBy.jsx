@@ -7,7 +7,7 @@ import {useSearchParams} from "react-router-dom";
 
 export const SortBy = ({sortOptions}) => {
     const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
-    const newQuery = new URLSearchParams();
+    const newQuery = new URLSearchParams(currentQueryParams);
 
     const sortBy = currentQueryParams.get('sortBy') || 'createdAt';
     const isAscending = currentQueryParams.get('isAscending') || 'true';
