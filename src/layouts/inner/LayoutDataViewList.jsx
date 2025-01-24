@@ -100,7 +100,7 @@ export const LayoutDataViewList = ({
     const renderDataListBody = () => {
         if (isLoading) {
             return (
-                <Stack spacing={1}>
+                <Stack spacing={1} sx={{flexGrow:1}}>
                     {Array.from(Array(dataList.limit ?? 1)).map((index) =>
                         <Skeleton key={index} variant="rounded"
                                   width="100%" height={100}
@@ -114,7 +114,7 @@ export const LayoutDataViewList = ({
 
         if (dataList.children.length === 0) return <EmptyState showFilterMessage={true}/>
 
-        if (dataList.children.length > 0) return dataList.children
+        if (dataList.children.length > 0) return <Box sx={{flexGrow:1}}>{dataList.children}</Box>
     }
 
     const renderDataListFooter = () => {
