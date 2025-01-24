@@ -5,9 +5,11 @@ export const inesDataApiV1 = axios.create({
     headers: {"Content-Type": "application/json"}
 })
 
-export const getFromApiData = async (endpoint) => {
+export const getFromApiData = async (endpoint, params) => {
     try {
-        const response = await inesDataApiV1.get(endpoint)
+        const response = await inesDataApiV1.get(endpoint, {
+            params: {...params}
+        })
         return response.data
 
     } catch (e) {

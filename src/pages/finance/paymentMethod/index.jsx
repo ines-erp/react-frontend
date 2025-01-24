@@ -15,15 +15,15 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
-import {useLocation} from "react-router-dom";
+import {useLocation, useSearchParams} from "react-router-dom";
 
 // TODO: Add pagination
-// FIX: Fix the filter badge applied
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
-    const location = useLocation()
-    const searchParams = location.search;
+
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const searchParams = Object.fromEntries([...currentQueryParams]);
 
     const [paymentMethods, setPaymentMethods] = useState(undefined)
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
@@ -43,8 +43,7 @@ export const PaymentMethodDashboard = () => {
 
     const getPaymentMethods = async () => {
 
-        // //TODO: After the PR of wes be merged, redo this function to receive axios params.
-        const data = await getFromApiData(`paymentmethods${searchParams}`);
+        const data = await getFromApiData(`paymentmethods`, searchParams);
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
@@ -117,7 +116,7 @@ export const PaymentMethodDashboard = () => {
             const options = availableCurrencies.map((item) => {
                 return {label: item.label, value: item.value}
             })
-            options.push({label: "All", value: undefined})
+            options.push({label: "All", value: ''})
 
             return options
         }
@@ -135,10 +134,10 @@ export const PaymentMethodDashboard = () => {
 
     const dataFilterView = {
         isVisible: true,
-        field: "currency",
+        field: searchParams.currency,
         onClick: (value) => {
-            console.log(value)
-
+            searchParams.currency = value
+            setCurrentQueryParams(searchParams);
         },
         options: handleOptionsFilterView()
     }
@@ -168,8 +167,11 @@ export const PaymentMethodDashboard = () => {
         actionButtons: <Box sx={{display: "flex", gap: 1}}>
             <SortBy
                 sortOptions={sortOptions}
+                currentQueryParams={currentQueryParams}
+                setCurrentQueryParams={setCurrentQueryParams}
             />
             <Filters
+                currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}
                 filterOptions={filterListOptions}
             />
         </Box>,
