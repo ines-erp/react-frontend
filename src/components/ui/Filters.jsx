@@ -21,6 +21,11 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
 
     const handleChangeFilter = (field, value) => {
         newQuery.set(field, value);
+
+        if(value.length === 0){
+            newQuery.delete(field)
+        }
+
         setCurrentQueryParams(newQuery);
     }
 
