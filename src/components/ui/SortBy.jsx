@@ -21,6 +21,7 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
 
     const handleChange = (field, value) => {
         newQuery.set(field, value);
+        newQuery.set("page", "1")
         setCurrentQueryParams(newQuery);
         setAnchorEl(null);
     }

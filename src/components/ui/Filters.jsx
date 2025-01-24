@@ -21,7 +21,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
 
     const handleChangeFilter = (field, value) => {
         newQuery.set(field, value);
-
+        newQuery.set("page", "1")
         if(value.length === 0){
             newQuery.delete(field)
         }
@@ -35,6 +35,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
         for (const field of fields) {
             newQuery.delete(field);
         }
+        newQuery.set("page", "1")
         setCurrentQueryParams(newQuery);
         setIsOpen(false);
     }
