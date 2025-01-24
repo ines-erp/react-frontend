@@ -8,8 +8,8 @@ import {useSearchParams} from "react-router-dom";
 export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams}) => {
     const newQuery = new URLSearchParams(currentQueryParams);
 
-    const sortBy = currentQueryParams.get('sortBy') || 'createdAt';
-    const isAscending = currentQueryParams.get('isAscending') || 'true';
+    const sortBy = currentQueryParams.get('sort') || 'createdAt';
+    const orderBy = currentQueryParams.get('order') || 'asc';
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -40,7 +40,7 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
             <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose} sx={{padding:4}}>
                 {sortOptions.map(opt => (
                     <MenuSelectItem key={opt.value} value={opt.value} selected={sortBy === opt.value}
-                              onClick={()=>handleChange("sortBy", opt.value)}
+                              onClick={()=>handleChange("sort", opt.value)}
                               sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
                         {opt.label}
 
@@ -50,9 +50,9 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
                 <Divider/>
 
                 <MenuSelectItem
-                    selected={isAscending === "true"}
+                    selected={orderBy === "asc"}
                     onClick={() => {
-                        handleChange("isAscending", "true")
+                        handleChange("order", "asc")
                     }}
                     sx={{
                         display: "flex",
@@ -64,9 +64,9 @@ export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams})
                 </MenuSelectItem>
 
                 <MenuSelectItem
-                    selected={isAscending === "false"}
+                    selected={orderBy === "desc"}
                     onClick={() => {
-                        handleChange("isAscending", "false")
+                        handleChange("order", "desc")
                     }}
                     sx={{
                         display: "flex",

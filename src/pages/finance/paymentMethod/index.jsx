@@ -43,7 +43,7 @@ export const PaymentMethodDashboard = () => {
 
     const getPaymentMethods = async () => {
 
-        const data = await getFromApiData(`paymentmethods`, searchParams);
+        const data = await getFromApiData(`paymentmethods`, {...searchParams, limit:5});
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
