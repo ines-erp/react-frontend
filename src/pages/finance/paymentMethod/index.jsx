@@ -15,23 +15,24 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
+import {useLocation, useSearchParams} from "react-router-dom";
 
-// TODO: Add filters when the endpoint is able to it
+// TODO: Add pagination
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
-    const [paymentMethods, setPaymentMethods] = useState(undefined)
-    const [filters, setFilters] = useState({
-        type: "",
-        name: "",
-        currencyCode: "",
-    })
-    const [sortBy, setSortBy] = useState({value:"createdAt", isAscending:true})
 
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const searchParams = Object.fromEntries([...currentQueryParams]);
+
+    const [paymentMethods, setPaymentMethods] = useState(undefined)
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
-    const currenciesAvailable = paymentMethods && paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
-    const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const availableCurrencies = [
+        {value: "USD", label: "Dollar"},
+        {value: "EUR", label: "Euro"},
+        {value: "BRL", label: "Real"},
+    ]
 
     const sortOptions = [
         {value: "currency", label: "Currency"},
@@ -41,11 +42,8 @@ export const PaymentMethodDashboard = () => {
     ]
 
     const getPaymentMethods = async () => {
-        const sortRequest=`&sortBy=${sortBy.value}&isAscending=${sortBy.isAscending}`
-        const filterRequest =  Object.values(filters).filter(value => value !== "").length > 0 ? `name=${filters.name}&type=${filters.type}&currency=${filters.currencyCode}`: "";
 
-        // //TODO: After the PR of wes be merged, redo this function to receive axios params.
-        const data = await getFromApiData(`paymentmethods?${filterRequest}${sortRequest}`);
+        const data = await getFromApiData(`paymentmethods`, searchParams);
         const formatted = data.map((item) => {
             const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
@@ -100,54 +98,29 @@ export const PaymentMethodDashboard = () => {
     const filterListOptions = [
 
         {
-            label: "filter by currency", type: "buttons", field: "currencyCode", options: [
-                {value: "USD", label: "Dollar"},
-                {value: "EUR", label: "Euro"},
-                {value: "BRL", label: "Real"},
-            ]
+            label: "Currency", type: "buttons", field: "currency", options: availableCurrencies
         },
         {
-            label: "filter by type", type: "textField", field: "type"
+            label: "Type", type: "textField", field: "type"
         },
         {
             label: "Name", type: "textField", field: "name",
-        }
+        },
+        {
+            label: "Fruta", type: "textField", field: "jacare",
+        },
     ]
 
-    const handleFilters = (field, value) => {
-        setFilters((prevState) => {
-            return {
-                ...prevState,
-                [field]: value
-            }
-        })
-    }
-
     const handleOptionsFilterView = () => {
-        if (currenciesOnPm) {
-            const options = currenciesOnPm.map((item) => {
-                const data = currenciesAvailable.filter(c => c.isoCode === item)[0];
-                return {label: data.name, value: data.isoCode}
+        if (availableCurrencies) {
+            const options = availableCurrencies.map((item) => {
+                return {label: item.label, value: item.value}
             })
-            options.push({label: "All", value: undefined})
+            options.push({label: "All", value: ''})
 
             return options
         }
         return undefined
-    }
-
-    const handleChangeFilter = (field, value) => {
-        console.log(field, value)
-        setSortBy((prevState) => {
-            if(field === "isAscending")
-            {
-                return {value: prevState.value, isAscending:value}
-            }
-            return {
-                ...prevState,
-                value: value
-            }
-        })
     }
 
     const dataHeader = {
@@ -161,10 +134,10 @@ export const PaymentMethodDashboard = () => {
 
     const dataFilterView = {
         isVisible: true,
-        field: filters.currencyCode,
+        field: searchParams.currency,
         onClick: (value) => {
-            console.log(value)
-            handleFilters("currencyCode", value)
+            searchParams.currency = value
+            setCurrentQueryParams(searchParams);
         },
         options: handleOptionsFilterView()
     }
@@ -194,14 +167,12 @@ export const PaymentMethodDashboard = () => {
         actionButtons: <Box sx={{display: "flex", gap: 1}}>
             <SortBy
                 sortOptions={sortOptions}
-                onChange={handleChangeFilter}
-                sortState={sortBy}
+                currentQueryParams={currentQueryParams}
+                setCurrentQueryParams={setCurrentQueryParams}
             />
             <Filters
+                currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}
                 filterOptions={filterListOptions}
-                filters={filters}
-                onChangeFilters={handleFilters}
-                onClearFilters={() => setFilters({name:"", type:"", currencyCode: ""})}
             />
         </Box>,
 
@@ -221,7 +192,7 @@ export const PaymentMethodDashboard = () => {
         setTimeout(() => {
             getPaymentMethods();
         }, "1000")
-    }, [filters, sortBy])
+    }, [searchParams])
 
     return (
         <LayoutDataViewList
