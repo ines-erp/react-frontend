@@ -8,6 +8,5 @@ export const paymentMethodsRoutesList = [
         label: "Dashboard",
         path: "",
     },
-    {element: <div>Details</div>, isEnabled: true, isInMenu: false, label: "Details", path: ":id/details"},
 ];
 

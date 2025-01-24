@@ -29,7 +29,7 @@ export const financesRoutesList = [
         isEnabled: true,
         isInMenu: true,
         label: "Payment methods",
-        path: "paymentmethods"
+        path: "payment-methods"
     }
 ];
 
