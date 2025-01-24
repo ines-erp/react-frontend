@@ -4,7 +4,6 @@ import {
 import React, {useState} from "react";
 import {FilterListOff, FilterList, Close} from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {useSearchParams} from "react-router-dom";
 
 /**
  *

@@ -1,13 +1,13 @@
-import {Box, InputAdornment, ListItemIcon, Menu, MenuItem, TextField, Typography} from "@mui/material";
+import {Box,  Typography} from "@mui/material";
 import {
-    AccountBalance, ArrowDownward, ArrowUpward,
+    AccountBalance,
     CreditCard,
     Info,
-    LocalAtm, Sort
+    LocalAtm,
 } from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 
-import {DeleteFromApiData, getFromApiData, PostToApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 
@@ -15,7 +15,7 @@ import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
-import {useLocation, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 
 // TODO: Add pagination
 // TODO: last used payment methods on transactions when endpoint is filtering by date
@@ -65,7 +65,7 @@ export const PaymentMethodDashboard = () => {
 
     const handleCreatePaymentMethod = async (data) => {
         try {
-            await PostToApiData("paymentmethods", data);
+            await postToApiData("paymentmethods", data);
             await getPaymentMethods();
         } catch (e) {
 
@@ -74,7 +74,7 @@ export const PaymentMethodDashboard = () => {
 
     const handleDeletePaymentMethod = async (id) => {
         try {
-            await DeleteFromApiData(`paymentmethods/${id}`)
+            await deleteFromApiData(`paymentmethods/${id}`)
             await getPaymentMethods();
         } catch (error) {
             console.error(error)
