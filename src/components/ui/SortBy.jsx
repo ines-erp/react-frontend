@@ -5,8 +5,7 @@ import {blueGrey, lightBlue} from "@mui/material/colors";
 import {useSearchParams} from "react-router-dom";
 
 
-export const SortBy = ({sortOptions}) => {
-    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+export const SortBy = ({sortOptions, currentQueryParams, setCurrentQueryParams}) => {
     const newQuery = new URLSearchParams(currentQueryParams);
 
     const sortBy = currentQueryParams.get('sortBy') || 'createdAt';

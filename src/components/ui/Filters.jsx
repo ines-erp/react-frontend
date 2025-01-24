@@ -12,8 +12,7 @@ import {useSearchParams} from "react-router-dom";
  * @returns {Element}
  * @constructor
  */
-export const Filters = ({filterOptions}) => {
-    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParams}) => {
     const newQuery = new URLSearchParams(currentQueryParams);
 
     const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +40,7 @@ export const Filters = ({filterOptions}) => {
             <Button
                 aria-label="delete"
                 color="warning"
-                // onClick={() => onChangeFilters(field, undefined)} startIcon={<DeleteIcon/>}
+                onClick={() => {newQuery.delete(field); setCurrentQueryParams(newQuery)}} startIcon={<DeleteIcon/>}
             >
                 Clear
             </Button>)
