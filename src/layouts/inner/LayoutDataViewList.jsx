@@ -114,7 +114,7 @@ export const LayoutDataViewList = ({
 
         if (dataList.children.length === 0) return <EmptyState showFilterMessage={true}/>
 
-        if (dataList.children.length > 0) return <Box sx={{flexGrow:1}}>{dataList.children}</Box>
+        if (dataList.children.length > 0) return <Box sx={{flexGrow:1, display:"flex", flexDirection:"column", gap:2}}>{dataList.children}</Box>
     }
 
     const renderDataListFooter = () => {
