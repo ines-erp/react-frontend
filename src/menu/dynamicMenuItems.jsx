@@ -11,7 +11,6 @@ import {blue, blueGrey} from "@mui/material/colors";
  */
 export const dynamicMenuItems = (routes) => {
 
-
     return routes.map((route) => {
         return (
             <React.Fragment key={route.path}>
