@@ -5,6 +5,7 @@ import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMet
 import {transactionsRoutesList} from "@/pages/finance/transactions/transactionsRoutes.jsx";
 import {transactionCategoryRoutes} from "@/pages/finance/category/transactionCategoryRoutes.jsx";
 import {transactionTypesRoutes} from "@/pages/finance/transactionTypes/transactionTypesRoutes.jsx";
+import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
 
 export const financesRoutesList = [
     {
@@ -53,7 +54,7 @@ export const financesRoutesList = [
 export const financesRoutes = [
     {
         children: financesRoutesList.filter(item => item.isEnabled === true),
-        element: <Outlet/>,
+        element: <LayoutMenuAppbar/>,
         path: "/finance"
     }
 ];
