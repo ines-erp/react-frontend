@@ -18,34 +18,55 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
 
     const drawerWidth = "20%";
 
-    const handleChangeFilter = (field, value) => {
-        newQuery.set(field, value);
-        newQuery.set("page", "1")
-        if(value.length === 0){
-            newQuery.delete(field)
+    /**
+     * Handles changes to filter values.
+     *
+     * @param {string} field - The name of the field being filtered.
+     *                        If undefined, all filters matching filterOptions will be cleared.
+     * @param {string} value - The new value for the filter.
+     *                        If an empty string, the filter will be cleared.
+     *
+     * This function updates the `newQuery` object with the new filter value
+     * and resets the page number to 1. If `value` is an empty string,
+     * it clears the specified filter or all filters matching `filterOptions`
+     * if `field` is undefined. Finally, it updates the `currentQueryParams`
+     * state with the modified `newQuery`.
+     */
+    const handleChangeFilter = (field = undefined, value) => {
+        // Set the new filter value if both field and value exist
+        if (value && field) {
+            newQuery.set(field, value);
         }
 
-        setCurrentQueryParams(newQuery);
-    }
-
-    const handleClearFilters = () => {
-        //remove all filters from url that matches filterOptions fields.
-        const fields = filterOptions.map((option) => option.field)
-        for (const field of fields) {
-            newQuery.delete(field);
+        // Handle clearing filters
+        if (value.length === 0) {
+            if (field) {
+                // Remove specific filter if field is provided
+                newQuery.delete(field);
+            } else {
+                // Remove all filters matching filterOptions fields
+                for (const option of filterOptions) {
+                    newQuery.delete(option.field);
+                }
+            }
         }
-        newQuery.set("page", "1")
-        setCurrentQueryParams(newQuery);
-        setIsOpen(false);
-    }
 
-    const RenderFilterOptions = (filter) => {
+        // Reset page number to 1 on any filter change
+        newQuery.set("page", "1");
+
+        // Update current query params
+        setCurrentQueryParams(newQuery);
+    };
+
+       const RenderFilterOptions = (filter) => {
         const {type, field, label, options} = filter
         const clearButton = (
             <Button
                 aria-label="delete"
                 color="warning"
-                onClick={() => {newQuery.delete(field); setCurrentQueryParams(newQuery)}} startIcon={<DeleteIcon/>}
+                onClick={() => {
+                    handleChangeFilter(field, "")
+                }} startIcon={<DeleteIcon/>}
             >
                 Clear
             </Button>)
@@ -139,7 +160,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
                 {filterOptions.map(filter => RenderFilterOptions(filter))}
 
                 <Button
-                    onClick={handleClearFilters}
+                    onClick={()=>handleChangeFilter(undefined, "")}
                     variant="outlined"
                     color="warning"
                     startIcon={<FilterListOff/>}
