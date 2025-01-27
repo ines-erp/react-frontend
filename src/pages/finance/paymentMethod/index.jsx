@@ -189,9 +189,7 @@ export const PaymentMethodDashboard = () => {
     }
 
     useEffect(() => {
-        setTimeout(() => {
             getPaymentMethods();
-        }, "1000")
     }, [searchParams])
 
     return (
