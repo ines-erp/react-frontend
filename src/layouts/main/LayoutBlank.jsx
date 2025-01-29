@@ -9,7 +9,9 @@ export const LayoutBlank = ({sx}) => (
             ...sx,
             background: grey[100],
             marginBottom: 0,
-            minHeight: "100vh"
-        }}>
+
+            minHeight: "100vh",
+        }}
+    >
         <Outlet/>
     </Container>);

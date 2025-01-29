@@ -16,7 +16,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const drawerWidth = "20%";
+    const drawerWidth = "240px";
 
     /**
      * Handles changes to filter values.
@@ -58,18 +58,17 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
         setCurrentQueryParams(newQuery);
     };
 
-       const RenderFilterOptions = (filter) => {
+    const RenderFilterOptions = (filter) => {
         const {type, field, label, options} = filter
-        const clearButton = (
-            <Button
-                aria-label="delete"
-                color="warning"
-                onClick={() => {
-                    handleChangeFilter(field, "")
-                }} startIcon={<DeleteIcon/>}
-            >
-                Clear
-            </Button>)
+        const clearButton = (<Button
+            aria-label="delete"
+            color="warning"
+            onClick={() => {
+                handleChangeFilter(field, "")
+            }} startIcon={<DeleteIcon/>}
+        >
+            Clear
+        </Button>)
 
         switch (type) {
             case "buttons":
@@ -117,23 +116,17 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
             Filter
         </Button>
         <Drawer
-            variant={isOpen ? "permanent" : "temporary"}
             open={isOpen}
             sx={{
                 width: drawerWidth,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: {width: drawerWidth, boxSizing: 'border-box'},
             }}
             anchor="right"
+            onClose={()=>setIsOpen(false)}
         >
             <Box sx={{height: '86px'}}/>
             <Box
                 sx={{
-                    padding: "0px 16px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 4,
-                    height: "100%"
+                    padding: "0px 16px", display: "flex", flexDirection: "column", gap: 4, height: "100%"
                 }}
             >
                 <Box sx={{
@@ -159,14 +152,23 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
 
                 {filterOptions.map(filter => RenderFilterOptions(filter))}
 
-                <Button
-                    onClick={()=>handleChangeFilter(undefined, "")}
-                    variant="outlined"
-                    color="warning"
-                    startIcon={<FilterListOff/>}
-                >
-                    Clear all
-                </Button>
+                <Box sx={{
+                    display: "flex",
+                    gap: 2,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "100%"
+                }}>
+                    <Button variant="outlined" onClick={() => setIsOpen(false)}>Close</Button>
+                    <Button
+                        onClick={() => handleChangeFilter(undefined, "")}
+                        variant="outlined"
+                        color="warning"
+                        startIcon={<FilterListOff/>}
+                    >
+                        Clear all
+                    </Button>
+                </Box>
             </Box>
         </Drawer>
     </>)
