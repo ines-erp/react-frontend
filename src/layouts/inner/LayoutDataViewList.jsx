@@ -1,10 +1,10 @@
 import {
-    Box, Container, Pagination, PaginationItem, Paper, Skeleton, Stack, Typography
+    Box, Button, Container, Pagination, PaginationItem, Paper, Skeleton, Stack, Typography
 } from "@mui/material";
 import {PageHeader} from "@/components/ui/PageHeader.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useSearchParams} from "react-router-dom";
 
 /**
  *
@@ -24,9 +24,16 @@ export const LayoutDataViewList = ({
                                    }) => {
     const isLoading = !dataList.children;
 
-    const location = useLocation();
-    const query = new URLSearchParams(location.search);
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+
+    const query = new URLSearchParams(currentQueryParams);
     const page = parseInt(query.get('page') || '1', 10);
+
+    const handleChangePage = (event, value) => {
+        query.set('page', value);
+        setCurrentQueryParams(query);
+    };
+
 
     const renderFilterView = () => {
         if (isLoading) {
@@ -93,7 +100,7 @@ export const LayoutDataViewList = ({
     const renderDataListBody = () => {
         if (isLoading) {
             return (
-                <Stack spacing={1}>
+                <Stack spacing={1} sx={{flexGrow:1}}>
                     {Array.from(Array(dataList.limit ?? 1)).map((index) =>
                         <Skeleton key={index} variant="rounded"
                                   width="100%" height={100}
@@ -107,7 +114,7 @@ export const LayoutDataViewList = ({
 
         if (dataList.children.length === 0) return <EmptyState showFilterMessage={true}/>
 
-        if (dataList.children.length > 0) return dataList.children
+        if (dataList.children.length > 0) return <Box sx={{flexGrow:1, display:"flex", flexDirection:"column", gap:2}}>{dataList.children}</Box>
     }
 
     const renderDataListFooter = () => {
@@ -120,11 +127,8 @@ export const LayoutDataViewList = ({
                 count={dataList.totalPages}
                 shape="rounded" color="primary"
                 page={page}
-                renderItem={(item) => (<PaginationItem
-                    component={Link}
-                    to={`${location.pathname}?page=${item.page}`}
-                    {...item}
-                />)}/>)
+                onChange={handleChangePage}
+                />)
     }
 
     return (

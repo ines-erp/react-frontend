@@ -16,11 +16,12 @@ inesDataApiV1.interceptors.request.use(
     }, (error) => Promise.reject(error)
 );
 
-export const getFromApiData = async (endpoint) => {
+export const getFromApiData = async (endpoint, params=null) => {
     try {
-        const response = await inesDataApiV1.get(endpoint);
-        return response.data;
-
+        const response = await inesDataApiV1.get(endpoint, {
+            params: params && {...params}
+        })
+        return response.data
     } catch (e) {
         return null;
     }

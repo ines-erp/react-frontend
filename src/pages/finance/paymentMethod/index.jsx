@@ -1,69 +1,67 @@
+import {Box,  Typography} from "@mui/material";
 import {
-    Box,
-    Breadcrumbs,
-    Button,
-    ButtonGroup,
-    Card,
-    CardContent,
-    Chip,
-    Container,
-    FormControl,
-    InputLabel,
-    MenuItem,
-    Pagination,
-    Paper,
-    Select,
-    Stack,
-    Typography
-} from "@mui/material";
-import {Add, CreditCard, LocalAtm} from "@mui/icons-material";
-import {useEffect, useState} from "react";
-import {EmptyState} from "@/components/ui/EmptyState.jsx";
+    AccountBalance,
+    CreditCard,
+    Info,
+    LocalAtm,
+} from "@mui/icons-material";
+import React, {useEffect, useState} from "react";
+
 import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
-import {Link} from "react-router-dom";
-import {grey} from "@mui/material/colors";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 
-//TODO: add the skeleton
-//TODO: Add filters when the endpoint is able to it
+import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
+import {SummaryCard} from "@/components/base/SummaryCard.jsx";
+import {Filters} from "@/components/ui/Filters.jsx";
+import {SortBy} from "@/components/ui/SortBy.jsx";
+import {useSearchParams} from "react-router-dom";
+
+// TODO: Add pagination
 // TODO: last used payment methods on transactions when endpoint is filtering by date
 
 export const PaymentMethodDashboard = () => {
-    const [paymentMethods, setPaymentMethods] = useState([]);
-    const [filters, setFilters] = useState({
-        currencyCode: undefined,
-        name: undefined,
-        type: undefined,
-    });
 
-    const lastPaymentMethods = paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const searchParams = Object.fromEntries([...currentQueryParams]);
 
-    const currenciesAvailable = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.currency) : undefined;
-    const currenciesOnPm = currenciesAvailable && currenciesAvailable.length > 0 ? currenciesAvailable.map(pm => pm.isoCode).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const [paymentMethods, setPaymentMethods] = useState(undefined)
+    const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
-    const typesOfPm = paymentMethods.length > 0 ? paymentMethods.map(pm => pm.type).filter((value, index, array) => array.indexOf(value) === index) : undefined;
+    const availableCurrencies = [
+        {value: "USD", label: "Dollar"},
+        {value: "EUR", label: "Euro"},
+        {value: "BRL", label: "Real"},
+    ]
+
+    const sortOptions = [
+        {value: "currency", label: "Currency"},
+        {value: "name", label: "Name"},
+        {value: "type", label: "Type"},
+        {value: "createdAt", label: "Created At"},
+    ]
 
     const getPaymentMethods = async () => {
-        const data = await getFromApiData(`paymentmethods`);
+
+        const data = await getFromApiData(`paymentmethods`, searchParams);
         const formatted = data.map((item) => {
-            const createdDate = item.createdAt && new Date(item.createdAt).toDateString();
+            const createdDate = item.createdAt && new Date(item.createdAt).toDateString()
             return {
                 ...item,
                 createdAt: createdDate
-            };
-        });
+            }
+        })
         setPaymentMethods(formatted);
-    };
+    }
 
     const handleUpdate = async (data) => {
         try {
-            await putToApiData(`paymentmethods/${data.id}`, data);
+            await putToApiData(`paymentmethods/${data.id}`, data)
             await getPaymentMethods();
         } catch (error) {
-            console.error(error);
+            console.error(error)
         }
-    };
+    }
 
     const handleCreatePaymentMethod = async (data) => {
         try {
@@ -72,196 +70,137 @@ export const PaymentMethodDashboard = () => {
         } catch (e) {
 
         }
-    };
+    }
 
     const handleDeletePaymentMethod = async (id) => {
-        try{
-            await deleteFromApiData(`paymentmethods/${id}`);
+        try {
+            await deleteFromApiData(`paymentmethods/${id}`)
             await getPaymentMethods();
-        }catch(error){
-            console.error(error);
+        } catch (error) {
+            console.error(error)
         }
-    };
+    }
+
+    const renderIconCards = (type) => {
+        switch (true) {
+            case type.toLowerCase().includes('card'):
+                return <CreditCard/>;
+            case type.toLowerCase().includes('cash'):
+                return <LocalAtm/>;
+            case type.toLowerCase().includes('bank'):
+                return <AccountBalance/>;
+            default:
+                return <Info/>;
+        }
+    }
+
+    // TODO: request this filters from the api
+    const filterListOptions = [
+
+        {
+            label: "Currency", type: "buttons", field: "currency", options: availableCurrencies
+        },
+        {
+            label: "Type", type: "textField", field: "type"
+        },
+        {
+            label: "Name", type: "textField", field: "name",
+        },
+        {
+            label: "Fruta", type: "textField", field: "jacare",
+        },
+    ]
+
+    const handleOptionsFilterView = () => {
+        if (availableCurrencies) {
+            const options = availableCurrencies.map((item) => {
+                return {label: item.label, value: item.value}
+            })
+            options.push({label: "All", value: ''})
+
+            return options
+        }
+        return undefined
+    }
+
+    const dataHeader = {
+        title: "payment methods",
+        actionButton:
+            <ActionModalPM
+                type="create"
+                size="medium"
+                onSave={handleCreatePaymentMethod}/>
+    }
+
+    const dataFilterView = {
+        isVisible: true,
+        field: searchParams.currency,
+        onClick: (value) => {
+            searchParams.currency = value
+            setCurrentQueryParams(searchParams);
+        },
+        options: handleOptionsFilterView()
+    }
+
+    const dataSummaryCards = {
+        isVisible: true,
+        title: "Last used",
+        limit: 3,
+        children:
+            lastPaymentMethods && lastPaymentMethods.map(pm =>
+                React.createElement(SummaryCard,
+                    {
+                        key: pm.id,
+                        children: <Typography variant="h3">{pm.name}</Typography>,
+                        header: {
+                            title: pm.type,
+                            icon: renderIconCards(pm.type)
+                        },
+                        caption: pm.createdAt
+                    })
+            )
+    }
+
+    const dataList = {
+        title: "All Payment methods",
+        totalPages: 10,
+        actionButtons: <Box sx={{display: "flex", gap: 1}}>
+            <SortBy
+                sortOptions={sortOptions}
+                currentQueryParams={currentQueryParams}
+                setCurrentQueryParams={setCurrentQueryParams}
+            />
+            <Filters
+                currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}
+                filterOptions={filterListOptions}
+            />
+        </Box>,
+
+        children: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
+            return (
+                <PaymentMethodsCard
+                    key={paymentMethod.id}
+                    paymentMethod={paymentMethod}
+                    onUpdate={handleUpdate}
+                    onDelete={handleDeletePaymentMethod}
+                />
+            )
+        })
+    }
+
     useEffect(() => {
-        getPaymentMethods();
-    }, []);
+            getPaymentMethods();
+    }, [searchParams])
 
     return (
-        <Container sx={{ml: 0, display: "flex", flexDirection: "column", gap: 4}}>
-            <Box>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Typography variant="h1">
-                        Payment methods
-                    </Typography>
-                    <ActionModalPM type="create" size="medium" onSave={handleCreatePaymentMethod}/>
-                </Stack>
-                <Breadcrumbs>
-                    <Link to={"/"}>
-                        <Typography variant="h5" color={grey[500]}>
-                            Home
-                        </Typography>
-                    </Link>
-                    <Typography variant="h5" color={grey[500]}>
-                        Payment methods
-                    </Typography>
-                </Breadcrumbs>
-            </Box>
-
-            {currenciesOnPm && (
-                <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
-                    <Chip label="All" sx={{fontWeight: "bold"}} size={"medium"} color="primary"
-                          variant={filters.currencyCode === undefined ? "filled" : "outlined"}
-                          onClick={() => {
-                              setFilters((prev) => {
-                                  return {
-                                      ...prev,
-                                      currencyCode: undefined,
-                                  };
-                              });
-                          }}/>
-                    {currenciesOnPm.map((currency) => {
-                        const data = currenciesAvailable.find(c => c.isoCode === currency);
-                        return (
-                            <Chip key={data.symbol}
-                                  size={"medium"}
-                                // Sx={{color:"primary"}}
-                                  label={`${data.symbol} - ${data.name}`} sx={{fontWeight: "bold"}}
-                                  value={data.isoCode}
-                                  color="primary"
-                                  variant={filters.currencyCode === data.isoCode ? "filled" : "outlined"}
-                                  onClick={() => {
-                                      setFilters((prev) => {
-                                          return {
-                                              ...prev,
-                                              currencyCode: data.isoCode,
-                                          };
-                                      });
-                                  }}/>
-                        );
-                    })}
-                </Box>
-            )}
-
-            {paymentMethods.length === 0 && <EmptyState>
-                <Box sx={{alignItems: "center", display: "flex", flexDirection: "column", gap: 1}}>
-                    {Object.values(filters) && <Typography>Try adjust your search</Typography>}
-
-                    {Object.values(filters) === undefined && <>
-                        <Typography>Start by adding one payment method</Typography>
-                        <Button onClick={() => {
-                            console.log("not implemented");
-                        }} variant="contained" startIcon={<Add/>}>Add new</Button>
-                    </>}
-                </Box>
-            </EmptyState>}
-
-
-            {lastPaymentMethods && lastPaymentMethods.length > 0 &&
-                <Box>
-                    <Typography variant={"h2"} fontSize={"1.5rem"}>Last used</Typography>
-                    <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
-                        {lastPaymentMethods.map(pm => {
-                            return (
-                                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}}
-                                      variant={"outlined"}>
-                                    <CardContent>
-                                        <Typography variant={"h3"} sx={{
-                                            alignItems: "center",
-                                            color: 'text.secondary',
-                                            display: "flex",
-                                            fontSize: 14,
-                                            gap: "8px",
-                                            mb: "16px"
-                                        }}>
-                                            {pm.type.toLowerCase().includes("card") ? <CreditCard/> : <LocalAtm/>}
-                                            {pm.type}
-                                        </Typography>
-
-                                        <Typography variant="caption" color={"text.secondary"}>
-                                            {pm.currency.symbol} - {pm.currency.name}
-                                        </Typography>
-                                        <Typography gutterBottom variant={"h3"} component="div">
-                                            {pm.name}
-                                        </Typography>
-
-                                        <Typography variant="caption" color={"text.secondary"}>
-                                            Used on - 01/01/1970
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            );
-                        })}
-                    </Box>
-                </Box>
-            }
-
-            {paymentMethods.length > 0 && (
-                <Paper elevation={0}
-                       sx={{borderRadius: 4, display: "flex", flexDirection: "column", gap: 4, padding: 4}}>
-
-                    <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                        <Typography variant={"h2"} fontSize={"1.5rem"}>Payment methods</Typography>
-                        <ButtonGroup>
-                            <Button
-                                variant={filters.type === undefined ? "contained" : "outlined"}
-                                onClick={() => setFilters((prev) => {
-                                    return {
-                                        ...prev,
-                                        type: undefined
-                                    };
-                                })}>
-                                All
-                            </Button>
-                            {typesOfPm && typesOfPm.map(
-                                type => {
-                                    return (
-                                        <Button
-                                            key={type}
-                                            variant={filters.type === type ? "contained" : "outlined"}
-                                            onClick={() => setFilters((prev) => {
-                                                return {
-                                                    ...prev,
-                                                    type: type
-                                                };
-                                            })}>
-                                            {type}
-                                        </Button>
-                                    );
-                                }
-                            )}
-                        </ButtonGroup>
-                    </Box>
-
-                    {paymentMethods.map((paymentMethod) => {
-                        return (
-                            <PaymentMethodsCard
-                                key={paymentMethod.id}
-                                paymentMethod={paymentMethod}
-                                onUpdate={handleUpdate}
-                                onDelete={handleDeletePaymentMethod}
-                            />
-                        );
-                    })}
-
-                    <Box sx={{alignItems: "center", display: "flex", justifyContent: "space-between", marginTop: 4}}>
-                        <FormControl sx={{m: 1, minWidth: 120}} size="small">
-                            <InputLabel id="perpage">Per page</InputLabel>
-                            <Select variant="outlined" label="Per page" size="small"
-                                    onChange={() => console.log("not implemented")}>
-                                {Array.from([1, 2, 3, 4, 5], (x) => x * 10).map(option => {
-                                    if (option < 1) return null;
-                                    return <MenuItem key={option} value={option}>{option}</MenuItem>;
-                                })}
-                            </Select>
-                        </FormControl>
-                        <Pagination count={10} shape="rounded" color="primary"/>
-                    </Box>
-
-                </Paper>
-            )}
-        </Container>
-    );
-};
+        <LayoutDataViewList
+            header={dataHeader}
+            filterView={dataFilterView}
+            dataSummary={dataSummaryCards}
+            dataList={dataList}
+        />
+    )
+}
 
 
 
