@@ -132,7 +132,7 @@ export const PaymentMethodDashboard = () => {
                 onSave={handleCreatePaymentMethod}/>
     }
 
-    const dataFilterView = {
+    const badgeFilters = {
         isVisible: true,
         field: searchParams.currency,
         onClick: (value) => {
@@ -142,11 +142,11 @@ export const PaymentMethodDashboard = () => {
         options: handleOptionsFilterView()
     }
 
-    const dataSummaryCards = {
+    const dataMiddleSection = {
         isVisible: true,
         title: "Last used",
         limit: 3,
-        children:
+        content:
             lastPaymentMethods && lastPaymentMethods.map(pm =>
                 React.createElement(SummaryCard,
                     {
@@ -164,7 +164,7 @@ export const PaymentMethodDashboard = () => {
     const dataList = {
         title: "All Payment methods",
         totalPages: 10,
-        actionButtons: <Box sx={{display: "flex", gap: 1}}>
+        actions: <Box sx={{display: "flex", gap: 1, width:"100%", justifyContent:"flex-end"}}>
             <SortBy
                 sortOptions={sortOptions}
                 currentQueryParams={currentQueryParams}
@@ -176,7 +176,7 @@ export const PaymentMethodDashboard = () => {
             />
         </Box>,
 
-        children: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
+        items: !paymentMethods ? undefined : paymentMethods.map((paymentMethod) => {
             return (
                 <PaymentMethodsCard
                     key={paymentMethod.id}
@@ -195,8 +195,8 @@ export const PaymentMethodDashboard = () => {
     return (
         <LayoutDataViewList
             header={dataHeader}
-            filterView={dataFilterView}
-            dataSummary={dataSummaryCards}
+            badgeFilters={badgeFilters}
+            middleSection={dataMiddleSection}
             dataList={dataList}
         />
     )
