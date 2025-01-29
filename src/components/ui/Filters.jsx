@@ -121,6 +121,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
                 width: drawerWidth,
             }}
             anchor="right"
+            onClose={()=>setIsOpen(false)}
         >
             <Box sx={{height: '86px'}}/>
             <Box
