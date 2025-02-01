@@ -1,73 +1,92 @@
-import {
-    Box, Container, Pagination, PaginationItem, Paper, Skeleton, Stack, Typography
-} from "@mui/material";
+import {Box, Container, Pagination, Paper, Skeleton, Stack, Typography} from "@mui/material";
 import {PageHeader} from "@/components/ui/PageHeader.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
-import {Link, useLocation} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 
 /**
+ * A reusable layout component for displaying data in a list format, with optional header, middle section, filters, and pagination.
  *
- * @param header {{title:string, actionButton:ReactNode || foo}}
- * @param dataSummary {{isVisible:boolean }} [foo]
- * @param filterView {{}} [foo]
- * @param dataList
- * @returns {JSX.Element}
- * @constructor
+ * @param {object} header - Configuration for the header section.
+ * @param {string} header.title - The title displayed in the header.
+ * @param {React.ReactNode} [header.actionButton] - An optional action button to display in the header.
+ * @param {object} [middleSection] - Configuration for the optional middle section.
+ * @param {boolean} [middleSection.isVisible] - Whether to display the middle section.
+ * @param {string} [middleSection.title] - The title displayed in the middle section.
+ * @param {React.ReactNode} [middleSection.content] - The content of the middle section.
+ * @param {React.ReactNode} [middleSection.filters] - Additional filter elements for the middle section.
+ * @param {number} [middleSection.limit] - Number of skeleton elements to display during loading.
+ * @param {object} dataList - Configuration for the data list section.
+ * @param {string} dataList.title - The title displayed above the data list.
+ * @param {Array<React.ReactNode>} dataList.items - The data items to display in the list.
+ * @param {React.ReactNode} [dataList.actions] - Optional action buttons for the data list.
+ * @param {number} [dataList.totalPages] - The total number of pages for pagination.
+ * @param {number} [dataList.limit] - Number of skeleton elements to display during loading.
+ * @param {object} [badgeFilters] - Configuration for the data list filter section.
+ * @param {boolean} [badgeFilters.isVisible] - Whether to display the filter section.
+ * @param {Array<{label: string, value: any}>} [badgeFilters.options] - Array of filter options.
+ * @param {string} [badgeFilters.field] - The currently selected filter value.
+ * @param {function} [badgeFilters.onClick] - Callback function when a filter option is clicked.
+ * @param {number} [badgeFilters.limit] - Number of skeleton elements to display during loading.
  */
-
 export const LayoutDataViewList = ({
                                        header,
-                                       dataSummary = {isVisible: false},
-                                       filterView = {isVisible: false, options: []},
+                                       middleSection = {isVisible: false},
                                        dataList,
+                                       badgeFilters = {isVisible: false, options: []},
                                    }) => {
-    const isLoading = !dataList.children;
+    const isLoading = !dataList.items;
 
-    const location = useLocation();
-    const query = new URLSearchParams(location.search);
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+
+    const query = new URLSearchParams(currentQueryParams);
     const page = parseInt(query.get('page') || '1', 10);
 
-    const renderFilterView = () => {
+    const handleChangePage = (event, value) => {
+        query.set('page', value);
+        setCurrentQueryParams(query);
+    };
+
+
+    const renderBadgeFilters = () => {
         if (isLoading) {
-            return (<Box sx={{display: "flex", gap: 2, maginBottom: 2}}>
-                {Array.from(Array(filterView.limit ?? 3)).map((index) => (
-                    <Skeleton sx={{borderRadius: 20}} height="32px" width="10%" variant="rounded" key={index}/>))}
+            return (<Box sx={{display: "flex", gap: 2, marginBottom: 2}}>
+                {Array.from(Array(badgeFilters.limit ?? 3)).map((_, index) => (
+                    <Skeleton key={index} sx={{borderRadius: 20}} height="32px" width="10%" variant="rounded"/>))}
             </Box>)
         }
 
         return (<Box sx={{display: "flex", gap: 1, alignItems: "center", marginBottom: 2}}>
-            {filterView.options && filterView.options.map((opt) => {
-                return (<Badge key={opt.label}
-                               label={opt.label}
-                               isSelected={filterView.field === opt.value}
-                               value={opt.value}
-                               onClick={() => filterView.onClick(opt.value)}/>)
-            })}
+            {badgeFilters.options && badgeFilters.options.map((opt) => (
+                <Badge key={opt.label}
+                       label={opt.label}
+                       isSelected={badgeFilters.field === opt.value}
+                       value={opt.value}
+                       onClick={() => badgeFilters.onClick(opt.value)}/>
+            ))}
         </Box>)
     }
 
-    const renderDataSummary = () => {
+    const renderMiddleSection = () => {
         if (isLoading) {
             return (<Box sx={{marginTop: 2}}>
-                {/*TODO: Extract to a function an reuse it*/}
-                {dataSummary.title && <Skeleton width={"15%"} height="32px" variant="rounded"/>}
+                {middleSection.title && <Skeleton width={"15%"} height="32px" variant="rounded"/>}
                 <Box sx={{display: "flex", gap: 2, marginTop: 1}}>
-                    {Array.from(Array(dataSummary.limit ?? 1)).map((index) => (
-                        <Skeleton height="180px" width="25%" variant="rounded" key={index}/>))}
+                    {Array.from(Array(middleSection.limit ?? 1)).map((_, index) => (
+                        <Skeleton key={index} height="180px" width="25%" variant="rounded"/>))}
                 </Box>
             </Box>)
         }
 
         return (<Box id="data-summary" sx={{marginTop: 2}}>
-            {dataSummary.filters && dataSummary.filters}
-            {dataSummary.title && <Typography
+            {middleSection.filters && middleSection.filters}
+            {middleSection.title && <Typography
                 variant="h2" fontSize="1.5rem"
                 sx={{marginBottom: 2}}>
-                {dataSummary.title}
+                {middleSection.title}
             </Typography>}
             <Box sx={{display: "flex", gap: 2}}>
-                {dataSummary.children}
+                {middleSection.content}
             </Box>
         </Box>)
     }
@@ -76,7 +95,7 @@ export const LayoutDataViewList = ({
         if (isLoading) {
             return (<>
                 <Skeleton width="75%" height="3.5rem"/>
-                {dataList.actionButtons && <Skeleton width="15%" height="3.5rem"/>}
+                {dataList.actions && <Skeleton width="15%" height="3.5rem"/>}
             </>)
         }
         return (<>
@@ -86,15 +105,15 @@ export const LayoutDataViewList = ({
                 sx={{textTransform: "capitalize"}}>
                 {dataList.title}
             </Typography>
-            {dataList.actionButtons}
+            {dataList.actions}
         </>)
     }
 
     const renderDataListBody = () => {
         if (isLoading) {
             return (
-                <Stack spacing={1}>
-                    {Array.from(Array(dataList.limit ?? 1)).map((index) =>
+                <Stack spacing={1} sx={{flexGrow: 1}}>
+                    {Array.from(Array(dataList.limit ?? 1)).map((_, index) =>
                         <Skeleton key={index} variant="rounded"
                                   width="100%" height={100}
                                   sx={{padding: 0, margin: 0}}
@@ -103,11 +122,11 @@ export const LayoutDataViewList = ({
             )
         }
 
-        if (!dataList.children) return null;
+        if (!dataList.items) return null;
 
-        if (dataList.children.length === 0) return <EmptyState showFilterMessage={true}/>
+        if (dataList.items.length === 0) return <EmptyState showFilterMessage={true}/>
 
-        if (dataList.children.length > 0) return dataList.children
+        return <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", gap: 2}}>{dataList.items}</Box>
     }
 
     const renderDataListFooter = () => {
@@ -120,11 +139,8 @@ export const LayoutDataViewList = ({
                 count={dataList.totalPages}
                 shape="rounded" color="primary"
                 page={page}
-                renderItem={(item) => (<PaginationItem
-                    component={Link}
-                    to={`${location.pathname}?page=${item.page}`}
-                    {...item}
-                />)}/>)
+                onChange={handleChangePage}
+            />)
     }
 
     return (
@@ -132,9 +148,9 @@ export const LayoutDataViewList = ({
             <PageHeader title={header.title} actionButton={header.actionButton} isLoading={isLoading}/>
 
             <Box id="optional-section" sx={{marginY: 8}}>
-                {filterView.isVisible && renderFilterView()}
+                {badgeFilters.isVisible && renderBadgeFilters()}
 
-                {dataSummary.isVisible === true && renderDataSummary()}
+                {middleSection.isVisible && renderMiddleSection()}
             </Box>
 
             <Paper id="main" variant="outlined" sx={{minHeight: "450px", justifyContent: "space-between"}}>
@@ -167,4 +183,3 @@ export const LayoutDataViewList = ({
         </Container>
     );
 }
-

@@ -67,28 +67,59 @@ export const LoginPage = () => {
     }
 
     return (
-        <Container sx={{padding: 4}}>
+        <Container sx={{padding: 4, margin: "auto 0",}}>
             <Typography variant={"h1"} mb={4} textAlign={"center"}>INES ERP</Typography>
 
-            <Paper sx={{maxWidth: "45%", minWidth: "350px", mx: "auto", padding: 4}}>
+            <Paper
+                sx={{maxWidth: "45%", minWidth: "350px", mx: "auto", padding: 4}}
+            >
                 <Typography variant={"h2"} mb={2}>Please Login</Typography>
 
                 <Box mb={2}>
-                    <TextField name="username" inputRef={userName} label="username" type="email"
-                               fullWidth={true}/>
+                    <TextField
+                        variant="outlined"
+                        name="username"
+                        inputRef={userName}
+                        label="username"
+                        type="email"
+                        fullWidth={true}
+                        sx={{
+                            '& input:-webkit-autofill': {
+                                '-webkit-box-shadow': '0 0 0 1000px #e1f5fe inset !important',
+                                backgroundColor: '#e1f5fe !important',
+                                '-webkit-text-fill-color': '#333 !important',
+                            },
+                            '& input:-moz-autofill': {
+                                backgroundColor: '#e1f5fe !important',
+                                color: '#333 !important',
+                            },
+                        }}
+                    />
                 </Box>
 
                 <Box mb={2}>
                     <TextField name="password" inputRef={password} label="password" type="password"
-                               fullWidth={true}/>
+                               fullWidth={true}
+                               sx={{
+                                   '& input:-webkit-autofill': {
+                                       '-webkit-box-shadow': '0 0 0 1000px #e1f5fe inset !important',
+                                       backgroundColor: '#e1f5fe !important',
+                                       '-webkit-text-fill-color': '#333 !important',
+                                   },
+                                   '& input:-moz-autofill': {
+                                       backgroundColor: '#e1f5fe !important',
+                                       color: '#333 !important',
+                                   },
+                               }}
+                    />
                 </Box>
 
-                <Typography component={Link} to={"/auth/request-new-password"}>
+                <Button component={Link} to={"/auth/request-new-password"}>
                     Forgot password
-                </Typography>
+                </Button>
 
                 <Box sx={{display: "flex", justifyContent: "end"}}>
-                    <Button variant={"contained"}
+                    <Button variant="contained"
                             onClick={() => handleLogin(password, userName, dispatch, navigateTo)}>Login</Button>
                 </Box>
             </Paper>

@@ -31,7 +31,7 @@ export const financesRoutesList = [
         isEnabled: true,
         isInMenu: true,
         label: "Payment methods",
-        path: "paymentmethods"
+        path: "payment-methods"
     },
     {
         children: transactionCategoryRoutesList.filter(item => item.isEnabled === true),

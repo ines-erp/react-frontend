@@ -6,8 +6,8 @@ import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
 
 export const PaymentMethodsCard = ({paymentMethod, onUpdate, onDelete}) => {
     return (
-        <Card key={paymentMethod.id} variant={"outlined"}>
-            <CardContent>
+        <Card key={paymentMethod.id} variant={"outlined"} sx={{maxHeight: 'fit-content'}}>
+            <CardContent sx={{height: '100%'}}>
                 <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
                     <Chip variant="outlined" label={paymentMethod.type}/>
                     <Typography variant={"h3"}>{paymentMethod.name}</Typography>
