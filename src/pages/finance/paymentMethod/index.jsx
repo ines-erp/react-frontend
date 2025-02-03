@@ -190,7 +190,7 @@ export const PaymentMethodDashboard = () => {
 
     useEffect(() => {
             getPaymentMethods();
-    }, [searchParams])
+    }, [currentQueryParams])
 
     return (
         <LayoutDataViewList
