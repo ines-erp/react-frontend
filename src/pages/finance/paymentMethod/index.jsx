@@ -125,6 +125,7 @@ export const PaymentMethodDashboard = () => {
 
     const dataHeader = {
         title: "payment methods",
+        breadcrumbs:{previous:[{label:"Finance", path:"/finance"}], current:"Payment methods"},
         actionButton:
             <ActionModalPM
                 type="create"
