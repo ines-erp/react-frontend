@@ -1,10 +1,10 @@
 import {Card, CardContent, Typography} from "@mui/material";
 import {Info} from "@mui/icons-material";
 
-export const SummaryCard = ({header={icon:<Info />, title:undefined},children, caption}) => {
+export const SummaryCard = ({header={icon:<Info />, title:undefined},children, caption, ...rest}) => {
 
     return (
-        <Card sx={{maxWidth: "240px", flex: 1}} variant={"filled"}>
+        <Card sx={{maxWidth: "240px", flex: 1}} variant={"filled"} {...rest}>
             <CardContent>
                 {header.title && <Typography variant={"h3"} sx={{
                     color: 'text.secondary',
