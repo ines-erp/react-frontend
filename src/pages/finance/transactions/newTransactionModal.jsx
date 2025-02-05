@@ -59,7 +59,7 @@ export const NewTransactionModal = ({
 
 
     if (!categories & !paymentMethods && !types) {
-        return <>... loading</>;
+        return <></>;
     }
 
 
