@@ -18,26 +18,7 @@ export const FormModal = ({
             onClose={handleClose}
             PaperProps={{
                 component: "form",
-                onSubmit: (event) => {
-                    event.preventDefault();
-
-                    const newFormData = {
-                        // TODO: Get that from props
-                        // "Amount": event.target.amount.value,
-                        // "Date": new Date(event.target.date.value).toISOString(),
-                        // "Description": event.target.description.value,
-                        // "Name": event.target.name.value,
-                        // "PaidBy": event.target.paidBy.value,
-                        // "PaymentMethodId": event.target.paymentMethod.value,
-                        // "ReceivedBy": event.target.receivedBy.value,
-                        // "TransactionCategoryId": event.target.category.value,
-                        // "TransactionTypeId": event.target.transactionType.value
-                    };
-
-                    handlePost(newFormData);
-                    handleClose();
-
-                }
+                onSubmit: handlePost
             }}
             fullWidth={true}
             maxWidth={"md"}

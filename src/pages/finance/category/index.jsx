@@ -1,19 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/inesDataApiV1.js";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
-import {
-    Box,
-    Button,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    List,
-    ListItem,
-    ListItemText,
-    Radio,
-    RadioGroup,
-    Typography
-} from "@mui/material";
+import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
 import {FormModal} from "@/pages/finance/category/edit.jsx";
 
@@ -21,6 +9,7 @@ export const TransactionCategoryDashboard = () => {
 
     const [categories, setCategories] = useState({data: [], metadata: {}});
     const [isOpen, setIsOpen] = useState(false);
+    const [editingData, setEditingData] = useState({});
 
     //API request
     const handleGetCategories = async () => {
@@ -43,9 +32,11 @@ export const TransactionCategoryDashboard = () => {
         });
     };
 
-    const handleToggleModal = () => {
-        setIsOpen(prev => !prev)
-    }
+    //Handling modal open, close editing data
+    const handleToggleModal = (data = undefined) => {
+        setEditingData(data ?? {});
+        setIsOpen(prev => !prev);
+    };
 
     useEffect(() => {
         handleGetCategories();
@@ -60,6 +51,17 @@ export const TransactionCategoryDashboard = () => {
         title: "Transaction categories"
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const category = {
+            name: event.target.name.value
+        };
+
+        //FIX: call the right function here
+        //API call here
+        console.log(category);
+    };
+
     const childrenComponent = categories.data && (
         <List>
             {categories.data.map((category) => (
@@ -68,7 +70,7 @@ export const TransactionCategoryDashboard = () => {
                         <Typography variant={"h3"} sx={{fontSize: "1.2rem"}}>{category.name}</Typography>
                     </ListItemText>
 
-                    <Button variant="outlined">
+                    <Button variant="outlined" onClick={() => handleToggleModal(category)}>
                         <Edit size="medium" sx={{marginRight: "8px"}}/>
                         Edit
                     </Button>
@@ -92,26 +94,17 @@ export const TransactionCategoryDashboard = () => {
 
     return (
         <>
-            <FormModal isOpen={isOpen} handlePost={() => console.log("Saving data")} isEditing={false}
-                       handleClose={handleToggleModal}>
-                <FormControl>
-                    <FormLabel>Transaction type</FormLabel>
+            <FormModal
+                isOpen={isOpen}
+                handlePost={(event) => handleSubmit(event)}
+                isEditing={!!editingData.id}
+                handleClose={handleToggleModal}
+                data={editingData}
+            >
 
-                    <RadioGroup defaultValue={1}
-                                id={"transactionType"}
-                                name={"transactionType"}
-                                sx={{display: "flex", flexDirection: "row", gap: 2}}>
-                        {[{"id": 2, "name": "jaca"}, {"id": 1, "name": "amora"}].map(transactionType => {
-                            return (
-                                <FormControlLabel required value={transactionType.id} key={transactionType.id}
-                                                  control={<Radio/>}
-                                                  label={transactionType.name}/>
-                            );
-                        })}
-                        {/*<FormControlLabel value={"outcome"} control={<Radio/>} label={"Outcome"}/>*/}
-                    </RadioGroup>
+                <TextField id={"name"} label={"Name"} sx={{marginTop: '16px'}}
+                           defaultValue={editingData ? editingData.name : ""}/>
 
-                </FormControl>
             </FormModal>
 
             <LayoutDataViewList header={dataHeader} dataList={dataList}/>
