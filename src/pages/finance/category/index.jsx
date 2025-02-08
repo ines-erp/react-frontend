@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getFromApiData} from "@/api/inesDataApiV1.js";
+import {getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
@@ -17,7 +17,7 @@ export const TransactionCategoryDashboard = () => {
 
         await Promise.all([transactionCategoriesResponse]).then(([categoriesResponse]) => {
             setCategories(({metadata, data}) => {
-                // TODO Refactory that to fit the new api response
+                // TODO: Refactory that to fit the new api response
                 data = categoriesResponse;
                 metadata = {
                     "apiVersion": 1,
@@ -32,10 +32,36 @@ export const TransactionCategoryDashboard = () => {
         });
     };
 
+    const handlePostTransactionCategory = async (body) => {
+        await postToApiData('transactionCategories', body);
+        handleGetCategories();
+    };
+
+    const handlePutTransactionCategory = async (id, body) => {
+        await putToApiData(`transactionCategories/${id}`, body);
+        handleGetCategories();
+    };
+
     //Handling modal open, close editing data
     const handleToggleModal = (data = undefined) => {
         setEditingData(data ?? {});
         setIsOpen(prev => !prev);
+    };
+
+    const handleSubmit = async (event, id = "") => {
+        event.preventDefault();
+        const category = {
+            name: event.target.name.value
+        };
+
+        //API call here
+        if (id) {
+            await handlePutTransactionCategory(id, category);
+        } else {
+            handlePostTransactionCategory(category);
+        }
+
+        setIsOpen(false);
     };
 
     useEffect(() => {
@@ -49,18 +75,6 @@ export const TransactionCategoryDashboard = () => {
             </>
         ),
         title: "Transaction categories"
-    };
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const category = {
-            name: event.target.name.value
-        };
-
-        //FIX: call the right function here
-        //API call here
-        console.log(category);
-        setIsOpen(false);
     };
 
     const childrenComponent = categories.data && (
@@ -97,7 +111,7 @@ export const TransactionCategoryDashboard = () => {
         <>
             <FormModal
                 isOpen={isOpen}
-                handlePost={(event) => handleSubmit(event)}
+                handlePost={(event) => handleSubmit(event, editingData.id)}
                 isEditing={!!editingData.id}
                 handleClose={handleToggleModal}
                 data={editingData}

@@ -1,7 +1,7 @@
 //TODO: Make generic, extract form and and make a component
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/material";
 
-
+//TODO: PUT ON IN FRONT OF CALLBACK FUNCTIONS THAT WILL DO SOMETHING
 export const FormModal = ({
                               children,
                               handleClose,
