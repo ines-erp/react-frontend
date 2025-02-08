@@ -1,7 +1,7 @@
 import {BiUser} from "react-icons/bi";
 import {TransactionsDashboard} from "@/pages/finance/transactions/index.jsx";
 import {TransactionsDetails} from "@/pages/finance/transactions/details.jsx";
-import {transactionTypesRoutesList} from "@/pages/finance/transactionTypes/transactionTypesRoutesList.jsx";
+import {transactionTypesRoutesList} from "@/pages/finance/transactions/types/transactionTypesRoutesList.jsx";
 import {Outlet} from "react-router-dom";
 
 export const transactionsRoutesList = [

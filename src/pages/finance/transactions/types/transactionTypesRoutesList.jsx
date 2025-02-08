@@ -1,4 +1,4 @@
-import {TransactionTypesDashboard} from "@/pages/finance/transactionTypes/index.jsx";
+import {TransactionTypesDashboard} from "@/pages/finance/transactions/types/index.jsx";
 
 export const transactionTypesRoutesList = [
     {

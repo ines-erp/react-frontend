@@ -4,8 +4,8 @@ import {FinancesDashboard} from "@/pages/finance/index.jsx";
 import {transactionsRoutesList} from "@/pages/finance/transactions/transactionsRoutes.jsx";
 import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMethodsRoutes.jsx";
 import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
-import {transactionCategoryRoutesList} from "@/pages/finance/category/transactionCategoryRoutesList.jsx";
-import {transactionTypesRoutesList} from "@/pages/finance/transactionTypes/transactionTypesRoutesList.jsx";
+import {transactionCategoryRoutesList} from "@/pages/finance/transactions/category/transactionCategoryRoutesList.jsx";
+import {transactionTypesRoutesList} from "@/pages/finance/transactions/types/transactionTypesRoutesList.jsx";
 
 export const financesRoutesList = [
     {
