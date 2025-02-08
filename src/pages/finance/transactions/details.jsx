@@ -112,6 +112,7 @@ export const TransactionsDetails = () => {
 
     return (
         <Container sx={{ml: 0}}>
+            {/*FIX: CHANGE HERE TO THE NEW FormModal component*/}
             <NewTransactionModal
                 isOpen={open}
                 handleClose={handleClose}

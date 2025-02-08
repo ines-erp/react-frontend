@@ -1,4 +1,3 @@
-//TODO: Make generic, extract form and and make a component
 import {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/inesDataApiV1.js";
 import {
