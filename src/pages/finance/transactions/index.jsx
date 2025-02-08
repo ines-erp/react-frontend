@@ -1,7 +1,7 @@
 import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
 import {Add, MonetizationOnOutlined} from "@mui/icons-material";
 import {green, grey} from "@mui/material/colors";
-import {Link} from "react-router-dom";
+import {Link, useSearchParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
@@ -49,6 +49,8 @@ const PAYMENTMETHODS = [
 ];
 
 export const TransactionsDashboard = () => {
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const searchParams = Object.fromEntries([...currentQueryParams]);
 
     const [transactions, setTransactions] = useState([]);
     const [balance, setBalance] = useState({});
@@ -86,7 +88,7 @@ export const TransactionsDashboard = () => {
     };
 
     const handleGetTransactionsAndBalances = async (currency) => {
-        const transactionsResponse =  getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString());
+        const transactionsResponse =  getFromApiData('transactions', searchParams);
         const balanceResponse = getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString());
 
         await Promise.all([transactionsResponse, balanceResponse])
@@ -98,7 +100,7 @@ export const TransactionsDashboard = () => {
 
     useEffect(() => {
         handleGetTransactionsAndBalances(currency);
-    }, [currency]);
+    }, [currentQueryParams]);
 
 
     const handleSelectTransactionType = (key) => {
@@ -115,12 +117,11 @@ export const TransactionsDashboard = () => {
         });
     };
 
-    const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
-    const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
+    const outcomes = transactions && transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
+    const incomes = transactions && transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
 
-    const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0);
-
-    const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0);
+    const totalIncomes = incomes && incomes.reduce((acc, current) => acc + current.amount, 0);
+    const totalOutcomes = outcomes && outcomes.reduce((acc, current) => acc + current.amount, 0);
 
     const header = {
         title: "Transactions",
@@ -129,21 +130,29 @@ export const TransactionsDashboard = () => {
             New
         </Button>
     }
+
     const middleSection = {
         isVisible: true,
         limit: 3,
         content: <BalanceSection balance={balance} totalIncomes={totalIncomes} totalOutcomes={totalOutcomes} />
     }
 
+    const sortOptions = [
+        {value: "currency", label: "Currency"},
+        {value: "name", label: "Name"},
+        {value: "amount", label: "Amount"},
+        {value: "", label: "Created At"},
+    ]
+
     const dataList = {
         title: "Latest Transactions",
         totalPages: 10,
         actions: <Box sx={{display: "flex", gap: 1, width:"100%", justifyContent:"flex-end"}}>
-            {/*<SortBy*/}
-            {/*    sortOptions={sortOptions}*/}
-            {/*    currentQueryParams={currentQueryParams}*/}
-            {/*    setCurrentQueryParams={setCurrentQueryParams}*/}
-            {/*/>*/}
+            <SortBy
+                sortOptions={sortOptions}
+                currentQueryParams={currentQueryParams}
+                setCurrentQueryParams={setCurrentQueryParams}
+            />
             {/*<Filters*/}
             {/*    currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}*/}
             {/*    filterOptions={filterListOptions}*/}
@@ -160,11 +169,11 @@ export const TransactionsDashboard = () => {
 
     const badgeFilters = {
         isVisible: true,
-        // field: searchParams.currency,
-        // onClick: (value) => {
-        //     searchParams.currency = value
-        //     setCurrentQueryParams(searchParams);
-        // },
+        field: searchParams.currency,
+        onClick: (value) => {
+            searchParams.currency = value
+            setCurrentQueryParams(searchParams);
+        },
         options: currencies.map((item) => ({label: `${item.label} ${item.symbol}`, value: item.value})),
     }
     return (
