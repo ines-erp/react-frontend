@@ -12,7 +12,6 @@ export const SummaryCard = ({header={icon:<Info />, title:undefined},children, c
                     alignItems: "center",
                     display: "flex",
                     gap: "8px",
-                    mb: "16px"
                 }}>
                     {header.icon}
                     {header.title}
