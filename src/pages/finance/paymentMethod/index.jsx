@@ -1,5 +1,10 @@
-import {Box, Typography} from "@mui/material";
-import {AccountBalance, CreditCard, Info, LocalAtm,} from "@mui/icons-material";
+import {Box,  Typography} from "@mui/material";
+import {
+    AccountBalance,
+    CreditCard,
+    Info,
+    LocalAtm,
+} from "@mui/icons-material";
 import React, {useEffect, useState} from "react";
 
 import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
@@ -159,7 +164,7 @@ export const PaymentMethodDashboard = () => {
     const dataList = {
         title: "All Payment methods",
         totalPages: 10,
-        actions: <Box sx={{display: "flex", gap: 1, width: "100%", justifyContent: "flex-end"}}>
+        actions: <Box sx={{display: "flex", gap: 1, width:"100%", justifyContent:"flex-end"}}>
             <SortBy
                 sortOptions={sortOptions}
                 currentQueryParams={currentQueryParams}
@@ -184,8 +189,8 @@ export const PaymentMethodDashboard = () => {
     }
 
     useEffect(() => {
-        getPaymentMethods();
-    }, [searchParams])
+            getPaymentMethods();
+    }, [currentQueryParams])
 
     return (
         <LayoutDataViewList
