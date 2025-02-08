@@ -1,7 +1,6 @@
-import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
-import {Add, MonetizationOnOutlined} from "@mui/icons-material";
-import {green, grey} from "@mui/material/colors";
-import {Link, useSearchParams} from "react-router-dom";
+import {Box, Button,} from "@mui/material";
+import {Add} from "@mui/icons-material";
+import {useSearchParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
@@ -9,12 +8,11 @@ import {deleteFromApiData, getFromApiData, postToApiData} from "@/api/inesDataAp
 import {BalanceSection} from "@/pages/finance/transactions/BalanceSection.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
-import {PaymentMethodsCard} from "@/pages/finance/paymentMethod/PaymentMethodsCard.jsx";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {CURRENCIES} from "@/utils/currencies.js";
 
 
-// TODO: COLLECT THAT INFORMATION FROM API
+// TODO: COLLECT THAT INFORMATION FROM API AND APPLY TO FILTERS AND DATA
 const CATEGORIES = [
     {
         label: 'Bills',
@@ -54,7 +52,6 @@ export const TransactionsDashboard = () => {
 
     const [transactions, setTransactions] = useState([]);
     const [balance, setBalance] = useState({});
-    const [currency, setCurrency] = useState("EUR");
 
     //modal
     const [open, setOpen] = useState(false);
@@ -62,17 +59,12 @@ export const TransactionsDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
     const [currencies, setCurrencies] = useState(CURRENCIES);
 
-    //filters
-    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false});
 
     const handleClickOpen = () => {
         setOpen(true);
     };
     const handleClose = () => {
         setOpen(false);
-    };
-    const handleSelectCurrency = (currency) => {
-        setCurrency(currency);
     };
 
     //PROMISES
@@ -87,35 +79,22 @@ export const TransactionsDashboard = () => {
         }
     };
 
-    const handleGetTransactionsAndBalances = async (currency) => {
+    const handleGetTransactionsAndBalances = async () => {
+        const currentCurrency = currentQueryParams.get('currency')
         const transactionsResponse =  getFromApiData('transactions', searchParams);
-        const balanceResponse = getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString());
+        const balanceResponse = getFromApiData('balance?'+currentCurrency);
 
         await Promise.all([transactionsResponse, balanceResponse])
             .then(([transactions, balance]) => {
                 setTransactions(transactions);
-                setBalance(balance);
+                setBalance(balance[0]);
             });
     };
 
     useEffect(() => {
-        handleGetTransactionsAndBalances(currency);
+        handleGetTransactionsAndBalances();
     }, [currentQueryParams]);
 
-
-    const handleSelectTransactionType = (key) => {
-        setFilterTransactionType(() => {
-            const selected = {
-                all: false,
-                incomes: false,
-                outcomes: false,
-            };
-
-            selected[key] = true;
-
-            return selected;
-        });
-    };
 
     const outcomes = transactions && transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
     const incomes = transactions && transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
@@ -143,6 +122,10 @@ export const TransactionsDashboard = () => {
         {value: "amount", label: "Amount"},
         {value: "", label: "Created At"},
     ]
+    const filterOptions = [
+        {label:"Currency", type:"buttons", field:"currency", options: CURRENCIES},
+        // TODO: add the transaction type and transaction category after is done on backend
+    ]
 
     const dataList = {
         title: "Latest Transactions",
@@ -153,10 +136,10 @@ export const TransactionsDashboard = () => {
                 currentQueryParams={currentQueryParams}
                 setCurrentQueryParams={setCurrentQueryParams}
             />
-            {/*<Filters*/}
-            {/*    currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}*/}
-            {/*    filterOptions={filterListOptions}*/}
-            {/*/>*/}
+            <Filters
+                currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}
+                filterOptions={filterOptions}
+            />
         </Box>,
 
         items: transactions.map((transaction) => {
@@ -186,7 +169,7 @@ export const TransactionsDashboard = () => {
                 currencies={currencies}
                 categories={categories}
                 paymentMethods={paymentMethods}
-                data={{currency, paidBy: "Wes"}}
+                data={{currency:currentQueryParams.get("currency")}}
             />
 
             <LayoutDataViewList
