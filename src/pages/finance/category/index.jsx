@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
+import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
@@ -34,13 +34,20 @@ export const TransactionCategoryDashboard = () => {
 
     const handlePostTransactionCategory = async (body) => {
         await postToApiData('transactionCategories', body);
-        handleGetCategories();
+        await handleGetCategories();
     };
 
     const handlePutTransactionCategory = async (id, body) => {
         await putToApiData(`transactionCategories/${id}`, body);
-        handleGetCategories();
+        await handleGetCategories();
     };
+
+    const handleDeleteTransactionCategory = async (id) => {
+        // Fix: add a confirmation
+        await deleteFromApiData(`transactionCategories/${id}`);
+        await handleGetCategories();
+    };
+
 
     //Handling modal open, close editing data
     const handleToggleModal = (data = undefined) => {
@@ -85,13 +92,14 @@ export const TransactionCategoryDashboard = () => {
                         <Typography variant={"h3"} sx={{fontSize: "1.2rem"}}>{category.name}</Typography>
                     </ListItemText>
 
-                    <Button variant="outlined" onClick={() => handleToggleModal(category)}>
-                        <Edit size="medium" sx={{marginRight: "8px"}}/>
+                    <Button variant="outlined" onClick={() => handleToggleModal(category)} startIcon={<Edit/>}>
                         Edit
                     </Button>
 
-                    <Button variant="outlined" color="warning">
-                        <Delete sx={{marginRight: "8px"}} size="medium" color="error"/>
+                    <Button variant="outlined" color="error"
+                            onClick={() => handleDeleteTransactionCategory(category.id)}
+                            startIcon={<Delete/>}
+                    >
                         Delete
                     </Button>
                 </ListItem>
