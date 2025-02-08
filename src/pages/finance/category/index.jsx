@@ -7,14 +7,26 @@ import {Delete, Edit} from "@mui/icons-material";
 
 export const TransactionCategoryDashboard = () => {
 
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState({data: [], metadata: {}});
 
     //API request
     const handleGetCategories = async () => {
         const transactionCategoriesResponse = getFromApiData("transactionCategories");
 
-        Promise.all([transactionCategoriesResponse]).then(([categoriesResponse]) => {
-            setCategories(categoriesResponse);
+        await Promise.all([transactionCategoriesResponse]).then(([categoriesResponse]) => {
+            setCategories(({metadata, data}) => {
+                // TODO Refactory that to fit the new api response
+                data = categoriesResponse;
+                metadata = {
+                    "apiVersion": 1,
+                    "currentPage": 2,
+                    "nextPage": null,
+                    "perPage": 5,
+                    "previousPage": 1,
+                    "totalPages": 2
+                };
+                return {data, metadata};
+            });
         });
     };
 
@@ -31,12 +43,12 @@ export const TransactionCategoryDashboard = () => {
         title: "Transaction categories"
     };
 
-    const childrenComponent = (
+    const childrenComponent = categories.data && (
         <List>
-            {categories.map((category) => (
+            {categories.data.map((category) => (
                 <ListItem key={category.id} sx={{borderBottom: "1px solid #ddd", gap: "8px", paddingY: "16px"}}>
                     <ListItemText>
-                        <Typography variant={"h3"} sx={{fontSize: "1.6rem"}}>{category.name}</Typography>
+                        <Typography variant={"h3"} sx={{fontSize: "1.2rem"}}>{category.name}</Typography>
                     </ListItemText>
 
                     <Button variant="outlined">
@@ -57,7 +69,7 @@ export const TransactionCategoryDashboard = () => {
         actions: <Box sx={{display: "flex", gap: 1}}></Box>,
         items: childrenComponent,
         title: "All categories",
-        totalPages: 10
+        totalPages: categories.metadata.totalPages ?? 1
     };
 
     return (
