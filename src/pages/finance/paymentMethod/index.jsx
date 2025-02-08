@@ -16,6 +16,7 @@ import {SummaryCard} from "@/components/base/SummaryCard.jsx";
 import {Filters} from "@/components/ui/Filters.jsx";
 import {SortBy} from "@/components/ui/SortBy.jsx";
 import {useSearchParams} from "react-router-dom";
+import {CURRENCIES} from "@/utils/currencies.js";
 
 // TODO: Add pagination
 // TODO: last used payment methods on transactions when endpoint is filtering by date
@@ -28,11 +29,8 @@ export const PaymentMethodDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState(undefined)
     const lastPaymentMethods = paymentMethods && paymentMethods.length > 0 ? paymentMethods.slice(0, 3) : undefined;
 
-    const availableCurrencies = [
-        {value: "USD", label: "Dollar"},
-        {value: "EUR", label: "Euro"},
-        {value: "BRL", label: "Real"},
-    ]
+    const availableCurrencies = CURRENCIES;
+
 
     const sortOptions = [
         {value: "currency", label: "Currency"},
