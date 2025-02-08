@@ -18,7 +18,8 @@ export const BalanceSection = ({balance, totalIncomes, totalOutcomes}) => {
                     Incomes
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h3" component="div"
+                sx={{}}>
                     {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success"
                                                                      size="small"></Chip>
                 </Typography>
@@ -44,7 +45,7 @@ export const BalanceSection = ({balance, totalIncomes, totalOutcomes}) => {
                     Outcomes
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h3" component="div">
                     {balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
                                                                       size="small"></Chip>
                 </Typography>
@@ -71,7 +72,7 @@ export const BalanceSection = ({balance, totalIncomes, totalOutcomes}) => {
                     Balance
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="div">
+                <Typography gutterBottom variant="h3" component="div">
                     {balance.symbol} {balance.amount} <Chip label="12.8%" color="success" size="small"></Chip>
                 </Typography>
 
