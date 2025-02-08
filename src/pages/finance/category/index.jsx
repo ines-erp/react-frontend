@@ -2,13 +2,12 @@ import React, {useEffect, useState} from "react";
 import {getFromApiData} from "@/api/inesDataApiV1.js";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {ActionModalPM} from "@/pages/finance/paymentMethod/ActionModalPM.jsx";
-import {Box, Button, Card, CardActionArea, CardContent} from "@mui/material";
-import {Edit} from "@mui/icons-material";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {Box, Button, List, ListItem, ListItemText, Typography} from "@mui/material";
+import {Delete, Edit} from "@mui/icons-material";
 
 export const TransactionCategoryDashboard = () => {
 
-    const [categories, setCategories] = useState(null);
+    const [categories, setCategories] = useState([]);
 
     //API request
     const handleGetCategories = async () => {
@@ -23,11 +22,6 @@ export const TransactionCategoryDashboard = () => {
         handleGetCategories();
     }, []);
 
-    if (categories === null) {
-        return <>Loading cagetegories</>;
-    }
-
-
     const dataHeader = {
         actionButton:
             <ActionModalPM
@@ -37,32 +31,31 @@ export const TransactionCategoryDashboard = () => {
         title: "Transaction categories"
     };
 
+    const childrenComponent = (
+        <List>
+            {categories.map((category) => (
+                <ListItem key={category.id} sx={{borderBottom: "1px solid #ddd", gap: "8px", paddingY: "16px"}}>
+                    <ListItemText>
+                        <Typography variant={"h3"} sx={{fontSize: "1.6rem"}}>{category.name}</Typography>
+                    </ListItemText>
+
+                    <Button variant="outlined">
+                        <Edit size="medium" sx={{marginRight: "8px"}}/>
+                        Edit
+                    </Button>
+
+                    <Button variant="outlined" color="warning">
+                        <Delete sx={{marginRight: "8px"}} size="medium" color="error"/>
+                        Delete
+                    </Button>
+                </ListItem>
+            ))}
+        </List>
+    );
 
     const dataList = {
-        actionButtons: <Box sx={{display: "flex", gap: 1}}>
-        </Box>,
-        children:
-            categories.map(category => {
-                return (
-                    // TODO: maybe here we could use some data grid instead of cards.
-                    <Card key={category.id} sx={{mt: "16px"}}>
-                        <CardContent>
-                            <div>
-                                {category.name}
-                            </div>
-                        </CardContent>
-                        <CardActionArea sx={{display: "flex", gap: "16px", justifyContent: "end"}}>
-                            {/*TODO: make that button group a component that could be wide used*/}
-                            <Button variant="outlined" size="medium" color="primary" startIcon={<Edit/>}
-                                    sx={{mr: "8px"}}>
-                                Edit
-                            </Button>
-                            <Button variant="outlined" size="medium" color="error" startIcon={<DeleteIcon/>}>
-                                Delete
-                            </Button>
-                        </CardActionArea>
-                    </Card>);
-            }),
+        actions: <Box sx={{display: "flex", gap: 1}}></Box>,
+        items: childrenComponent,
         title: "All categories",
         totalPages: 10
     };
