@@ -40,7 +40,7 @@ export const TransactionCategoryDashboard = () => {
                 type="create"
                 size="medium"
                 onSave={() => console.log("clicked")}/>,
-        title: "Transaction categories"
+        title: "Transaction categories" 
     };
 
     const childrenComponent = categories.data && (
@@ -67,6 +67,7 @@ export const TransactionCategoryDashboard = () => {
 
     const dataList = {
         actions: <Box sx={{display: "flex", gap: 1}}></Box>,
+        currentPage: categories.metadata.currentPage ?? 1,
         items: childrenComponent,
         title: "All categories",
         totalPages: categories.metadata.totalPages ?? 1
