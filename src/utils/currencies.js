@@ -1,3 +1,4 @@
+// TODO: Remove the const to replace with endpoint call
 export const CURRENCIES =
     [
         {value: "USD", label: "Dollar", symbol:"$"},
