@@ -4,8 +4,9 @@ import React, {useState} from "react";
 import {blueGrey, lightBlue} from "@mui/material/colors";
 
 
-export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAscending:true}}) => {
+export const SortBy = ({sortOptions, currentQueryParams,setCurrentQueryParams}) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const newQuery = new URLSearchParams(currentQueryParams);
 
     const isOpen = Boolean(anchorEl)
 
@@ -14,7 +15,8 @@ export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAsc
     }
 
     const handleChange = (field, value) => {
-        onChange(field, value);
+        newQuery.set(field, value);
+        setCurrentQueryParams(newQuery);
         setAnchorEl(null);
     }
 
@@ -32,8 +34,8 @@ export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAsc
             </Button>
             <Menu anchorEl={anchorEl} open={isOpen} onClose={handleClose} sx={{padding:4}}>
                 {sortOptions.map(opt => (
-                    <MenuSelectItem key={opt.value} value={opt.value} selected={sortState.value === opt.value}
-                              onClick={()=>handleChange("value", opt.value)}
+                    <MenuSelectItem key={opt.value} value={opt.value} selected={currentQueryParams.get("sort") === opt.value.toLowerCase()}
+                              onClick={()=>handleChange("sort", opt.value)}
                               sx={{display: "flex", justifyContent: "space-between", width: "100%"}}>
                         {opt.label}
 
@@ -43,9 +45,9 @@ export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAsc
                 <Divider/>
 
                 <MenuSelectItem
-                    selected={sortState.isAscending}
+                    selected={currentQueryParams.get("order") !== "desc" }
                     onClick={() => {
-                        onChange("isAscending", true)
+                        handleChange("order", "asc")
                     }}
                     sx={{
                         display: "flex",
@@ -57,9 +59,9 @@ export const SortBy = ({sortOptions, onChange, sortState={value:undefined, isAsc
                 </MenuSelectItem>
 
                 <MenuSelectItem
-                    selected={!sortState.isAscending}
+                    selected={currentQueryParams.get("order") === "desc" }
                     onClick={() => {
-                        onChange("isAscending", false)
+                        handleChange("order", "desc")
                     }}
                     sx={{
                         display: "flex",
