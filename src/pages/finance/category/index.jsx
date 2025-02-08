@@ -60,6 +60,7 @@ export const TransactionCategoryDashboard = () => {
         //FIX: call the right function here
         //API call here
         console.log(category);
+        setIsOpen(false);
     };
 
     const childrenComponent = categories.data && (
