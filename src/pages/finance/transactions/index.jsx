@@ -13,6 +13,8 @@ import {CURRENCIES} from "@/utils/currencies.js";
 
 
 // TODO: COLLECT THAT INFORMATION FROM API AND APPLY TO FILTERS AND DATA
+// TODO: Add pagination logic
+
 const CATEGORIES = [
     {
         label: 'Bills',
@@ -81,6 +83,7 @@ export const TransactionsDashboard = () => {
 
     const handleGetTransactionsAndBalances = async () => {
         const currentCurrency = currentQueryParams.get('currency')
+
         const transactionsResponse =  getFromApiData('transactions', searchParams);
         const balanceResponse = getFromApiData('balance?'+currentCurrency);
 
