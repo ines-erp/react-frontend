@@ -11,6 +11,7 @@ import { useSearchParams} from "react-router-dom";
  *
  * @param {object} header - Configuration for the header section.
  * @param {string} header.title - The title displayed in the header.
+ * @param {object} header.breadcrumbs - The list of the previous paths, and the string current page to be rendered in the breadcrumbs.
  * @param {React.ReactNode} [header.actionButton] - An optional action button to display in the header.
  * @param {object} [middleSection] - Configuration for the optional middle section.
  * @param {boolean} [middleSection.isVisible] - Whether to display the middle section.
@@ -147,7 +148,7 @@ export const LayoutDataViewList = ({
 
     return (
         <Container>
-            <PageHeader title={header.title} actionButton={header.actionButton} isLoading={isLoading}/>
+            <PageHeader title={header.title} actionButton={header.actionButton} isLoading={isLoading} breadcrumbs={header.breadcrumbs}/>
 
             <Box id="optional-section" sx={{marginY: 8}}>
                 {badgeFilters.isVisible && renderBadgeFilters()}

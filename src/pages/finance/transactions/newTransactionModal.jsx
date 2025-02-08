@@ -59,7 +59,7 @@ export const NewTransactionModal = ({
 
 
     if (!categories & !paymentMethods && !types) {
-        return <>... loading</>;
+        return <></>;
     }
 
 
@@ -94,14 +94,10 @@ export const NewTransactionModal = ({
 
         >
             <DialogTitle variant={"h3"}>
-                Add new transaction
+                {isEditing ? "Editing" : "Adding new"} transaction
             </DialogTitle>
 
             <DialogContent sx={{display: "flex", flexDirection: "column", gap: 4}}>
-                <DialogContentText sx={{mb: 3}}>
-                    Some example text
-                </DialogContentText>
-
                 <FormControl>
                     <FormLabel>Transaction type</FormLabel>
 

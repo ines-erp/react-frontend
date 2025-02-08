@@ -1,5 +1,7 @@
-import {Box, Button, Card, CardContent, Typography} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Chip, Typography} from "@mui/material";
 import {Link} from "react-router-dom";
+import {grey} from "@mui/material/colors";
+import {Today} from "@mui/icons-material";
 
 export const TransactionCardResume = ({transaction, onDelete}) => {
     const {
@@ -37,52 +39,58 @@ export const TransactionCardResume = ({transaction, onDelete}) => {
 
     return (
         <Card
-            variant={"outlined"}
+            variant="outlined"
             key={transaction.id}
             sx={{background: transaction.transactionType.name.toLowerCase() === "income" ? "#00ff0009" : "#ff000009"}}
         >
 
-            <CardContent
-                sx={{alignItems: "center", display: "flex", justifyContent: "space-between"}}
-            >
-
-                <Typography variant={"h3"} fontSize={"1rem"}>
-                    {name}
-                </Typography>
-
-                <Typography>
-                    {transactionTypeName}
-                </Typography>
-                <Typography>
-                    {currencySymbol}: {amount.toFixed(2)}
-                </Typography>
-
-                <Typography>
-                    {description.substring(0, 30) + "..."}
-                </Typography>
-
-                <Box sx={{alignItems: "center", display: "flex", gap: "8px", my: "auto"}}>
-                    <Button
-                        as={Link}
-                        variant={"outlined"}
-                        sx={{background: "#fff"}}
-                        to={`${id}/details`}
-                    >
-                        Details
-                    </Button>
-
-                    <Button
-                        componet={Link}
-                        variant={"outlined"}
-                        color={"error"}
-                        sx={{background: "#fff"}}
-                        onClick={onDelete}
-                    >
-                        Delete
-                    </Button>
+            <CardContent>
+                <Box sx={{display: "flex", gap: 2, alignItems: "center"}}>
+                    <Chip variant="outlined" label={transactionTypeName}/>
+                    <Typography variant="h4">
+                        {currencySymbol}: {amount.toFixed(2)}
+                    </Typography>
                 </Box>
+                <Typography variant="h3">{name}</Typography>
+                <Typography>
+                    {description.substring(0, 50) + "..."}
+                </Typography>
 
+                {createdAt &&
+                    <Typography variant="body1" component="div"
+                                sx={{
+                                    display: "flex",
+                                    gap: 2,
+                                    alignItems: "center",
+                                    color: grey[600]
+                                }}
+                    >
+                        <Today color="inherit" fontSize="inherit"/>
+                        {new Date(createdAt).toLocaleDateString()}
+                    </Typography>
+                }
             </CardContent>
+            <CardActions>
+                <Button
+                    as={Link}
+                    variant={"outlined"}
+                    sx={{background: "#fff"}}
+                    style={{textDecoration: "none"}}
+                    to={`${id}/details`}
+                >
+                    Details
+                </Button>
+
+                <Button
+                    componet={Link}
+                    variant="outlined"
+                    color="error"
+                    sx={{background: "#fff"}}
+                    onClick={onDelete}
+                >
+                    Delete
+                </Button>
+            </CardActions>
         </Card>
     )
 }
