@@ -3,7 +3,7 @@ import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
 import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
-import {FormModal} from "@/pages/finance/category/edit.jsx";
+import {FormModal} from "@/components/ui/FormModal.jsx";
 
 export const TransactionCategoryDashboard = () => {
 
@@ -119,9 +119,9 @@ export const TransactionCategoryDashboard = () => {
         <>
             <FormModal
                 isOpen={isOpen}
-                handlePost={(event) => handleSubmit(event, editingData.id)}
+                onSubmit={(event) => handleSubmit(event, editingData.id)}
                 isEditing={!!editingData.id}
-                handleClose={handleToggleModal}
+                onClose={handleToggleModal}
                 data={editingData}
             >
 
