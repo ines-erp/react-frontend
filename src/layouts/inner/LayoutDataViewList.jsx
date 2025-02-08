@@ -4,6 +4,8 @@ import {Badge} from "@/components/base/Badge.jsx";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
 import {useSearchParams} from "react-router-dom";
 
+// TODO Would be nice if we check for each node that could be a React element and if we pass a react element as props we do prefer to render the passed element instead of the default element
+
 /**
  * A reusable layout component for displaying data in a list format, with optional header, middle section, filters, and pagination.
  *
