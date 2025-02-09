@@ -43,8 +43,6 @@ export const LayoutDataViewList = ({
     const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
 
     const query = new URLSearchParams(currentQueryParams);
-
-    //TODO: Here must fit metadata design
     const page = parseInt(query.get('page') || '1', 10);
 
     const handleChangePage = (event, value) => {
@@ -58,7 +56,7 @@ export const LayoutDataViewList = ({
             return (<Box sx={{display: "flex", gap: 2, marginBottom: 2}}>
                 {Array.from(Array(badgeFilters.limit ?? 3)).map((_, index) => (
                     <Skeleton key={index} sx={{borderRadius: 20}} height="32px" width="10%" variant="rounded"/>))}
-            </Box>)
+            </Box>);
         }
 
         return (<Box sx={{display: "flex", gap: 1, alignItems: "center", marginBottom: 2}}>
@@ -69,8 +67,8 @@ export const LayoutDataViewList = ({
                        value={opt.value}
                        onClick={() => badgeFilters.onClick(opt.value)}/>
             ))}
-        </Box>)
-    }
+        </Box>);
+    };
 
     const renderMiddleSection = () => {
         if (isLoading) {
@@ -80,7 +78,7 @@ export const LayoutDataViewList = ({
                     {Array.from(Array(middleSection.limit ?? 1)).map((_, index) => (
                         <Skeleton key={index} height="180px" width="25%" variant="rounded"/>))}
                 </Box>
-            </Box>)
+            </Box>);
         }
 
         return (<Box id="data-summary" sx={{marginTop: 2}}>
@@ -93,15 +91,15 @@ export const LayoutDataViewList = ({
             <Box sx={{display: "flex", gap: 2}}>
                 {middleSection.content}
             </Box>
-        </Box>)
-    }
+        </Box>);
+    };
 
     const renderDataListHeader = () => {
         if (isLoading) {
             return (<>
                 <Skeleton width="75%" height="3.5rem"/>
                 {dataList.actions && <Skeleton width="15%" height="3.5rem"/>}
-            </>)
+            </>);
         }
         return (<>
             <Typography
@@ -111,8 +109,8 @@ export const LayoutDataViewList = ({
                 {dataList.title}
             </Typography>
             {dataList.actions}
-        </>)
-    }
+        </>);
+    };
 
     const renderDataListBody = () => {
         if (isLoading) {
@@ -124,20 +122,20 @@ export const LayoutDataViewList = ({
                                   sx={{padding: 0, margin: 0}}
                         />)}
                 </Stack>
-            )
+            );
         }
 
         if (!dataList.items) return null;
 
-        if (dataList.items.length === 0) return <EmptyState showFilterMessage={true}/>
+        if (dataList.items.length === 0) return <EmptyState showFilterMessage={true}/>;
 
-        return <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", gap: 2}}>{dataList.items}</Box>
-    }
+        return <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", gap: 2}}>{dataList.items}</Box>;
+    };
 
     const renderDataListFooter = () => {
         if (isLoading) {
             return (
-                <Skeleton width="30%" height="2.5rem"/>)
+                <Skeleton width="30%" height="2.5rem"/>);
         }
         return (
             dataList.totalPages && <Pagination
@@ -145,8 +143,8 @@ export const LayoutDataViewList = ({
                 shape="rounded" color="primary"
                 page={page}
                 onChange={handleChangePage}
-            />)
-    }
+            />);
+    };
 
     return (
         <Container>
@@ -187,4 +185,4 @@ export const LayoutDataViewList = ({
             </Paper>
         </Container>
     );
-}
+};

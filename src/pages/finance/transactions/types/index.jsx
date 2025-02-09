@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
-import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
+import {Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
 import {FormModal} from "@/components/ui/FormModal.jsx";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
@@ -76,11 +76,7 @@ export const TransactionTypesDashboard = () => {
     }, []);
 
     const dataHeader = {
-        actionButton: (
-            <>
-                <Button variant={"contained"} onClick={handleToggleModal}>Add new</Button>
-            </>
-        ),
+        actionButton: <Button variant={"contained"} onClick={handleToggleModal}>Add new</Button>,
         title: "Transaction Types"
     };
 
@@ -108,7 +104,6 @@ export const TransactionTypesDashboard = () => {
     );
 
     const dataList = {
-        actions: <Box sx={{display: "flex", gap: 1}}></Box>,
         currentPage: transactionTypes.metadata.currentPage ?? 1,
         items: childrenComponent,
         title: "All transactionTypes",

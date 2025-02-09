@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {deleteFromApiData, getFromApiData, postToApiData, putToApiData} from "@/api/inesDataApiV1.js";
 import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
-import {Box, Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
+import {Button, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
 import {Delete, Edit} from "@mui/icons-material";
 import {FormModal} from "@/components/ui/FormModal.jsx";
 
@@ -108,7 +108,6 @@ export const TransactionCategoryDashboard = () => {
     );
 
     const dataList = {
-        actions: <Box sx={{display: "flex", gap: 1}}></Box>,
         currentPage: categories.metadata.currentPage ?? 1,
         items: childrenComponent,
         title: "All categories",
