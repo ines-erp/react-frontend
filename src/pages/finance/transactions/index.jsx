@@ -1,14 +1,20 @@
-import {Box, Breadcrumbs, Button, ButtonGroup, Card, CardContent, Chip, Container, Typography} from "@mui/material";
-import {Add, MonetizationOnOutlined} from "@mui/icons-material";
-import {green, grey} from "@mui/material/colors";
-import {Link} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {Box, Button,} from "@mui/material";
+import {Add} from "@mui/icons-material";
+import {useSearchParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import {NewTransactionModal} from "@/pages/finance/transactions/newTransactionModal.jsx";
 import {TransactionCardResume} from "@/pages/finance/transactions/TransactionCardResume.jsx";
 import {deleteFromApiData, getFromApiData, postToApiData} from "@/api/inesDataApiV1.js";
+import {BalanceSection} from "@/pages/finance/transactions/BalanceSection.jsx";
+import {SortBy} from "@/components/ui/SortBy.jsx";
+import {Filters} from "@/components/ui/Filters.jsx";
+import {LayoutDataViewList} from "@/layouts/inner/LayoutDataViewList.jsx";
+import {CURRENCIES} from "@/utils/currencies.js";
 
 
-// TODO: COLLECT THAT INFORMATION FROM API
+// TODO: COLLECT THAT INFORMATION FROM API AND APPLY TO FILTERS AND DATA
+// TODO: Add pagination logic
+
 const CATEGORIES = [
     {
         label: 'Bills',
@@ -41,26 +47,13 @@ const PAYMENTMETHODS = [
         value: 'card-0244'
     }
 ];
-const CURRENCIES = [
-    {
-        label: '€',
-        name: 'Euro',
-        value: 'EUR'
-    },
-    {
-        label: 'R$',
-        name: 'Brazilian Real',
-        value: 'BRL'
-    },
-
-];
-
 
 export const TransactionsDashboard = () => {
+    const [currentQueryParams, setCurrentQueryParams] = useSearchParams();
+    const searchParams = Object.fromEntries([...currentQueryParams]);
 
     const [transactions, setTransactions] = useState([]);
     const [balance, setBalance] = useState({});
-    const [currency, setCurrency] = useState("BRL");
 
     //modal
     const [open, setOpen] = useState(false);
@@ -68,8 +61,6 @@ export const TransactionsDashboard = () => {
     const [paymentMethods, setPaymentMethods] = useState(PAYMENTMETHODS);
     const [currencies, setCurrencies] = useState(CURRENCIES);
 
-    //filters
-    const [filterTransactionType, setFilterTransactionType] = useState({all: true, incomes: false, outcomes: false});
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -77,63 +68,103 @@ export const TransactionsDashboard = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    const handleSelectCurrency = (currency) => {
-        setCurrency(currency);
-    };
 
     //PROMISES
     const handlePostTransaction = async (body) => {
         await postToApiData('transactions', body);
-        handleGetTransactionsAndBalances();
+        await handleGetTransactionsAndBalances();
     };
     const handleDelete = async (id) => {
         const response = await deleteFromApiData(`transactions/${id}`);
         if (response) {
-            handleGetTransactionsAndBalances();
+            await handleGetTransactionsAndBalances();
         }
     };
 
-    const handleGetTransactionsAndBalances = async (currency) => {
-        const transactionsResponse = await getFromApiData('transactions?' + new URLSearchParams({currency: currency}).toString());
-        const balanceResponse = await getFromApiData('balance?' + new URLSearchParams({currency: currency}).toString());
+    const handleGetTransactionsAndBalances = async () => {
+        const currentCurrency = currentQueryParams.get('currency')
 
-        Promise.all([transactionsResponse, balanceResponse])
+        const transactionsResponse =  getFromApiData('transactions', searchParams);
+        const balanceResponse = getFromApiData('balance?'+currentCurrency);
+
+        await Promise.all([transactionsResponse, balanceResponse])
             .then(([transactions, balance]) => {
                 setTransactions(transactions);
-                setBalance(balance);
+                setBalance(balance[0]);
             });
     };
 
     useEffect(() => {
-        handleGetTransactionsAndBalances(currency);
-    }, [currency]);
+        handleGetTransactionsAndBalances();
+    }, [currentQueryParams]);
 
 
-    const handleSelectTransactionType = (key) => {
-        setFilterTransactionType(() => {
-            const selected = {
-                all: false,
-                incomes: false,
-                outcomes: false,
-            };
+    const outcomes = transactions && transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
+    const incomes = transactions && transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
 
-            selected[key] = true;
+    const totalIncomes = incomes && incomes.reduce((acc, current) => acc + current.amount, 0);
+    const totalOutcomes = outcomes && outcomes.reduce((acc, current) => acc + current.amount, 0);
 
-            return selected;
-        });
-    };
+    const header = {
+        title: "Transactions",
+        breadcrumbs: {previous:[{label:"finance", path:"/finance"}], current:"Transactions"},
+        actionButton: <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
+            New
+        </Button>
+    }
 
-    const outcomes = transactions.filter(transaction => transaction.transactionType.name.toLowerCase() === "outcome");
-    const incomes = transactions.filter(transaction => (transaction.transactionType.name).toLowerCase() === "income");
+    const middleSection = {
+        isVisible: true,
+        limit: 3,
+        content: <BalanceSection balance={balance} totalIncomes={totalIncomes} totalOutcomes={totalOutcomes} />
+    }
 
-    const totalIncomes = incomes.reduce((acc, current) => acc + current.amount, 0);
+    const sortOptions = [
+        {value: "currency", label: "Currency"},
+        {value: "name", label: "Name"},
+        {value: "amount", label: "Amount"},
+        {value: "", label: "Created At"},
+    ]
+    const filterOptions = [
+        {label:"Currency", type:"buttons", field:"currency", options: CURRENCIES},
+        // TODO: add the transaction type and transaction category after is done on backend
+    ]
 
-    const totalOutcomes = outcomes.reduce((acc, current) => acc + current.amount, 0);
+    const dataList = {
+        title: "Latest Transactions",
+        totalPages: 10,
+        actions: <Box sx={{display: "flex", gap: 1, width:"100%", justifyContent:"flex-end"}}>
+            <SortBy
+                sortOptions={sortOptions}
+                currentQueryParams={currentQueryParams}
+                setCurrentQueryParams={setCurrentQueryParams}
+            />
+            <Filters
+                currentQueryParams={currentQueryParams} setCurrentQueryParams={setCurrentQueryParams}
+                filterOptions={filterOptions}
+            />
+        </Box>,
 
-    // TODO: CREATE THEMES AND STYLES FOR ELEMENTS DOWN HERE
+        items: transactions.map((transaction) => {
+            return (
+                <TransactionCardResume transaction={transaction}
+                                       onDelete={() => handleDelete(transaction.id)}/>
+            )
+        })
+    }
+
+    const badgeFilters = {
+        isVisible: true,
+        field: searchParams.currency,
+        onClick: (value) => {
+            searchParams.currency = value
+            setCurrentQueryParams(searchParams);
+        },
+        options: currencies.map((item) => ({label: `${item.label} ${item.symbol}`, value: item.value})),
+    }
     return (
-        <Container sx={{ml: 0}}>
-            {/*FIX: CHANGE HERE TO THE NEW FormModal component*/}
+        <>
+
             <NewTransactionModal
                 isOpen={open}
                 handleClose={handleClose}
@@ -141,162 +172,17 @@ export const TransactionsDashboard = () => {
                 currencies={currencies}
                 categories={categories}
                 paymentMethods={paymentMethods}
-                data={{currency, paidBy: "Wes"}}
+                data={{currency:currentQueryParams.get("currency")}}
             />
 
-            <Box sx={{display: "flex", gap: 1}}>
-                <Box sx={{
-                    alignItems: "center",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                }}>
-                    <Typography variant={"h1"}>Transactions</Typography>
-                    <Button variant="contained" startIcon={<Add/>} onClick={handleClickOpen}>
-                        New
-                    </Button>
-                </Box>
-            </Box>
+            <LayoutDataViewList
+                header={header}
+                dataList={dataList}
+                middleSection={middleSection}
+                badgeFilters={badgeFilters}
+            />
 
-            <Breadcrumbs>
-                <Link to={"/"}>
-                    <Typography variant="h5" color={grey[500]}>
-                        Home
-                    </Typography>
-                </Link>
-                <Typography variant="h5" color={grey[500]}>
-                    Transactions
-                </Typography>
-            </Breadcrumbs>
-
-            <Box sx={{display: "flex", gap: 1, minWidth: "25%", mt: 6}}>
-                {currencies.map((option) => (
-                    <Chip label={`${option.label} - ${option.name}`} sx={{fontWeight: "bold"}} size={"medium"}
-                          key={option.value}
-                          value={option.value} color={currency === option.value ? "primary" : ""} onClick={() => {
-                        handleSelectCurrency(option.value);
-                    }}/>
-                ))}
-            </Box>
-
-            <Box sx={{display: "flex", gap: "24px", mb: 4, mt: 2}}>
-                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}} variant={"outlined"}>
-                    <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            alignItems: "center",
-                            color: 'text.secondary',
-                            display: "flex",
-                            fontSize: 14,
-                            gap: "8px",
-                            mb: "16px"
-                        }}>
-                            <MonetizationOnOutlined/>
-                            Incomes
-                        </Typography>
-
-                        <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {totalIncomes.toFixed(2)} <Chip label="12.8%" color="success"
-                                                                             size="small"></Chip>
-                        </Typography>
-
-                        <Typography variant="caption">
-                            <Typography variant="string" fontWeight="bold" color="success">+ R$ 30,00</Typography> than
-                            last month
-                        </Typography>
-                    </CardContent>
-                </Card>
-
-                <Card sx={{border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}} variant={"outlined"}>
-                    <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            alignItems: "center",
-                            color: 'text.secondary',
-                            display: "flex",
-                            fontSize: 14,
-                            gap: "8px",
-                            mb: "16px"
-                        }}>
-                            <MonetizationOnOutlined/>
-                            Outcomes
-                        </Typography>
-
-                        <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {totalOutcomes.toFixed(2)} <Chip label="12.8%" color="warning"
-                                                                              size="small"></Chip>
-                        </Typography>
-
-                        <Typography variant="caption">
-                            <Typography variant="string" fontWeight="bold" color="warning">- R$ 10,00</Typography> than
-                            last month
-                        </Typography>
-                    </CardContent>
-                </Card>
-
-                <Card sx={{background: green[50], border: "none", borderRadius: 4, flex: 1, maxWidth: "240px"}}
-                      variant={"outlined"}>
-                    <CardContent>
-                        <Typography variant={"h3"} sx={{
-                            alignItems: "center",
-                            color: 'text.secondary',
-                            display: "flex",
-                            fontSize: 14,
-                            gap: "8px",
-                            mb: "16px"
-                        }}>
-                            <MonetizationOnOutlined/>
-                            Balance
-                        </Typography>
-
-                        <Typography gutterBottom variant="h5" component="div">
-                            {balance.symbol} {balance.amount} <Chip label="12.8%" color="success" size="small"></Chip>
-                        </Typography>
-
-                        <Typography variant="caption">
-                            <Typography variant="string" fontWeight="bold" color="success">+ R$ 20,00</Typography> than
-                            last month
-                        </Typography>
-                    </CardContent>
-
-                </Card>
-            </Box>
-
-            <Box sx={{display: "none", gap: "24px"}}>
-                <Card sx={{border: "none", flex: 1, maxWidth: "60%", minHeight: "350px"}} variant={"outlined"}>Chart
-                    one</Card>
-                <Card sx={{border: "none", flex: 1, maxWidth: "40%", minHeight: "350px"}} variant={"outlined"}>Chart
-                    one</Card>
-            </Box>
-
-            <Box sx={{
-                background: "#fff",
-                borderRadius: "8px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "24px",
-                mt: "32px",
-                padding: "32px"
-            }}>
-                <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                    <Typography variant={"h2"} fontSize={"1.5rem"}>Latests Transactions</Typography>
-                    <ButtonGroup>
-                        <Button variant={filterTransactionType.all ? "contained" : "outlined"}
-                                onClick={() => handleSelectTransactionType("all")}>All</Button>
-
-                        <Button variant={filterTransactionType.incomes ? "contained" : "outlined"}
-                                onClick={() => handleSelectTransactionType("incomes")}> Incomes < /Button>
-
-                        <Button variant={filterTransactionType.outcomes ? "contained" : "outlined"}
-                                onClick={() => handleSelectTransactionType("outcomes")}>Outcomes</Button>
-                    </ButtonGroup>
-                </Box>
-
-                <Box sx={{display: "flex", flexDirection: "column", gap: "16px"}}>
-                    {transactions.map(transaction => <TransactionCardResume transaction={transaction}
-                                                                            onDelete={() => handleDelete(transaction.id)}/>)}
-                </Box>
-            </Box>
-
-        </Container>
+        </>
     );
 
 };
