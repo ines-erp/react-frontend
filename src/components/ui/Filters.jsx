@@ -1,8 +1,6 @@
-import {
-    Box, Button, Drawer, Stack, TextField, Typography
-} from "@mui/material";
+import {Box, Button, Drawer, Stack, TextField, Typography} from "@mui/material";
 import React, {useState} from "react";
-import {FilterListOff, FilterList, Close} from "@mui/icons-material";
+import {Close, FilterList, FilterListOff} from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 /**
@@ -121,7 +119,7 @@ export const Filters = ({filterOptions, currentQueryParams, setCurrentQueryParam
                 width: drawerWidth,
             }}
             anchor="right"
-            onClose={()=>setIsOpen(false)}
+            onClose={() => setIsOpen(false)}
         >
             <Box sx={{height: '86px'}}/>
             <Box

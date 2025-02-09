@@ -67,7 +67,7 @@ export const LoginPage = () => {
     }
 
     return (
-        <Container sx={{padding: 4, margin:"auto 0",}}>
+        <Container sx={{padding: 4, margin: "auto 0",}}>
             <Typography variant={"h1"} mb={4} textAlign={"center"}>INES ERP</Typography>
 
             <Paper

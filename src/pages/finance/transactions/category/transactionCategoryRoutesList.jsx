@@ -1,6 +1,6 @@
-import {TransactionCategoryDashboard} from "@/pages/finance/category/index.jsx";
+import {TransactionCategoryDashboard} from "@/pages/finance/transactions/category/index.jsx";
 
-export const transactionCategoryRoutes = [
+export const transactionCategoryRoutesList = [
     {
         element: <TransactionCategoryDashboard/>,
         isEnabled: true,

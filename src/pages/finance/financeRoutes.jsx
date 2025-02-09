@@ -4,6 +4,8 @@ import {FinancesDashboard} from "@/pages/finance/index.jsx";
 import {transactionsRoutesList} from "@/pages/finance/transactions/transactionsRoutes.jsx";
 import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMethodsRoutes.jsx";
 import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
+import {transactionCategoryRoutesList} from "@/pages/finance/transactions/category/transactionCategoryRoutesList.jsx";
+import {transactionTypesRoutesList} from "@/pages/finance/transactions/types/transactionTypesRoutesList.jsx";
 
 export const financesRoutesList = [
     {
@@ -30,6 +32,22 @@ export const financesRoutesList = [
         isInMenu: true,
         label: "Payment methods",
         path: "payment-methods"
+    },
+    {
+        children: transactionCategoryRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Categories",
+        path: "categories"
+    },
+    {
+        children: transactionTypesRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Types of transactions",
+        path: "types"
     }
 ];
 

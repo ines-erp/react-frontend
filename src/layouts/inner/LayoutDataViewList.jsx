@@ -1,10 +1,10 @@
-import {
-    Box, Container, Pagination, Paper, Skeleton, Stack, Typography
-} from "@mui/material";
+import {Box, Container, Pagination, Paper, Skeleton, Stack, Typography} from "@mui/material";
 import {PageHeader} from "@/components/ui/PageHeader.jsx";
 import {Badge} from "@/components/base/Badge.jsx";
 import {EmptyState} from "@/components/ui/EmptyState.jsx";
-import { useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
+
+// TODO Would be nice if we check for each node that could be a React element and if we pass a react element as props we do prefer to render the passed element instead of the default element
 
 /**
  * A reusable layout component for displaying data in a list format, with optional header, middle section, filters, and pagination.
@@ -56,7 +56,7 @@ export const LayoutDataViewList = ({
             return (<Box sx={{display: "flex", gap: 2, marginBottom: 2}}>
                 {Array.from(Array(badgeFilters.limit ?? 3)).map((_, index) => (
                     <Skeleton key={index} sx={{borderRadius: 20}} height="32px" width="10%" variant="rounded"/>))}
-            </Box>)
+            </Box>);
         }
 
         return (<Box sx={{display: "flex", gap: 1, alignItems: "center", marginBottom: 2}}>
@@ -67,8 +67,8 @@ export const LayoutDataViewList = ({
                        value={opt.value}
                        onClick={() => badgeFilters.onClick(opt.value)}/>
             ))}
-        </Box>)
-    }
+        </Box>);
+    };
 
     const renderMiddleSection = () => {
         if (isLoading) {
@@ -78,7 +78,7 @@ export const LayoutDataViewList = ({
                     {Array.from(Array(middleSection.limit ?? 1)).map((_, index) => (
                         <Skeleton key={index} height="180px" width="25%" variant="rounded"/>))}
                 </Box>
-            </Box>)
+            </Box>);
         }
 
         return (<Box id="data-summary" sx={{marginTop: 2}}>
@@ -91,15 +91,15 @@ export const LayoutDataViewList = ({
             <Box sx={{display: "flex", gap: 2}}>
                 {middleSection.content}
             </Box>
-        </Box>)
-    }
+        </Box>);
+    };
 
     const renderDataListHeader = () => {
         if (isLoading) {
             return (<>
                 <Skeleton width="75%" height="3.5rem"/>
                 {dataList.actions && <Skeleton width="15%" height="3.5rem"/>}
-            </>)
+            </>);
         }
         return (<>
             <Typography
@@ -109,8 +109,8 @@ export const LayoutDataViewList = ({
                 {dataList.title}
             </Typography>
             {dataList.actions}
-        </>)
-    }
+        </>);
+    };
 
     const renderDataListBody = () => {
         if (isLoading) {
@@ -122,20 +122,20 @@ export const LayoutDataViewList = ({
                                   sx={{padding: 0, margin: 0}}
                         />)}
                 </Stack>
-            )
+            );
         }
 
         if (!dataList.items) return null;
 
-        if (dataList.items.length === 0) return <EmptyState showFilterMessage={true}/>
+        if (dataList.items.length === 0) return <EmptyState showFilterMessage={true}/>;
 
-        return <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", gap: 2}}>{dataList.items}</Box>
-    }
+        return <Box sx={{flexGrow: 1, display: "flex", flexDirection: "column", gap: 2}}>{dataList.items}</Box>;
+    };
 
     const renderDataListFooter = () => {
         if (isLoading) {
             return (
-                <Skeleton width="30%" height="2.5rem"/>)
+                <Skeleton width="30%" height="2.5rem"/>);
         }
         return (
             dataList.totalPages && <Pagination
@@ -143,8 +143,8 @@ export const LayoutDataViewList = ({
                 shape="rounded" color="primary"
                 page={page}
                 onChange={handleChangePage}
-            />)
-    }
+            />);
+    };
 
     return (
         <Container>
@@ -185,4 +185,4 @@ export const LayoutDataViewList = ({
             </Paper>
         </Container>
     );
-}
+};

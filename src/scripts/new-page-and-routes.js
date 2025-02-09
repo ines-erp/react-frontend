@@ -1,5 +1,6 @@
 import {mkdir, writeFile} from 'node:fs/promises';
 import path from "node:path";
+
 /**
  * Generates a new React page with associated routes and exports them for use in a React Router setup.
  *
