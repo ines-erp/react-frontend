@@ -1,5 +1,5 @@
-import {menuRoutes} from "@/menu/menuRoutes.jsx";
-import {dynamicMenuItems} from "@/menu/dynamicMenuItems.jsx";
+import {menuRoutes} from "@/menu/sidebar/menuRoutes.jsx";
+import {dynamicMenuItems} from "@/menu/sidebar/dynamicMenuItems.jsx";
 import {List} from "@mui/material";
 import {useLocation} from "react-router-dom";
 

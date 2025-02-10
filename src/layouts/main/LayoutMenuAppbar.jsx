@@ -1,7 +1,7 @@
 import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMediaQuery} from "@mui/material";
 import React, {useContext, useEffect} from "react";
 import MenuIcon from "@mui/icons-material/Menu";
-import {RouterMainMenu} from "@/menu/index.jsx";
+import {RouterMainMenu} from "@/menu/sidebar/index.jsx";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
