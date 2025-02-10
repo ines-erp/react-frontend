@@ -37,6 +37,6 @@ export const financesRoutes = [
         element: <LayoutMenuAppbar/>,
         path: "/finance",
         label: "Finances",
-        isVisible:true
+        isInMenu:true
     }
 ];

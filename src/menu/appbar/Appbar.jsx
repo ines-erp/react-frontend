@@ -11,15 +11,19 @@ import {
     Button
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Link} from "react-router-dom";
 import {modulesRoutes} from "@/routes/modulesRoutes.js";
+import {handleLogout} from "@/pages/auth/login/index.jsx";
+import {blue} from "@mui/material/colors";
+import {AuthDispatchContext} from "@/store/authContext.js";
 
 
 export const AppBar = ({username, onDrawerToggle, isScreenBigger}) => {
+    //TODO: update for the user name on profile when is available on api
+    const dispatch = useContext(AuthDispatchContext);
 
-    const modules = Object.values(modulesRoutes).filter(module => module.isVisible);
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+    const modules = Object.values(modulesRoutes).filter(module => module.isInMenu);
 
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -69,10 +73,11 @@ export const AppBar = ({username, onDrawerToggle, isScreenBigger}) => {
                             </Button>
                         ))}
                     </Box>
-                    <Box sx={{flexGrow: 0}}>
+                    <Box sx={{flexGrow: 0, display:"flex", gap:1, alignItems:"center", justifyContent:"center"}}>
+                        <Typography>{username}</Typography>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                                <Avatar alt={username}>{username}</Avatar>
+                                <Avatar sx={{bgcolor:"#fff", color:blue[800], textTransform:"uppercase"}} />
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -91,11 +96,9 @@ export const AppBar = ({username, onDrawerToggle, isScreenBigger}) => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            {settings.map((setting) => (
-                                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                    <Typography sx={{textAlign: 'center'}}>{setting}</Typography>
-                                </MenuItem>
-                            ))}
+                        <MenuItem onClick={()=> handleLogout(dispatch)}>
+                            <Typography sx={{textAlign: 'center'}}>Logout</Typography>
+                        </MenuItem>
                         </Menu>
                     </Box>
                 </Toolbar>

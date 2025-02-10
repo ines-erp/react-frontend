@@ -7,11 +7,11 @@ import {modulesRoutes} from "@/routes/modulesRoutes.js";
 export const HomePage =() => {
     return (
         <Container>
-            <Typography>Choose the module here or in top</Typography>
+            <Typography >Modules</Typography>
 
             <Stack direction="column">
 
-            {Object.values(modulesRoutes).map((route, index) => {
+            {Object.values(modulesRoutes).filter(module => module.isInMenu).map((route, index) => {
                 console.log(route)
                     return <Link to={route.path}>{route.label}</Link>
                 }

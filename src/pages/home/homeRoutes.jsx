@@ -21,6 +21,6 @@ export const homeRoutes = [
         element: <LayoutMenuAppbar/>,
         path: "/",
         label: "Home",
-        isVisible:false
+        isInMenu:true
     }
 ];
