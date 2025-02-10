@@ -27,5 +27,6 @@ export const authRoutesRoutes = [
         element: <LayoutBlank sx={{display: "flex", alignItems: "center", justifyContent: 'center'}}/>,
         path: "/auth",
         label: "Auth",
+        isVisible:true
     }
 ];
