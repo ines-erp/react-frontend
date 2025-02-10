@@ -3,6 +3,7 @@ import {FinancesDashboard} from "@/pages/finance/index.jsx";
 import {transactionsRoutesList} from "@/pages/finance/transactions/transactionsRoutes.jsx";
 import {paymentMethodsRoutesList} from "@/pages/finance/paymentMethod/paymentMethodsRoutes.jsx";
 import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
+import {MoneyRounded} from "@mui/icons-material";
 
 export const financesRoutesList = [
     {
@@ -37,6 +38,7 @@ export const financesRoutes = [
         element: <LayoutMenuAppbar/>,
         path: "/finance",
         label: "Finances",
-        isInMenu:true
+        isInMenu:true,
+        icon:<MoneyRounded />
     }
 ];
