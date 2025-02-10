@@ -9,13 +9,12 @@ import {transactionTypesRoutesList} from "@/pages/finance/transactions/types/tra
 
 export const financesRoutesList = [
     {
-        element: <FinancesDashboard/>,
-        icon: <BiUser/>,
+        children: [{isEnabled: true, isInMenu: true, element: <FinancesDashboard/>, path:""}],
+        element: <Outlet/>,
         isEnabled: true,
         isInMenu: true,
         label: "Dashboard",
-        parentLabel: "Finance",
-        path: ""
+        path: "",
     },
     {
         children: transactionsRoutesList.filter(item => item.isEnabled === true),
@@ -33,22 +32,6 @@ export const financesRoutesList = [
         label: "Payment methods",
         path: "payment-methods"
     },
-    {
-        children: transactionCategoryRoutesList.filter(item => item.isEnabled === true),
-        element: <Outlet/>,
-        isEnabled: true,
-        isInMenu: true,
-        label: "Categories",
-        path: "categories"
-    },
-    {
-        children: transactionTypesRoutesList.filter(item => item.isEnabled === true),
-        element: <Outlet/>,
-        isEnabled: true,
-        isInMenu: true,
-        label: "Types of transactions",
-        path: "types"
-    }
 ];
 
 export const financesRoutes = [

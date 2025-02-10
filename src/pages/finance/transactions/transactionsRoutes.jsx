@@ -3,21 +3,18 @@ import {TransactionsDashboard} from "@/pages/finance/transactions/index.jsx";
 import {TransactionsDetails} from "@/pages/finance/transactions/details.jsx";
 import {transactionTypesRoutesList} from "@/pages/finance/transactions/types/transactionTypesRoutesList.jsx";
 import {Outlet} from "react-router-dom";
+import {transactionCategoryRoutesList} from "@/pages/finance/transactions/category/transactionCategoryRoutesList.jsx";
 
 export const transactionsRoutesList = [
     {
         element: <TransactionsDashboard/>,
-        icon: <BiUser/>,
         isEnabled: true,
         isInMenu: true,
-        label: "Dashboard trasactions",
+        label: "Dashboard",
         parentLabel: "Finance",
         path: ""
     },
-    {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "New transaction", path: "add"},
     {element: <TransactionsDetails/>, isEnabled: true, isInMenu: false, label: "Details", path: ":id/details"},
-    {element: <h1>Any other</h1>, isEnabled: false, isInMenu: false, label: "Delete transaction", path: ":id/delete"},
-
     {
         children: transactionTypesRoutesList.filter(item => item.isEnabled === true),
         element: <Outlet/>,
@@ -25,5 +22,13 @@ export const transactionsRoutesList = [
         isInMenu: true,
         label: "Transaction Types",
         path: "types"
-    }
+    },
+    {
+        children: transactionCategoryRoutesList.filter(item => item.isEnabled === true),
+        element: <Outlet/>,
+        isEnabled: true,
+        isInMenu: true,
+        label: "Categories",
+        path: "categories"
+    },
 ];
