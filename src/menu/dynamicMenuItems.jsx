@@ -10,7 +10,6 @@ import {blue, blueGrey} from "@mui/material/colors";
  * @returns React.ReactNode
  */
 export const dynamicMenuItems = (routes) => {
-
     return routes.map((route) => {
         return (
             <React.Fragment key={route.path}>
@@ -22,63 +21,64 @@ export const dynamicMenuItems = (routes) => {
 };
 
 const MenuGroup = ({route}) => {
-    const location = useLocation();
-    const isParentPathSelected = location.pathname.split('/')[1] === route.path.split('/')[1];
+        const location = useLocation();
+        const isParentPathSelected = location.pathname.split('/')[2] === route.path.split('/')[0];
 
-    const [isVisible, setIsVisible] = useState(false);
+        const [isVisible, setIsVisible] = useState(false);
+        if (route.isInMenu && route.isEnabled) {
+            const childrenInMenu = route.children.length > 1 ? route.children.filter(item => item.isInMenu && item.isEnabled) : undefined;
+            const currentPath = route.path;
 
-    return route.children.map((childRoute) => {
-        if (childRoute.isInMenu && childRoute.isEnabled) {
-            const currentPath = `${route.path}/${childRoute.path}`;
-
-            switch (!!childRoute.parentLabel) {
+            switch (!!childrenInMenu) {
                 case true:
                     return (<
                         React.Fragment key={currentPath}>
                         <MenuItem selected={isParentPathSelected} onClick={() => {
                             setIsVisible((prev) => !prev);
-                        }}>
-                            {childRoute.icon && <ListItemIcon sx={{color: 'inherit'}}>
-                                {childRoute.icon}
+                        }}
+                        >
+                            {route.icon && <ListItemIcon sx={{color: 'inherit'}}>
+                                {route.icon}
                             </ListItemIcon>}
-                            <ListItemText primary={childRoute.parentLabel}/>
+                            <ListItemText primary={route.label}/>
                             {isVisible ? <ExpandLess/> : <ExpandMore/>}
                         </MenuItem>
 
-                        <NavLink to={currentPath} end role={undefined}
-                                 style={{color: 'inherit', textDecoration: 'none'}}>
-                            {({isActive}) => (
-                                <MenuItem menuLevel={1} selected={isActive}
-                                          sx={{display: isVisible ? "block" : "none"}}>
-                                    <ListItemText primary={childRoute.label} inset/>
-                                </MenuItem>
-                            )}
-                        </NavLink>
+                        {childrenInMenu.map((childRoute) => {
 
-                    </React.Fragment>);
+                            return (<NavLink to={`${currentPath}/${childRoute.path}`} end role={undefined}
+                                             style={{color: 'inherit', textDecoration: 'none'}}>
+                                {({isActive}) => (
+                                    <MenuItem menuLevel={1} selected={isActive}
+                                              sx={{display: isVisible ? "block" : "none"}}>
+                                        <ListItemText primary={childRoute.label} inset/>
+                                    </MenuItem>
+                                )}
+                            </NavLink>)
+                        })}
+
+                    </React.Fragment>)
 
                 default:
                     return (
-                        <NavLink to={currentPath} key={currentPath}
+                        <NavLink to={currentPath} end key={currentPath}
                                  style={{color: 'inherit', textDecoration: 'none'}}>
                             {({isActive}) => (
-                                <MenuItem menuLevel={1} selected={isActive}
-                                          sx={{display: isVisible ? "block" : "none"}}>
-                                    {childRoute.icon &&
-                                        <ListItemIcon>
-                                            {childRoute.icon}
+                                <MenuItem selected={isActive}>
+                                    {route.icon &&
+                                        <ListItemIcon sx={{color: 'inherit'}}>
+                                            {route.icon}
                                         </ListItemIcon>
                                     }
-                                    <ListItemText primary={childRoute.label} inset={!childRoute.icon}/>
+                                    <ListItemText primary={route.label}/>
                                 </MenuItem>
                             )}
                         </NavLink>
                     );
             }
         }
-        return null;
-    });
-};
+    }
+;
 
 
 const MenuItem = styled(ListItemButton)(

@@ -1,15 +1,12 @@
-//TODO: finish that implementation when have menu
-
 import {menuRoutes} from "@/menu/menuRoutes.jsx";
 import {dynamicMenuItems} from "@/menu/dynamicMenuItems.jsx";
-import {List, ListItem, ListItemButton, ListItemIcon, ListItemText} from "@mui/material";
-import MailIcon from '@mui/icons-material/Mail';
+import {List} from "@mui/material";
 
 
-export const RouterMainMenu = () => {
+export const RouterMainMenu = (module) => {
     return (
         <List as={'nav'} >
-            {dynamicMenuItems(menuRoutes)}
+            {dynamicMenuItems(menuRoutes("finance"))}
         </List>
     )
 }
