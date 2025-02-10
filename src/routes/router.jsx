@@ -1,9 +1,9 @@
 import {createBrowserRouter, Outlet} from "react-router-dom";
-import {menuRoutes} from "@/menu/menuRoutes.jsx";
+import {modulesRoutes} from "@/routes/modulesRoutes.js";
 
 const router = createBrowserRouter([
     {
-        children: [...menuRoutes],
+        children: Object.values(modulesRoutes).map(module => module),
         element: <Outlet/>,
         errorElement: <h1>Error</h1>,
         path: "/"

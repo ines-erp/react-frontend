@@ -1,11 +1,11 @@
-import {AppBar, Box, Container, Drawer, IconButton, Toolbar, Typography, useMediaQuery} from "@mui/material";
+import {Box, Container, Drawer, useMediaQuery} from "@mui/material";
 import React, {useContext, useEffect} from "react";
-import MenuIcon from "@mui/icons-material/Menu";
-import {RouterMainMenu} from "@/menu/index.jsx";
+import {RouterMainMenu} from "@/menu/sidebar/index.jsx";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {grey} from "@mui/material/colors";
 import {AuthContext, AuthDispatchContext} from "@/store/authContext.js";
 import {getLoginToken, handleLogout} from "@/pages/auth/login/index.jsx";
+import {AppBar} from "@/menu/appbar/Appbar.jsx";
 
 const Offset = () => <Box sx={{height: '86px'}}/>;
 
@@ -15,6 +15,7 @@ export const LayoutMenuAppbar = () => {
 
     const location = useLocation();
 
+    //FIX: username not being updated;
     const {token, username} = useContext(AuthContext);
     const dispatch = useContext(AuthDispatchContext);
 
@@ -37,33 +38,8 @@ export const LayoutMenuAppbar = () => {
 
     return (
         <Box sx={{display: 'flex'}}>
-            <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
-                <Toolbar>
-                    <IconButton color='inherit' onClick={handleDrawerToggle}
-                                sx={{display: isScreenBigger ? 'none' : 'flex', marginRight: 2}}>
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography
-                        variant="h4"
-                        noWrap
-                        component="a"
-                        href="/"
-                        sx={{
-                            color: 'inherit',
-                            fontFamily: 'monospace',
-                            fontWeight: 900,
-                            letterSpacing: '.6rem',
-                            mr: 4,
-                            textDecoration: 'none',
-                        }}
-                    >
-                        INES
-                    </Typography>
-                    <Typography>
-                        {username}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
+            <AppBar username={username} onDrawerToggle={handleDrawerToggle} isScreenBigger={isScreenBigger}/>
+
             <Drawer variant={isScreenBigger ? "permanent" : "temporary"}
                     open={isDrawerOpen}
                     sx={{
@@ -73,7 +49,7 @@ export const LayoutMenuAppbar = () => {
                     }}
                     anchor="left">
                 <Offset/>
-                <RouterMainMenu/>
+                <RouterMainMenu />
             </Drawer>
 
             <Container as={"main"} maxWidth={false} sx={{background: grey[100], marginBottom: 0, minHeight: "100vh"}}>

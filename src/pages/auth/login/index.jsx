@@ -36,7 +36,7 @@ const handleLogin = async (password, userName, dispatch, navigateTo) => {
             auth: {token: isLogged.jwtToken, username: userName.current.value},
             type: "login"
         });
-        navigateTo("/home");
+        navigateTo("/");
     }
 };
 
