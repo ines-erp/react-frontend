@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Card, CardContent, Container, Icon, ListItemIcon, Stack, SvgIcon, Typography} from "@mui/material";
+import {Card, CardContent, Container, Typography} from "@mui/material";
 import {modulesRoutes} from "@/routes/modulesRoutes.js";
 import React from "react";
 import {blue} from "@mui/material/colors";
