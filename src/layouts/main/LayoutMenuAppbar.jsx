@@ -73,7 +73,7 @@ export const LayoutMenuAppbar = () => {
                     }}
                     anchor="left">
                 <Offset/>
-                <RouterMainMenu/>
+                <RouterMainMenu />
             </Drawer>
 
             <Container as={"main"} maxWidth={false} sx={{background: grey[100], marginBottom: 0, minHeight: "100vh"}}>

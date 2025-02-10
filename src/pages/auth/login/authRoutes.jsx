@@ -25,6 +25,7 @@ export const authRoutesRoutes = [
     {
         children: authRoutesList.filter(item => item.isEnabled === true),
         element: <LayoutBlank sx={{display: "flex", alignItems: "center", justifyContent: 'center'}}/>,
-        path: "/auth"
+        path: "/auth",
+        label: "Auth",
     }
 ];

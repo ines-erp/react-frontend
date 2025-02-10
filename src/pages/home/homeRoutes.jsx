@@ -1,34 +1,17 @@
 import {HomePage} from "@/pages/home/index.jsx";
 import {MailLock} from "@mui/icons-material";
 import {LayoutMenuAppbar} from "@/layouts/main/LayoutMenuAppbar.jsx";
+import {Outlet} from "react-router-dom";
 
-//example
 export const homeRoutesList = [
     {
-        element: <HomePage/>,
+        children: [{isEnabled: true, isInMenu: true, element: <HomePage/>, path:""}],
+        element: <Outlet />,
         icon: <MailLock/>,
         isEnabled: true,
         isInMenu: true,
-        label: "Dashboard",
-        namespace: "home",
-        parentLabel: "Home",
+        label: "Modules",
         path: ""
-    },
-    {
-        element: <h1>Finances</h1>,
-        isEnabled: false,
-        isInMenu: true,
-        label: "Finance",
-        namespace: "finance",
-        path: "finance"
-    },
-    {
-        element: <h1>Any payment</h1>,
-        isEnabled: true,
-        isInMenu: false,
-        label: "payment home",
-        namespace: "payment",
-        path: "payment"
     },
 ];
 
@@ -36,11 +19,7 @@ export const homeRoutes = [
     {
         children: homeRoutesList.filter(item => item.isEnabled === true),
         element: <LayoutMenuAppbar/>,
-        path: "/home"
+        path: "/",
+        label: "Home",
     }
 ];
-
-//
-
-// func for route in routes recursive [namespace:namesapce:namespace]
-// func that will split that up list and convert to url pattern
